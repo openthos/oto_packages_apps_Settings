@@ -98,6 +98,12 @@
                 android:title="@string/device_feedback">
         </PreferenceScreen>
 
+        <!-- Device manufacturer -->
+        <Preference android:key="device_manufacturer"
+                style="?android:preferenceInformationStyle"
+                android:title="@string/device_manufacturer"
+                android:summary="@string/device_info_default"/>
+
         <!-- Device hardware model -->
         <Preference android:key="device_model" 
                 style="?android:preferenceInformationStyle"
