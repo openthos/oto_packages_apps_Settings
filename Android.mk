@@ -17,7 +17,9 @@ LOCAL_PRIVILEGED_MODULE := true
 LOCAL_MODULE_TAGS := optional
 LOCAL_USE_AAPT2 := true
 
-LOCAL_SRC_FILES := $(call all-java-files-under, src)
+LOCAL_SRC_FILES := $(call all-java-files-under, src) \
+    $(call all-java-files-under,../../../external/koush/Widgets/Widgets/src) \
+    $(call all-java-files-under,../../../external/koush/Superuser/Superuser/src)
 
 LOCAL_STATIC_ANDROID_LIBRARIES := \
     android-support-v4 \
@@ -39,6 +41,15 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
     settings-logtags
 
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+
+LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res \
+    external/koush/Widgets/Widgets/res \
+    external/koush/Superuser/Superuser/res
+
+LOCAL_AAPT_INCLUDE_ALL_RESOURCES := true
+
+LOCAL_AAPT_FLAGS := --auto-add-overlay \
+    --extra-packages com.koushikdutta.superuser:com.koushikdutta.widgets
 
 ifneq ($(INCREMENTAL_BUILDS),)
     LOCAL_PROGUARD_ENABLED := disabled

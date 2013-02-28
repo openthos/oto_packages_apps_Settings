@@ -827,6 +827,11 @@ public class SettingsActivity extends SettingsDrawerActivity
                 pm.hasSystemFeature(PackageManager.FEATURE_PRINTING), isAdmin)
                 || somethingChanged;
 
+        somethingChanged = setTileEnabled(new ComponentName(packageName,
+                         Settings.SuperuserActivity.class.getName()),
+                DevelopmentSettings.isRootForAppsEnabled(), isAdmin)
+                || somethingChanged;
+
         final boolean showDev = mDevelopmentPreferences.getBoolean(
                 DevelopmentSettings.PREF_SHOW, android.os.Build.TYPE.equals("eng"))
                 && !um.hasUserRestriction(UserManager.DISALLOW_DEBUGGING_FEATURES);

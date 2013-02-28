@@ -918,6 +918,13 @@ public class DevelopmentSettings extends RestrictedSettingsFragment
         pokeSystemProperties();
     }
 
+    public static boolean isRootForAppsEnabled() {
+        int value = SystemProperties.getInt(ROOT_ACCESS_PROPERTY, 1);
+        boolean daemonState =
+                SystemProperties.get("init.svc.su_daemon", "absent").equals("running");
+        return daemonState && (value == 1 || value == 3);
+    }
+
     private void updateRootAccessOptions() {
         String value = SystemProperties.get(ROOT_ACCESS_PROPERTY, "1");
         mRootAccess.setValue(value);

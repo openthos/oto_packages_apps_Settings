@@ -60,6 +60,7 @@ import com.android.settings.applications.assist.ManageAssist;
 import com.android.settings.bluetooth.BluetoothDeviceDetailsFragment;
 import com.android.settings.bluetooth.BluetoothSettings;
 import com.android.settings.connecteddevice.ConnectedDeviceDashboardFragment;
+import com.android.settings.cyanogenmod.superuser.PolicyNativeFragment;
 import com.android.settings.dashboard.SupportFragment;
 import com.android.settings.datausage.DataPlanUsageSummary;
 import com.android.settings.datausage.DataUsageList;
@@ -194,6 +195,7 @@ public class SettingsGateway {
             SpecialAccessSettings.class.getName(),
             NotificationAccessSettings.class.getName(),
             ZenAccessSettings.class.getName(),
+            PolicyNativeFragment.class.getName(),
             PrintSettingsFragment.class.getName(),
             PrintJobSettingsFragment.class.getName(),
             TrustedCredentialsSettings.class.getName(),
