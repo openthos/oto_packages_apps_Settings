@@ -23,6 +23,17 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.opengl.GLES20;
+
+// Requirements for context creation
+import android.graphics.SurfaceTexture;
+import android.opengl.EGL14;
+import android.opengl.GLSurfaceView.EGLConfigChooser;
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.egl.EGLContext;
+import javax.microedition.khronos.egl.EGLDisplay;
+import javax.microedition.khronos.egl.EGLSurface;
+
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
@@ -96,9 +107,65 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
 
         addPreferencesFromResource(R.xml.device_info_settings);
 
+        // Create an EGL Context
+        // References:
+        // [1] http://wlog.flatlib.jp/archive/1/2013-12-22
+        // [2] packages/apps/Camera2/src/com/android/camera/SurfaceTextureRenderer.java
+
+        EGL10 egl = (EGL10) EGLContext.getEGL();
+        EGLSurface eglSurface = null;
+        EGLContext eglContext = null;
+
+Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
+
+        // initialize display
+        EGLDisplay eglDisplay = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
+        if (eglDisplay == EGL10.EGL_NO_DISPLAY) {
+            Log.w(LOG_TAG, "eglGetDisplay failed");
+        }
+        int[] iparam = new int[2];
+        if (!egl.eglInitialize(eglDisplay, iparam)) {
+            Log.w(LOG_TAG, "eglInitialize failed");
+        }
+
+        // choose config
+        EGLConfig[] eglConfigs = new EGLConfig[1];
+        final int[] configSpec = { EGL10.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT, EGL10.EGL_NONE };
+        if (egl.eglChooseConfig(eglDisplay, configSpec, eglConfigs, 1, iparam) && iparam[0] > 0) {
+            // create surface
+            SurfaceTexture surfaceTexture = new SurfaceTexture(0);
+            eglSurface = egl.eglCreateWindowSurface(
+                    eglDisplay, eglConfigs[0], surfaceTexture, null);
+            if (eglSurface == null || eglSurface == EGL10.EGL_NO_SURFACE) {
+                Log.w(LOG_TAG, "eglCreateWindowSurface failed");
+            } else {
+                // create context
+                final int[] attribList = { EGL14.EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE };
+                eglContext = egl.eglCreateContext(
+                        eglDisplay, eglConfigs[0], EGL10.EGL_NO_CONTEXT, attribList);
+                if (eglContext == null || eglContext == EGL10.EGL_NO_CONTEXT) {
+                    Log.w(LOG_TAG, "eglCreateContext failed");
+                }
+
+                // bind context
+                if (!egl.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext)) {
+                    Log.w(LOG_TAG, "eglMakeCurrent failed");
+                }
+            }
+        } else {
+            Log.w(LOG_TAG, "eglChooseConfig failed");
+        }
+
         String opengl_version = "GL Vendor: " + GLES20.glGetString(GLES20.GL_VENDOR) + "\n" +
             "GL Renderer: " + GLES20.glGetString(GLES20.GL_RENDERER) + "\n" +
             "GL Version: " + GLES20.glGetString(GLES20.GL_VERSION);
+
+        if (eglContext != null) {
+            // release
+            egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
+            egl.eglDestroyContext(eglDisplay, eglContext);
+            egl.eglDestroySurface(eglDisplay, eglSurface);
+        }
 
         setStringSummary(KEY_FIRMWARE_VERSION, Build.VERSION.RELEASE);
         findPreference(KEY_FIRMWARE_VERSION).setEnabled(true);
