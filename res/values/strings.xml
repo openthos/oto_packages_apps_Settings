@@ -3194,6 +3194,11 @@
         features of your phone may stop working correctly until you power it off
         and then on again.</string>
 
+    <!-- Apps compatibility settings -->
+    <string name="apps_compatibility_title">Apps compatibility</string>
+    <string name="nativebridge_toggle_title">Enable native bridge</string>
+    <string name="nativebridge_toggle_summary">To support apps with arm native libraries</string>
+
     <!-- Language Settings --> <skip />
     <!-- Title of setting on main settings screen.  This item will take the user to the screen to tweak settings realted to locale and text -->
     <string name="language_settings">Language &amp; input</string>

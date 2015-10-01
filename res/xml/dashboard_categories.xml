@@ -124,6 +124,14 @@
                 android:icon="@drawable/ic_settings_applications"
                 />
 
+        <!-- Apps Compatibility -->
+        <dashboard-tile
+                android:id="@+id/apps_compatibility_settings"
+                android:title="@string/apps_compatibility_title"
+                android:fragment="com.android.settings.AppsCompatibility"
+                android:icon="@drawable/ic_settings_applications"
+                />
+
         <!-- Manage users -->
         <dashboard-tile
                 android:id="@+id/user_settings"

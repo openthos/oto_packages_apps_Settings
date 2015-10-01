@@ -787,6 +787,21 @@
                 android:resource="@id/application_settings" />
         </activity>
 
+        <activity android:name="Settings$AppsCompatibilityActivity"
+                android:label="@string/apps_compatibility_title"
+                android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                android:value="com.android.settings.AppsCompatibility" />
+            <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
+                android:resource="@id/apps_compatibility_settings" />
+            <meta-data android:name="com.android.settings.PRIMARY_PROFILE_CONTROLLED"
+                android:value="true" />
+        </activity>
+
         <!-- Keep compatibility with old shortcuts. -->
         <activity-alias android:name=".applications.ManageApplications"
                 android:label="@string/applications_settings"
