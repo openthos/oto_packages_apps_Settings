@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2014 Tieto Poland Sp. z o.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -221,6 +222,13 @@ public class SettingsActivity extends Activity
             R.id.wireless_settings,
             R.id.device_section,
             R.id.notification_settings,
+            /**
+             * Date: 4 Apr 2014
+             * Copyright (C) 2014 Tieto Poland Sp. z o.o.
+             *
+             * Expand Settings with Jabol settings.
+             */
+            R.id.jabol_settings,
             R.id.display_settings,
             R.id.storage_settings,
             R.id.application_settings,
@@ -261,6 +269,13 @@ public class SettingsActivity extends Activity
             UserDictionarySettings.class.getName(),
             HomeSettings.class.getName(),
             DisplaySettings.class.getName(),
+            /**
+             * Date: 4 Apr 2014
+             * Copyright (C) 2014 Tieto Poland Sp. z o.o.
+             *
+             * Expand Settings with Jabol settings.
+             */
+            JabolSettings.class.getName(),
             DeviceInfoSettings.class.getName(),
             ManageApplications.class.getName(),
             AppsCompatibility.class.getName(),

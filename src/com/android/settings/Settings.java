@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2014 Tieto Poland Sp. z o.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +44,13 @@ public class Settings extends SettingsActivity {
     public static class LocalePickerActivity extends SettingsActivity { /* empty */ }
     public static class UserDictionarySettingsActivity extends SettingsActivity { /* empty */ }
     public static class HomeSettingsActivity extends SettingsActivity { /* empty */ }
+    /**
+     * Date: 4 Apr 2014
+     * Copyright (C) 2014 Tieto Poland Sp. z o.o.
+     *
+     * Expand settings with Jabol settings.
+     */
+    public static class JabolSettingsActivity extends SettingsActivity { /* empty */ }
     public static class DisplaySettingsActivity extends SettingsActivity { /* empty */ }
     public static class DeviceInfoSettingsActivity extends SettingsActivity { /* empty */ }
     public static class ApplicationSettingsActivity extends SettingsActivity { /* empty */ }

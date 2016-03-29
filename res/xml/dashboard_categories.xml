@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (C) 2014 The Android Open Source Project
+     Copyright (C) 2014 Tieto Poland Sp. z o.o.
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -82,6 +83,19 @@
                 android:title="@string/home_settings"
                 android:fragment="com.android.settings.HomeSettings"
                 android:icon="@drawable/ic_settings_home"
+                />
+
+        <!--
+             Date: 4 Apr 2014
+             Copyright (C) 2014 Tieto Poland Sp. z o.o.
+
+             Expand Settings with Jabol settings.
+        -->
+        <dashboard-tile
+                android:id="@+id/jabol_settings"
+                android:title="@string/jabol_settings"
+                android:fragment="com.android.settings.JabolSettings"
+                android:icon="@drawable/ic_settings_jabol"
                 />
 
         <!-- Display -->
