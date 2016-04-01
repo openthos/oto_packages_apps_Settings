@@ -1961,7 +1961,7 @@
     <!-- Jabol settings screen heading -->
     <string name="jabol_settings">Jabol</string>
     <!-- Tieto multiwindow title -->
-    <string name="tieto_multiwindow_title">Tieto Multiwindow</string>
+    <string name="tieto_multiwindow_title">Disable Tieto Multiwindow</string>
 
     <!-- Dock settings title, top level -->
     <string name="dock_settings">Dock</string>

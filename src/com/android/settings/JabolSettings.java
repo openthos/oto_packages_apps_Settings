@@ -48,7 +48,7 @@ public class JabolSettings extends SettingsPreferenceFragment implements
         mTietoMultiwindow = (CheckBoxPreference) findPreference(KEY_TIETO_MULTIWINDOW);
         mTietoMultiwindow.setPersistent(false);
         mTietoMultiwindow.setChecked(Settings.System.getInt(resolver,
-                Settings.System.TIETO_MULTIWINDOW_ENABLED, 0) != 0);
+                Settings.System.TIETO_MULTIWINDOW_DISABLED, 0) != 0);
 
         mJabolSettings = (PreferenceGroup) findPreference(KEY_JABOL_SETTINGS);
     }
@@ -67,7 +67,7 @@ public class JabolSettings extends SettingsPreferenceFragment implements
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         Log.d(TAG, "Jabol setting has been changed");
         if (preference == mTietoMultiwindow) {
-            Settings.System.putInt(getContentResolver(), Settings.System.TIETO_MULTIWINDOW_ENABLED,
+            Settings.System.putInt(getContentResolver(), Settings.System.TIETO_MULTIWINDOW_DISABLED,
                     mTietoMultiwindow.isChecked() ? 1 : 0);
             Log.d(TAG, "Preference has been changed");
         }
