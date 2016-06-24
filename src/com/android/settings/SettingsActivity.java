@@ -67,6 +67,8 @@ import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.XmlUtils;
 import com.android.settings.accessibility.AccessibilitySettings;
 import com.android.settings.accessibility.CaptionPropertiesFragment;
+import com.android.settings.accountmanager.OpenthosIDSettings;
+import com.android.settings.accountmanager.ComputerUserNameSettings;
 import com.android.settings.accounts.AccountSettings;
 import com.android.settings.accounts.AccountSyncSettings;
 import com.android.settings.applications.InstalledAppDetails;
@@ -229,6 +231,11 @@ public class SettingsActivity extends Activity
              * Expand Settings with Jabol settings.
              */
             R.id.jabol_settings,
+            /**
+             * Date: 14 June 2016
+             * Expand settings with Account manager settings.
+            */
+            R.id.account_manager_settings,
             R.id.display_settings,
             R.id.storage_settings,
             R.id.application_settings,
@@ -276,6 +283,13 @@ public class SettingsActivity extends Activity
              * Expand Settings with Jabol settings.
              */
             JabolSettings.class.getName(),
+            /**
+             * Date: 14 June 2016
+             * Expand settings with Account manager settings.
+            */
+            AccountManagerSettings.class.getName(),
+            OpenthosIDSettings.class.getName(),
+            ComputerUserNameSettings.class.getName(),
             DeviceInfoSettings.class.getName(),
             ManageApplications.class.getName(),
             AppsCompatibility.class.getName(),

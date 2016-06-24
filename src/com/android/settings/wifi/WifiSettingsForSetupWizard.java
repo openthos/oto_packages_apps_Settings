@@ -114,11 +114,11 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
         // Suppressed during setup wizard
     }
 
-    @Override
-    /* package */ WifiEnabler createWifiEnabler() {
+    //@Override
+    /* package */// WifiEnabler createWifiEnabler() {
         // Not shown during setup wizard
-        return null;
-    }
+        //return null;
+    //}
 
     @Override
     /* package */ void addOptionsMenuItems(Menu menu) {

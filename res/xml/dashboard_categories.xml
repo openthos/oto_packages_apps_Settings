@@ -200,6 +200,18 @@
                 android:icon="@drawable/ic_settings_accounts"
                 />
 
+        <!--
+             Date: 14 June 2016
+             Expand Settings with account manager settings.
+        -->
+        <!--Account Manager -->
+        <dashboard-tile
+            android:id="@+id/account_manager_settings"
+            android:title="@string/account_manager_settings"
+            android:fragment="com.android.settings.AccountManagerSettings"
+            android:icon="@drawable/ic_settings_accounts"
+        />
+
         <!-- Language -->
         <dashboard-tile
                 android:id="@+id/language_settings"

@@ -35,7 +35,7 @@ public class AppsCompatibility extends SettingsPreferenceFragment {
 
         addPreferencesFromResource(R.xml.apps_compatibility_prefs);
         mNativeBridgePreference = (SwitchPreference) findPreference(KEY_TOGGLE_NB);
-        mNativeBridgePreference.setChecked(SystemProperties.getBoolean(PROPERTY_NATIVEBRIDGE, false));
+        mNativeBridgePreference.setChecked(SystemProperties.getBoolean(PROPERTY_NATIVEBRIDGE, true));
     }
 
     @Override

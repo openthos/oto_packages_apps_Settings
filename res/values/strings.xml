@@ -6072,5 +6072,25 @@
    <string name="imei_information_title">IMEI information</string>
    <string name="imei_information_summary">IMEI relative information</string>
    <string name="slot_number">(Slot<xliff:g id="slot_num">%1$d</xliff:g>)</string>
+    <!--
+        Date: 14 june 2016
+        Account manager settings names and other strings.
+    -->
+    <string name="account_manager_settings">Account manager</string>
+    <string name="openthos_id_settings_title">openthos ID</string>
+    <string name="email_address_summary">xxxx@xxx.com</string>
+    <string name="computer_username_settings_title">computer username</string>
+    <string name="computer_username_summary">John</string>
+    <string name="computer_name_settings_title">computer name</string>
+    <string name="computer_name_summary">John computer</string>
+    <string name="openthos_id">change the openthosId address</string>
+    <string name="computer_username_settings">computer username settings</string>
+    <string name="computer_name_settings">computer name settings</string>
+    <string name="change_computer_username">change computer username</string>
+    <string name="change_screen_password">change screen password</string>
+    <string name="change_computer_name">change computer name</string>
+    <string name="old_password">old password</string>
+    <string name="new_password">new password</string>
+    <string name="again_new_password">try again   </string>
 
 </resources>

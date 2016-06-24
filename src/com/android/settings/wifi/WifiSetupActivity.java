@@ -19,6 +19,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -98,6 +102,16 @@ public class WifiSetupActivity extends WifiPickerActivity
         mIsWifiRequired = intent.getBooleanExtra(EXTRA_IS_WIFI_REQUIRED, false);
         // Behave like the user already selected a network if we do not require selection
         mUserSelectedNetwork = !intent.getBooleanExtra(EXTRA_REQUIRE_USER_NETWORK_SELECTION, false);
+        //hide the status bar
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        //hide the status bar
+        final View view = getWindow().getDecorView();
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            }
+        });
     }
 
     @Override
@@ -170,12 +184,16 @@ public class WifiSetupActivity extends WifiPickerActivity
         super.onResume();
         registerReceiver(mReceiver, mFilter);
         refreshConnectionState();
+        //hide the status bar
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override
     public void onPause() {
         unregisterReceiver(mReceiver);
         super.onPause();
+        //hide the status bair
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override
@@ -229,7 +247,9 @@ public class WifiSetupActivity extends WifiPickerActivity
             // if there is none.
             final int message = isNetworkConnected() ? R.string.wifi_skipped_message :
                     R.string.wifi_and_mobile_skipped_message;
-            WifiSkipDialog.newInstance(message).show(getFragmentManager(), "dialog");
+            //WifiSkipDialog.newInstance(message).show(getFragmentManager(), "dialog");
+            finishOrNext(RESULT_SKIP);
+
         }
     }
 

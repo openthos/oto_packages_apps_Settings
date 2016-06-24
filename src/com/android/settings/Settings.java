@@ -110,5 +110,11 @@ public class Settings extends SettingsActivity {
 
     public static class TopLevelSettings extends SettingsActivity { /* empty */ }
     public static class ApnSettingsActivity extends SettingsActivity { /* empty */ }
+    /**
+     * Date: 14 June 2016
+     * Expand settings with Account manager settings.
+     */
+    public static class AccountManagerSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class OpenthosIDSettingsActivity extends SettingsActivity { /* empty */ }
 }
 
