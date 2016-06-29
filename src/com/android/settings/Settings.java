@@ -116,5 +116,10 @@ public class Settings extends SettingsActivity {
      */
     public static class AccountManagerSettingsActivity extends SettingsActivity { /* empty */ }
     public static class OpenthosIDSettingsActivity extends SettingsActivity { /* empty */ }
+    /**
+     * Date: 29 June 2016
+     * Expand settings with Ethernet settings.
+     */
+    public static class EthernetSettingsActivity extends SettingsActivity { /* empty */ }
 }
 

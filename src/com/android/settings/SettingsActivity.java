@@ -82,6 +82,7 @@ import com.android.settings.dashboard.NoHomeDialogFragment;
 import com.android.settings.dashboard.SearchResultsSummary;
 import com.android.settings.deviceinfo.Memory;
 import com.android.settings.deviceinfo.UsbSettings;
+import com.android.settings.ethernet.EthernetSettings;
 import com.android.settings.fuelgauge.BatterySaverSettings;
 import com.android.settings.fuelgauge.PowerUsageSummary;
 import com.android.settings.notification.NotificationAppList;
@@ -219,6 +220,11 @@ public class SettingsActivity extends Activity
             R.id.wireless_section,
             R.id.wifi_settings,
             R.id.bluetooth_settings,
+            /**
+             * Date: 29 June 2016
+             * Expand settings with Ethernet settings.
+             */
+            R.id.ethernet_settings,
             R.id.data_usage_settings,
             R.id.sim_settings,
             R.id.wireless_settings,
@@ -263,6 +269,11 @@ public class SettingsActivity extends Activity
             AdvancedWifiSettings.class.getName(),
             SavedAccessPointsWifiSettings.class.getName(),
             BluetoothSettings.class.getName(),
+            /**
+             * Date: 29 June 2016
+             * Expand settings with Ethernet settings.
+             */
+            EthernetSettings.class.getName(),
             SimSettings.class.getName(),
             TetherSettings.class.getName(),
             WifiP2pSettings.class.getName(),
