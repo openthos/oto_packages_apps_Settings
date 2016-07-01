@@ -21,11 +21,10 @@
     <Preference
         android:key="computer_username"
         android:title="@string/change_computer_username"
-        android:summary="@string/computer_username_settings_title"
+        android:summary="@string/computer_username_summary"
         android:persistent="false" />
     <Preference
         android:key="screen_password"
         android:title="@string/change_screen_password"
-        android:summary="@string/computer_username_summary"
         android:persistent="false" />
 </PreferenceScreen>

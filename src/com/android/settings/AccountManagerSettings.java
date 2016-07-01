@@ -23,6 +23,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.SystemProperties;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -34,6 +35,7 @@ import android.widget.EditText;
 
 import com.android.settings.accountmanager.OpenthosIDSettings;
 import com.android.settings.accountmanager.ComputerUserNameSettings;
+import com.android.emindsoft.tools.ChangeBuildPropTools;
 
 public class AccountManagerSettings extends SettingsPreferenceFragment implements
         Preference.OnPreferenceChangeListener , Preference.OnPreferenceClickListener{
@@ -44,10 +46,15 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
     private static final String KEY_OPENTHOS_ID_EMAIL = "openthos_id_email";
     private static final String KEY_COMPUTER_USERNAME = "computer_username";
     private static final String KEY_COMPUTER_NAME = "computer_name";
+    private static final String RO_PROPERTY_HOST = "ro.build.host";
+    private static final String RO_PROPERTY_USER = "ro.build.user";
     private PreferenceScreen mOpenthosID;
     private PreferenceScreen mComputerUserName;
     private PreferenceScreen mComputerName;
     private AlertDialog mDialog = null;
+    private String defaultComputerName;
+    private String computerName;
+    private String userName;
 
     private PreferenceGroup mAccountManagerSettings;
 
@@ -64,6 +71,12 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         mComputerUserName.setPersistent(true);
         mComputerName = (PreferenceScreen) findPreference(KEY_COMPUTER_NAME);
         mComputerName.setPersistent(true);
+
+        defaultComputerName = SystemProperties.get(RO_PROPERTY_HOST);
+        mComputerName.setSummary(defaultComputerName);
+
+        userName = SystemProperties.get(RO_PROPERTY_USER);
+        mComputerUserName.setSummary(userName);
 
         mComputerName.setOnPreferenceClickListener(this);
 
@@ -136,6 +149,11 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 String newComputerName = editTextPref.getText().toString();
+                //grant permission
+                ChangeBuildPropTools.exec("chmod -R 777  /system/build.prop");
+                ChangeBuildPropTools.setPropertyName(
+                           ChangeBuildPropTools.getPropertyName(RO_PROPERTY_HOST,newComputerName));
+                ChangeBuildPropTools.exec("chmod -R 644  /system/build.prop");
                 updateComputerName(newComputerName);
             }
         });

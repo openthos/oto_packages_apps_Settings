@@ -19,7 +19,9 @@ package com.android.settings.accountmanager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -71,7 +73,11 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
     @Override
     public boolean onPreferenceClick(final Preference pref) {
         if (pref == mOpenthosIDPref) {
-           // showChooseLanguageDialog();
+            Intent intent = new Intent();
+            intent.setAction("android.intent.action.VIEW");
+            Uri content_url = Uri.parse("http://www.baidu.com");
+            intent.setData(content_url);
+            startActivity(intent);
             return true;
         }
         return false;
@@ -79,73 +85,5 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
 
     private static int convertSubtypeIndexToDialogItemId(final int index) { return index + 1; }
     private static int convertDialogItemIdToSubtypeIndex(final int item) { return item - 1; }
-
-//    private void showChooseLanguageDialog() {
-//        if (mDialog != null && mDialog.isShowing()) {
-//            mDialog.dismiss();
-//        }
-//        final SpellCheckerInfo currentSci = mTsm.getCurrentSpellChecker();
-//        final SpellCheckerSubtype currentScs = mTsm.getCurrentSpellCheckerSubtype(
-//                false /* allowImplicitlySelectedSubtype */);
-//        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle(R.string.phone_language);
-//        final int subtypeCount = currentSci.getSubtypeCount();
-//        final CharSequence[] items = new CharSequence[subtypeCount + 1 /* default */ ];
-//        items[ITEM_ID_USE_SYSTEM_LANGUAGE] = getSpellCheckerSubtypeLabel(currentSci, null);
-//        int checkedItemId = ITEM_ID_USE_SYSTEM_LANGUAGE;
-//        for (int index = 0; index < subtypeCount; ++index) {
-//            final SpellCheckerSubtype subtype = currentSci.getSubtypeAt(index);
-//            final int itemId = convertSubtypeIndexToDialogItemId(index);
-//            items[itemId] = getSpellCheckerSubtypeLabel(currentSci, subtype);
-//            if (subtype.equals(currentScs)) {
-//                checkedItemId = itemId;
-//            }
-//        }
-//        builder.setSingleChoiceItems(items, checkedItemId, new AlertDialog.OnClickListener() {
-//            @Override
-//            public void onClick(final DialogInterface dialog, final int item) {
-//                if (item == ITEM_ID_USE_SYSTEM_LANGUAGE) {
-//                    mTsm.setSpellCheckerSubtype(null);
-//                } else {
-//                    final int index = convertDialogItemIdToSubtypeIndex(item);
-//                    mTsm.setSpellCheckerSubtype(currentSci.getSubtypeAt(index));
-//                }
-//                if (DBG) {
-//                    final SpellCheckerSubtype subtype = mTsm.getCurrentSpellCheckerSubtype(
-//                            true /* allowImplicitlySelectedSubtype */);
-//                    Log.d(TAG, "Current spell check locale is "
-//                            + subtype == null ? "null" : subtype.getLocale());
-//                }
-//                dialog.dismiss();
-//                updatePreferenceScreen();
-//            }
-//        });
-//        mDialog = builder.create();
-//        mDialog.show();
-//    }
-//
-//    private void showSecurityWarnDialog(final SpellCheckerPreference pref) {
-//        if (mDialog != null && mDialog.isShowing()) {
-//            mDialog.dismiss();
-//        }
-//        final SpellCheckerInfo sci = pref.getSpellCheckerInfo();
-//        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle(android.R.string.dialog_alert_title);
-//        builder.setMessage(getString(R.string.spellchecker_security_warning, pref.getTitle()));
-//        builder.setCancelable(true);
-//        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(final DialogInterface dialog, final int which) {
-//                changeCurrentSpellChecker(sci);
-//            }
-//        });
-//        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(final DialogInterface dialog, final int which) {
-//            }
-//        });
-//        mDialog = builder.create();
-//        mDialog.show();
-//    }
 
 }

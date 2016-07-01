@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
+import android.os.SystemProperties;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceScreen;
@@ -38,6 +39,7 @@ import com.android.settings.SettingsActivity;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.widget.SwitchBar;
 import com.android.settings.widget.SwitchBar.OnSwitchChangeListener;
+import com.android.emindsoft.tools.ChangeBuildPropTools;
 
 public class ComputerUserNameSettings extends SettingsPreferenceFragment
         implements OnPreferenceClickListener {
@@ -46,11 +48,13 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
 
     private static final String KEY_COMPUTER_USERNAME = "computer_username";
     private static final String KEY_SCREEN_PASSWORD = "screen_password";
+    private static final String RO_PROPERTY_USER = "ro.build.user";
 
     private Preference mComputerUserNamePref;
     private Preference mScreenPasswordPref;
     private AlertDialog mDialog = null;
     private TextServicesManager mTsm;
+    private String userName;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -60,6 +64,9 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
         mComputerUserNamePref.setOnPreferenceClickListener(this);
         mScreenPasswordPref = findPreference(KEY_SCREEN_PASSWORD);
         mScreenPasswordPref.setOnPreferenceClickListener(this);
+
+        userName = SystemProperties.get(RO_PROPERTY_USER);
+        mComputerUserNamePref.setSummary(userName);
 
     }
 
@@ -101,8 +108,13 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-                String newComputerName = editTextPref.getText().toString();
-                updateComputerUserName(newComputerName);
+                String newUserName = editTextPref.getText().toString().trim();
+                //grant permission
+                ChangeBuildPropTools.exec("chmod -R 777  /system/build.prop");
+                ChangeBuildPropTools.setPropertyName(
+                               ChangeBuildPropTools.getPropertyName(RO_PROPERTY_USER,newUserName));
+                ChangeBuildPropTools.exec("chmod -R 644  /system/build.prop");
+                updateComputerUserName(newUserName);
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
