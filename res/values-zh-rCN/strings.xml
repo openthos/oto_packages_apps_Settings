@@ -2516,4 +2516,53 @@
     <string name="imei_information_title" msgid="8499085421609752290">"IMEI信息"</string>
     <string name="imei_information_summary" msgid="2074095606556565233">"IMEI相关信息"</string>
     <string name="slot_number" msgid="3762676044904653577">"（插槽<xliff:g id="SLOT_NUM">%1$d</xliff:g>）"</string>
+    <!--
+      Date: 14 june 2016
+      Account manager settings names and other strings.
+   -->
+    <string name="account_manager_settings">系统账户管理</string>
+
+  <string name="openthos_id_settings_title">openthos ID</string>
+  <string name="email_address_summary">xxxx@xxx.com</string>
+  <string name="computer_username_settings_title">主机用户名设置</string>
+  <string name="computer_username_summary">John</string>
+  <string name="computer_name_settings_title">主机名 </string>
+  <string name="computer_name_summary">John的主机</string>
+  <string name="openthos_id">改变openthosId地址</string>
+
+  <string name="computer_username_settings">Setting username</string>
+  <string name="computer_name_settings">设置主机名</string>
+  <string name="change_computer_username">修改用户名</string>
+  <string name="change_screen_password">修改锁屏密码</string>
+  <string name="change_computer_name">修改主机名</string>
+
+  <string name="old_password">旧密码</string>
+  <string name="new_password">新密码</string>
+  <string name="again_new_password">再次输入   </string>
+  <!--
+      Date: 29 june 2016
+      Ethernet settings names and other strings.
+   -->
+  <string name="ethernet_settings">以太网</string>
+  <!-- Ethernet configuration dialog add by hcldyao-->
+  <string name="eth_config_title">配置以太网</string>
+  <string name="eth_setting">以太网</string>
+  <string name="eth_dev_list">以太网设备:</string>
+  <string name="eth_con_type">链接类型</string>
+  <string name="eth_con_type_dhcp">DHCP</string>
+  <string name="eth_con_type_manual">静态 IP</string>
+  <string name="eth_dns">DNS 地址</string>
+  <string name="eth_gw">网关 地址</string>
+  <string name="eth_ipaddr">IP 地址</string>
+  <string name="eth_quick_toggle_title">以太网</string>
+  <string name="eth_quick_toggle_summary">打开以太网</string>
+  <string name="eth_conf_perf_title">以太网配置</string>
+  <string name="eth_conf_summary">配置以太网设备</string>
+  <string name="eth_mask">子网掩码</string>
+  <string name="eth_toggle_summary_off">关闭以太网</string>
+  <string name="eth_toggle_summary_on">打开以太网</string>
+  <string name="eth_settings_error">错误揉效的字符 0~255</string>
+  <string name="eth_settings_empty">c不能为空</string>
+  <!-- Label for the Network prefix of the network [CHAR LIMIT=25]-->
+  <string name="eth_network_prefix_length">网络前缀长度</string>
 </resources>

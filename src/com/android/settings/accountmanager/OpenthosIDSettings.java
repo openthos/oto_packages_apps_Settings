@@ -75,7 +75,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
         if (pref == mOpenthosIDPref) {
             Intent intent = new Intent();
             intent.setAction("android.intent.action.VIEW");
-            Uri content_url = Uri.parse("http://www.baidu.com");
+            Uri content_url = Uri.parse("http://dev.openthos.org/?q=user/register");
             intent.setData(content_url);
             startActivity(intent);
             return true;
