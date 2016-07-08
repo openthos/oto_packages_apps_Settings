@@ -816,7 +816,13 @@
     <string name="auto_brightness_summary" msgid="1799041158760605375">"根据环境光线情况优化亮度"</string>
     <string name="screen_timeout" msgid="4351334843529712571">"休眠"</string>
     <string name="screen_timeout_title" msgid="5130038655092628247">"屏幕关闭"</string>
-    <string name="screen_timeout_summary" msgid="327761329263064327">"无操作<xliff:g id="TIMEOUT_DESCRIPTION">%1$s</xliff:g>后"</string>
+    <string name="screen_timeout_summary">设置休眠时间</string>
+    <string name="screen_timeout_settings_title">休眠</string>
+    <string name="screen_timeout_charging_summary">{v} 后睡眠</string>
+    <string name="screen_timeout_notcharging_summary">{v} 后睡眠</string>
+    <string name="screen_timeout_settings_fragment_title">"设置睡眠时间"</string>
+    <string name="Charging">接通电源时</string>
+    <string name="NotCharging">用电池时</string>
     <string name="wallpaper_settings_title" msgid="5449180116365824625">"壁纸"</string>
     <string name="wallpaper_settings_fragment_title" msgid="519078346877860129">"选择壁纸来源"</string>
     <string name="screensaver_settings_title" msgid="3349790120327233241">"互动屏保"</string>
@@ -2358,6 +2364,7 @@
     <string name="keywords_display_brightness_level" msgid="8923289340474728990">"变暗 调暗 屏幕 触摸屏 电池"</string>
     <string name="keywords_display_auto_brightness" msgid="8357056338746666901">"变暗 调暗 屏幕 触摸屏 电池"</string>
     <string name="keywords_display_wallpaper" msgid="6043033055096511751">"背景 墙纸 个性化 自定义 显示 显示屏"</string>
+    <string name="keywords_display_screen_timeout" msgid="6709007669501628320">"设置休眠时间"</string>
     <string name="keywords_display_font_size" msgid="3404655440064726124">"字体大小"</string>
     <string name="keywords_display_cast_screen" msgid="8887412173792143329">"投影 投射"</string>
     <string name="keywords_storage" msgid="6572905220031852173">"空间 磁盘 硬盘 设备 使用量 使用情况"</string>
