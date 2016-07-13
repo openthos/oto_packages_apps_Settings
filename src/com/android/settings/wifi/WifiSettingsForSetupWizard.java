@@ -16,6 +16,7 @@
 
 package com.android.settings.wifi;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
@@ -32,6 +33,7 @@ import android.widget.AbsListView.LayoutParams;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.net.wifi.WifiManager;
 
 import com.android.settings.R;
 
@@ -52,6 +54,7 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
     private ListAdapter mAdapter;
     private TextView mEmptyFooter;
     private boolean mListLastEmpty = false;
+    private WifiManager mWifiManager;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -61,6 +64,7 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
 
         final ListView list = (ListView) view.findViewById(android.R.id.list);
         final View title = view.findViewById(R.id.title);
+        mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         if (title == null) {
             final View header = inflater.inflate(R.layout.setup_wizard_header, list, false);
             list.addHeaderView(header, null, false);
@@ -115,10 +119,13 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
     }
 
     //@Override
-    /* package */// WifiEnabler createWifiEnabler() {
+    /* package */ WifiEnabler createWifiEnabler() {
         // Not shown during setup wizard
-        //return null;
-    //}
+        if(!mWifiManager.isWifiEnabled()){
+            mWifiManager.setWifiEnabled(true);
+        }
+        return null;
+    }
 
     @Override
     /* package */ void addOptionsMenuItems(Menu menu) {
