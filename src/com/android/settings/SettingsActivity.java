@@ -105,6 +105,7 @@ import com.android.settings.notification.NotificationStation;
 import com.android.settings.notification.ZenModeSettings;
 import com.android.settings.print.PrintJobSettingsFragment;
 import com.android.settings.print.PrintSettingsFragment;
+import com.android.settings.proxy.ProxySettings;
 import com.android.settings.sim.SimSettings;
 import com.android.settings.tts.TextToSpeechSettings;
 import com.android.settings.users.UserSettings;
@@ -225,6 +226,11 @@ public class SettingsActivity extends Activity
              * Expand settings with Ethernet settings.
              */
             R.id.ethernet_settings,
+            /**
+             * Date: 11 July 2016
+             * Expand settings with Proxy settings.
+            */
+            R.id.proxy_settings,
             R.id.data_usage_settings,
             R.id.sim_settings,
             R.id.wireless_settings,
@@ -274,6 +280,11 @@ public class SettingsActivity extends Activity
              * Expand settings with Ethernet settings.
              */
             EthernetSettings.class.getName(),
+            /**
+             * Date: 11 July 2016
+             * Expand settings with Proxy settings.
+            */
+            ProxySettings.class.getName(),
             SimSettings.class.getName(),
             TetherSettings.class.getName(),
             WifiP2pSettings.class.getName(),

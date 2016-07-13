@@ -2572,4 +2572,13 @@
   <string name="eth_settings_empty">c不能为空</string>
   <!-- Label for the Network prefix of the network [CHAR LIMIT=25]-->
   <string name="eth_network_prefix_length">网络前缀长度</string>
+  <!--
+        Date: 12 july 2016
+        Proxy settings names and other strings.
+     -->
+  <string name="proxy_server_address">Proxy server address</string>
+  <string name="proxy_post">端口</string>
+  <string name="proxy_settings">代理</string>
+  <string name="proxy_conf_perf_title">代理设置</string>
+  <string name="proxy_conf_summary">点击配置代理</string>
 </resources>

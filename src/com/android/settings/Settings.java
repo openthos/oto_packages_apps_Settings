@@ -121,5 +121,10 @@ public class Settings extends SettingsActivity {
      * Expand settings with Ethernet settings.
      */
     public static class EthernetSettingsActivity extends SettingsActivity { /* empty */ }
+    /**
+     * Date: 11 July 2016
+     * Expand settings with Proxy settings.
+     */
+    public static class ProxySettingsActivity extends SettingsActivity { /* empty */ }
 }
 

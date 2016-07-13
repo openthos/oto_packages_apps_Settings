@@ -50,6 +50,17 @@
             android:fragment="com.android.settings.ethernet.EthernetSettings"
             android:title="@string/ethernet_settings" />
 
+        <!--
+             Date: 11 July 2016
+             Expand Settings with proxy settings.
+        -->
+        <!-- proxy  -->
+        <dashboard-tile
+            android:id="@+id/proxy_settings"
+            android:icon="@drawable/ic_bt_misc_hid"
+            android:fragment="com.android.settings.proxy.ProxySettings"
+            android:title="@string/proxy_settings" />
+
         <!-- SIM Cards -->
         <dashboard-tile
                 android:id="@+id/sim_settings"
