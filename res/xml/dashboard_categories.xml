@@ -201,6 +201,20 @@
             android:fragment="com.android.settings.AutoStartSettings"
             android:icon="@drawable/ic_settings_nfc_payment"/>
 
+        <!--
+            Date: 7  July 2016
+            Copyright (C) 2016 OpenTHOS
+
+            Add Run Mode function by Engineer LittleTiger.
+        -->
+        <!-- run mode -->
+        <dashboard-tile
+            android:id="@+id/run_mode_settings"
+            android:title="@string/run_mode_settings"
+            android:fragment="com.android.settings.RunModeSettings"
+            android:icon="@drawable/ic_settings_run_mode"
+            />
+
     </dashboard-category>
 
     <!-- PERSONAL -->

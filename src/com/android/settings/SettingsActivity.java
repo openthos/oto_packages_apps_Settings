@@ -246,7 +246,7 @@ public class SettingsActivity extends Activity
             /**
              * Date: 14 June 2016
              * Expand settings with Account manager settings.
-            */
+             */
             R.id.account_manager_settings,
             R.id.display_settings,
             R.id.storage_settings,
@@ -258,11 +258,12 @@ public class SettingsActivity extends Activity
             R.id.security_settings,
             R.id.language_settings,
             R.id.user_settings,
-             /**
+            /**
              * Date: 5 July 2016
              * Expand settings with Account manager settings.
-            */
+             */
             R.id.auto_start_application,
+            R.id.run_mode_settings,
             R.id.account_settings,
             R.id.system_section,
             R.id.date_time_settings,
@@ -334,6 +335,7 @@ public class SettingsActivity extends Activity
             Memory.class.getName(),
             DevelopmentSettings.class.getName(),
             UsbSettings.class.getName(),
+            RunModeSettings.class.getName(),
             AndroidBeam.class.getName(),
             WifiDisplaySettings.class.getName(),
             PowerUsageSummary.class.getName(),

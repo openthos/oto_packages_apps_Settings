@@ -6152,5 +6152,10 @@
     <string name="energy_save_mode_balance">Balance</string>
     <string name="energy_save_mode_saving">Saving</string>
     <string name="energy_save_mode_efficient">Efficient</string>
+    <!--
+       Date: 15 july 2016
+       Run Mode saving mode settings names and other strings.
+    -->
+    <string name="run_mode_settings">Run Mode</string>
 
 </resources>
