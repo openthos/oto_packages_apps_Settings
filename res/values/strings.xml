@@ -6138,5 +6138,15 @@
     <string name="proxy_settings">proxy</string>
     <string name="proxy_conf_perf_title">proxy settings</string>
     <string name="proxy_conf_summary">click to config</string>
+    <!--
+       Date: 14 july 2016
+       Energy saving mode settings names and other strings.
+    -->
+    <string name="energy_saving_mode_title">Energy saving mode</string>
+    <string name="energy_saving_mode_summary">settings mode</string>
+    <string name="energy_save_mode">Energy saving mode</string>
+    <string name="energy_save_mode_balance">Balance</string>
+    <string name="energy_save_mode_saving">Saving</string>
+    <string name="energy_save_mode_efficient">Efficient</string>
 
 </resources>

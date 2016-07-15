@@ -2581,4 +2581,14 @@
   <string name="proxy_settings">代理</string>
   <string name="proxy_conf_perf_title">代理设置</string>
   <string name="proxy_conf_summary">点击配置代理</string>
+  <!--
+       Date: 14 july 2016
+       Energy saving mode settings names and other strings.
+    -->
+  <string name="energy_saving_mode_title">节能设置</string>
+  <string name="energy_saving_mode_summary">设置节能模式</string>
+  <string name="energy_save_mode">节能模式</string>
+  <string name="energy_save_mode_balance">平衡</string>
+  <string name="energy_save_mode_saving">节能</string>
+  <string name="energy_save_mode_efficient">高效</string>
 </resources>

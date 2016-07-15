@@ -40,6 +40,11 @@
                 android:fragment="com.android.settings.WallpaperTypeSettings" />
 
         <PreferenceScreen
+            android:key="energy_saving_mode"
+            android:title="@string/energy_saving_mode_title"
+            android:summary="@string/energy_saving_mode_summary" />
+
+        <PreferenceScreen
                 android:key="screen_timeout"
                 android:title="@string/screen_timeout"
                 android:summary="@string/screen_timeout_summary"
