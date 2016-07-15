@@ -15,14 +15,14 @@ public class AppViewHolder {
     public ApplicationsState.AppEntry entry;
     public View rootView;
     public TextView appName;
-    public ImageView appIcon;
+    public ImageView appIcon, appSwitch;
     public TextView appSize;
     public TextView disabled;
     public CheckBox checkBox;
 
     static public AppViewHolder createOrRecycle(LayoutInflater inflater, View convertView) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.manage_applications_item, null);
+            convertView = inflater.inflate(R.layout.autostart_applications_item, null);
 
             // Creates a ViewHolder and store references to the two children views
             // we want to bind data to.
@@ -33,6 +33,7 @@ public class AppViewHolder {
             holder.appSize = (TextView) convertView.findViewById(R.id.app_size);
             holder.disabled = (TextView) convertView.findViewById(R.id.app_disabled);
             holder.checkBox = (CheckBox) convertView.findViewById(R.id.app_on_sdcard);
+            holder.appSwitch = (ImageView)convertView.findViewById(R.id.app_switch);
             convertView.setTag(holder);
             return holder;
         } else {

@@ -88,15 +88,16 @@ public class ApplicationsState {
     
     public static class AppEntry extends SizeInfo {
         final File apkFile;
-        final long id;
-        String label;
+        public final long id;
+        public String label;
         long size;
         long internalSize;
         long externalSize;
+        public boolean isChecked = false;
 
         boolean mounted;
         
-        String getNormalizedLabel() {
+        public  String getNormalizedLabel() {
             if (normalizedLabel != null) {
                 return normalizedLabel;
             }
@@ -106,7 +107,7 @@ public class ApplicationsState {
 
         // Need to synchronize on 'this' for the following.
         ApplicationInfo info;
-        Drawable icon;
+        public  Drawable icon;
         String sizeStr;
         String internalSizeStr;
         String externalSizeStr;
@@ -414,7 +415,7 @@ public class ApplicationsState {
     static final Object sLock = new Object();
     static ApplicationsState sInstance;
 
-    static ApplicationsState getInstance(Application app) {
+    public  static ApplicationsState getInstance(Application app) {
         synchronized (sLock) {
             if (sInstance == null) {
                 sInstance = new ApplicationsState(app);
@@ -506,7 +507,7 @@ public class ApplicationsState {
         }
 
         // Creates a new list of app entries with the given filter and comparator.
-        ArrayList<AppEntry> rebuild(AppFilter filter, Comparator<AppEntry> comparator) {
+        public ArrayList<AppEntry> rebuild(AppFilter filter, Comparator<AppEntry> comparator) {
             synchronized (mRebuildSync) {
                 synchronized (mEntriesMap) {
                     mRebuildingSessions.add(this);
@@ -708,7 +709,7 @@ public class ApplicationsState {
         }
     }
     
-    void ensureIcon(AppEntry entry) {
+    public void ensureIcon(AppEntry entry) {
         if (entry.icon != null) {
             return;
         }

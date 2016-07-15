@@ -190,6 +190,16 @@
                 android:fragment="com.android.settings.WirelessSettings">
             <intent android:action="com.android.settings.MANUFACTURER_APPLICATION_SETTING" />
         </dashboard-tile>
+         <!--
+             Date: 5 July 2016
+             Expand Settings with auto start application.
+        -->
+        <!-- auto start -->
+        <dashboard-tile
+            android:id="@+id/auto_start_application"
+            android:title="@string/auto_start"
+            android:fragment="com.android.settings.AutoStartSettings"
+            android:icon="@drawable/ic_settings_nfc_payment"/>
 
     </dashboard-category>
 

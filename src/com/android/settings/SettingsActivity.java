@@ -258,6 +258,11 @@ public class SettingsActivity extends Activity
             R.id.security_settings,
             R.id.language_settings,
             R.id.user_settings,
+             /**
+             * Date: 5 July 2016
+             * Expand settings with Account manager settings.
+            */
+            R.id.auto_start_application,
             R.id.account_settings,
             R.id.system_section,
             R.id.date_time_settings,
@@ -338,6 +343,11 @@ public class SettingsActivity extends Activity
             DataUsageSummary.class.getName(),
             DreamSettings.class.getName(),
             UserSettings.class.getName(),
+            /**
+             * Date: 5 July 2016
+             * Expand settings with Account manager settings.
+            */
+            AutoStartSettings.class.getName(),
             NotificationAccessSettings.class.getName(),
             ConditionProviderSettings.class.getName(),
             PrintSettingsFragment.class.getName(),
