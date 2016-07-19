@@ -6157,5 +6157,13 @@
        Run Mode saving mode settings names and other strings.
     -->
     <string name="run_mode_settings">Run Mode</string>
+    <!--
+       Date: 19 july 2016
+       LockScreen settings names and other strings.
+    -->
+    <string name="screen_lock_time_title">Lock screen</string>
+    <string name="screen_lock_time_summary">Set lock screen time</string>
+    <string name="screen_lock_time_charging_summary">After {v} of inactivity</string>
+    <string name="screen_lock_time_notcharging_summary">After {v} of inactivity</string>
 
 </resources>

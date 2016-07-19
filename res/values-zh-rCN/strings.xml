@@ -2591,4 +2591,12 @@
   <string name="energy_save_mode_balance">平衡</string>
   <string name="energy_save_mode_saving">节能</string>
   <string name="energy_save_mode_efficient">高效</string>
+  <!--
+       Date: 19 july 2016
+       LockScreen settings names and other strings.
+    -->
+  <string name="screen_lock_time_title">锁屏</string>
+  <string name="screen_lock_time_summary">设置锁屏时间</string>
+  <string name="screen_lock_time_charging_summary">{v} 后锁屏</string>
+  <string name="screen_lock_time_notcharging_summary">{v} 后锁屏</string>
 </resources>
