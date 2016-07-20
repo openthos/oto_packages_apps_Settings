@@ -118,6 +118,8 @@ import com.android.settings.wifi.SavedAccessPointsWifiSettings;
 import com.android.settings.wifi.WifiSettings;
 import com.android.settings.wifi.p2p.WifiP2pSettings;
 import com.android.settings.CloudServiceFragment;
+import com.android.settings.SystemResetSetting;
+
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -274,7 +276,8 @@ public class SettingsActivity extends Activity
             R.id.nfc_payment_settings,
             R.id.home_settings,
             R.id.dashboard,
-            R.id.cloud_service
+            R.id.cloud_service,
+            R.id.system_reset
     };
 
     private static final String[] ENTRY_FRAGMENTS = {
@@ -370,7 +373,8 @@ public class SettingsActivity extends Activity
             OtherSoundSettings.class.getName(),
             QuickLaunchSettings.class.getName(),
             ApnSettings.class.getName(),
-            CloudServiceFragment.class.getName()
+            CloudServiceFragment.class.getName(),
+            SystemResetSetting.class.getName()
     };
 
 

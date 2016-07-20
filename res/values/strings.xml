@@ -6172,5 +6172,14 @@
     <string name="sync_memorandum">Memorandum</string>
     <string name="sync_photoalbum">Photo Album</string>
     <string name="cloud_service">Cloud Service</string>
-
+    <!--
+        name:system reset
+        author:wang zhixu
+        date:2016-07-20
+    -->
+    <string name="system_reset">System Reset</string>
+    <string name="system_reset_dialog_info">This will delete all media and data, and reset all settings. Do you want to continue?</string>
+    <string name="system_reset_info">System reset will erase all data, please backup in advance!</string>
+    <string name="system_reset_dialog_cancel">Cancel</string>
+    <string name="system_reset_dialog_continue">Continue</string>
 </resources>
