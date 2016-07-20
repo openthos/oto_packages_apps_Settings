@@ -6165,5 +6165,12 @@
     <string name="screen_lock_time_summary">Set lock screen time</string>
     <string name="screen_lock_time_charging_summary">After {v} of inactivity</string>
     <string name="screen_lock_time_notcharging_summary">After {v} of inactivity</string>
+    <!-- cloudservice-->
+    <string name="sync_contact">Contacts</string>
+    <string name="sync_email">Emails</string>
+    <string name="sync_calendar">Calendar</string>
+    <string name="sync_memorandum">Memorandum</string>
+    <string name="sync_photoalbum">Photo Album</string>
+    <string name="cloud_service">Cloud Service</string>
 
 </resources>

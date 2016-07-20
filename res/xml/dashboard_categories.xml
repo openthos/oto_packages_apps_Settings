@@ -328,6 +328,13 @@
                 android:fragment="com.android.settings.DeviceInfoSettings"
                 android:icon="@drawable/ic_settings_about"
                 />
+        <!-- About Cloud -->
+        <dashboard-tile
+                android:id="@+id/cloud_service"
+                android:title="@string/cloud_service"
+                android:fragment="com.android.settings.CloudServiceFragment"
+                android:icon="@drawable/ico_cloud"
+                />
 
     </dashboard-category>
 

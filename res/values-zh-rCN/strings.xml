@@ -2599,4 +2599,10 @@
   <string name="screen_lock_time_summary">设置锁屏时间</string>
   <string name="screen_lock_time_charging_summary">{v} 后锁屏</string>
   <string name="screen_lock_time_notcharging_summary">{v} 后锁屏</string>
+  <!--cloud service-->
+  <string name="sync_contact">通讯录</string>
+  <string name="sync_email">邮箱</string>
+  <string name="sync_calendar">日历</string>
+  <string name="sync_memorandum">备忘录</string>
+  <string name="sync_photoalbum">相册</string>
 </resources>
