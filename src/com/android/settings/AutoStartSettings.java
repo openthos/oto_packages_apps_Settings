@@ -66,7 +66,7 @@ public class AutoStartSettings extends Fragment implements ApplicationsState.Cal
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       View mRootView = inflater.inflate(R.layout.manage_applications_apps_1, container, false);
+       View mRootView = inflater.inflate(R.layout.autostart_applications_apps, container, false);
        mListContainer = mRootView.findViewById(R.id.list_container);
        if (mListContainer != null) {
            // Create adapter and list view here
@@ -138,7 +138,7 @@ public class AutoStartSettings extends Fragment implements ApplicationsState.Cal
 
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
-            mHolder = AppViewHolder.createOrRecycle(inflater, view);
+            mHolder = AppViewHolder.autoStartHolder(inflater, view);
             view = mHolder.rootView;
             // Bind the data efficiently with the mHolder
             ApplicationsState.AppEntry entry = mEntries.get(i);
@@ -160,7 +160,7 @@ public class AutoStartSettings extends Fragment implements ApplicationsState.Cal
 
             if (!entry.isChecked) {
                 mHolder.appSwitch.setSelected(false);
-            } else {
+            } else if (entry.isChecked) {
                 mHolder.appSwitch.setSelected(true);
             }
             return view;

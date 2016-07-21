@@ -94,6 +94,7 @@ public class ApplicationsState {
         long internalSize;
         long externalSize;
         public boolean isChecked = false;
+        public boolean runModeIsChecked = false;
 
         boolean mounted;
         

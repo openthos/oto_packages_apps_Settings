@@ -64,7 +64,7 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View mRootView = inflater.inflate(R.layout.run_mode, container, false);
+        View mRootView = inflater.inflate(R.layout.runmode_applications_apps, container, false);
         mListContainer = mRootView.findViewById(R.id.list_container);
         if (mListContainer != null) {
             // Create adapter and list view here
@@ -136,7 +136,7 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
 
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
-            mHolder = AppViewHolder.createOrRecycle(inflater, view);
+            mHolder = AppViewHolder.autoStartHolder(inflater, view);
             view = mHolder.rootView;
 
             // Bind the data efficiently with the mHolder
@@ -153,14 +153,14 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
 
                     public void onClick(View v ) {
                         v.setSelected(!v.isSelected());
-                        mEntries.get(i).isChecked=!mEntries.get(i).isChecked;
+                        mEntries.get(i).runModeIsChecked=!mEntries.get(i).runModeIsChecked;
                     }
                 });
             }
 
-            if (!entry.isChecked) {
+            if (!entry.runModeIsChecked) {
                 mHolder.appSwitch.setSelected(false);
-            } else {
+            } else if (entry.runModeIsChecked) {
                 mHolder.appSwitch.setSelected(true);
             }
             return view;

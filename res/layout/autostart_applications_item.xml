@@ -23,7 +23,8 @@
     android:orientation="horizontal"
     >
     <GridLayout
-        android:layout_width="550dp"
+        android:layout_weight="5"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/listPreferredItemHeight"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
@@ -79,9 +80,12 @@
             android:ellipsize="marquee" />
      </GridLayout>
      <ImageView
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
         android:id="@+id/app_switch"
-        android:layout_width="50sp"
-        android:layout_height="40sp"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
         android:src="@drawable/autostart_selector"
         />
 </LinearLayout>
