@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.opengl.GLES20;
@@ -37,11 +38,13 @@ import javax.microedition.khronos.egl.EGLSurface;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.os.SELinux;
 import android.os.SystemClock;
 import android.os.SystemProperties;
+import android.os.StatFs;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.preference.Preference;
@@ -57,6 +60,7 @@ import com.android.settings.search.Index;
 import com.android.settings.search.Indexable;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -94,6 +98,12 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
     private static final String KEY_DEVICE_FEEDBACK = "device_feedback";
     private static final String KEY_SAFETY_LEGAL = "safetylegal";
     private static final String KEY_DEVICE_MANUFACTURER = "device_manufacturer";
+    private static final String KEY_STATUS_INFO = "status_info";
+    private static final String KEY_OPENTHOS_VERSION = "openthos_version";
+    private static final String KEY_BROWSER_VERSION = "browser_version";
+    private static final String KEY_CPU_INFO = "cpu_info";
+    private static final String KEY_MEMORY_INFO = "memory_info";
+    private static final String KEY_HARD_DISK_INFO = "hard_disk_info";
 
     static final int TAPS_TO_BE_A_DEVELOPER = 7;
 
@@ -194,6 +204,12 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
             setStringSummary(KEY_SELINUX_STATUS, status);
         }
 
+        //set the browser/cpu/memory/harddisk info
+        setStringSummary(KEY_CPU_INFO, Build.CPU_ABI);
+        setStringSummary(KEY_BROWSER_VERSION, getBrowserVersion());
+        setStringSummary(KEY_MEMORY_INFO, getTotalMemory());
+        setStringSummary(KEY_HARD_DISK_INFO, getHardDiskMemory());
+
         // Remove selinux information if property is not present
         removePreferenceIfPropertyMissing(getPreferenceScreen(), KEY_SELINUX_STATUS,
                 PROPERTY_SELINUX_STATUS);
@@ -207,14 +223,29 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
                 PROPERTY_EQUIPMENT_ID);
 
         // Remove Baseband version if wifi-only device
-        if (Utils.isWifiOnly(getActivity())) {
+        //if (Utils.isWifiOnly(getActivity())) {
             getPreferenceScreen().removePreference(findPreference(KEY_BASEBAND_VERSION));
-        }
+        //}
 
         // Dont show feedback option if there is no reporter.
-        if (TextUtils.isEmpty(getFeedbackReporterPackage(getActivity()))) {
+        //if (TextUtils.isEmpty(getFeedbackReporterPackage(getActivity()))) {
             getPreferenceScreen().removePreference(findPreference(KEY_DEVICE_FEEDBACK));
-        }
+        //}
+
+        // Do not show status info
+        getPreferenceScreen().removePreference(findPreference(KEY_STATUS_INFO));
+
+        //Do not show android security patch level
+        getPreferenceScreen().removePreference(findPreference(KEY_SECURITY_PATCH));
+
+        //Do not show openGL driver version
+        getPreferenceScreen().removePreference(findPreference(KEY_OPENGL_VERSION));
+
+        //Do not show build number
+        getPreferenceScreen().removePreference(findPreference(KEY_BUILD_NUMBER));
+
+        //Do not show device manufacturer
+        getPreferenceScreen().removePreference(findPreference(KEY_DEVICE_MANUFACTURER));
 
         /*
          * Settings is a generic app and should not contain any device-specific
@@ -571,6 +602,61 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
                 return false;
             }
         };
+
+        //get the total memory
+    private String getTotalMemory()
+    {
+        String str1 = "/proc/meminfo";
+        String str2;
+        String[] arrayOfString;
+        long initial_memory = 0;
+        try
+        {
+            FileReader localFileReader = new FileReader(str1);
+            BufferedReader localBufferedReader = new BufferedReader(localFileReader, 8192);
+            str2 = localBufferedReader.readLine();
+
+            arrayOfString = str2.split("\\s+");
+            //for (String num : arrayOfString)
+            //{
+            //    Log.i(str2, num + "\t");
+            //}
+
+            initial_memory = Integer.valueOf(arrayOfString[1]).intValue();
+            localBufferedReader.close();
+
+        }
+        catch (IOException e)
+        {
+        }
+        return initial_memory / 1024 / 1024 + "G";
+    }
+
+    //get the hard disk memroy
+    private String getHardDiskMemory()
+    {
+        File root = Environment.getRootDirectory();
+        StatFs sf = new StatFs(root.getPath());
+        long blockSize = sf.getBlockSize();
+        long availCount = sf.getAvailableBlocks();
+        return (availCount * blockSize) / 1024 / 1024 / 1024 + "G";
+    }
+
+    //get the browser version
+    private String getBrowserVersion(){
+        PackageInfo pi = null;
+        try {
+            PackageManager pm = getActivity().getPackageManager();
+            pi = pm.getPackageInfo("com.android.browser",
+                    PackageManager.GET_CONFIGURATIONS);
+
+            return pi.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pi.versionName;
+    }
 
 }
 

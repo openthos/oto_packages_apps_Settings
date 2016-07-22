@@ -2614,5 +2614,19 @@
   <string name="system_reset_dialog_info">这将删除所有媒体和数据，并还原所有设置。是否继续？</string>
   <string name="system_reset_info">系统重置将清除所有的数据，请提前做好备份！</string>
   <string name="system_reset_dialog_cancel">取消</string>
-  <string name="system_reset_dialog_continue">继续</string>
+  <string name="system_reset_dialog_continue">继</string>
+  <!--
+           Date: 21 july 2016
+           About settings names and other strings.
+        -->
+  <string name="openthos_version_title">Openthos版本</string>
+  <string name="openthos_version_default">未知</string>
+  <string name="browser_title">浏览器版本</string>
+  <string name="browser_version_default">未知</string>
+  <string name="cpu_info_title">CPU</string>
+  <string name="cpu_info_default">未知</string>
+  <string name="memory_info_title">内存</string>
+  <string name="memory_info_default">未知</string>
+  <string name="hard_disk_info_title">硬盘</string>
+  <string name="hard_disk_info_default">未知</string>
 </resources>

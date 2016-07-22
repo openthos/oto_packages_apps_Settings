@@ -6182,4 +6182,18 @@
     <string name="system_reset_info">System reset will erase all data, please backup in advance!</string>
     <string name="system_reset_dialog_cancel">Cancel</string>
     <string name="system_reset_dialog_continue">Continue</string>
+    <!--
+           Date: 21 july 2016
+           About settings names and other strings.
+        -->
+    <string name="openthos_version_title">Openthos version</string>
+    <string name="openthos_version_default">Unknown</string>
+    <string name="browser_title">Browser version</string>
+    <string name="browser_version_default">Unknown</string>
+    <string name="cpu_info_title">CPU</string>
+    <string name="cpu_info_default">Unknown</string>
+    <string name="memory_info_title">Memory</string>
+    <string name="memory_info_default">Unknown</string>
+    <string name="hard_disk_info_title">Hard disk</string>
+    <string name="hard_disk_info_default">Unknown</string>
 </resources>

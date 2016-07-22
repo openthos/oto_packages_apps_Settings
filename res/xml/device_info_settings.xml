@@ -158,4 +158,35 @@
                 android:title="@string/selinux_status"
                 android:summary="@string/selinux_status_enforcing"/>
 
+        <!-- add some new itme-->
+        <!-- openthos version -->
+        <Preference android:key="openthos_version"
+            style="?android:preferenceInformationStyle"
+            android:title="@string/openthos_version_title"
+            android:summary="@string/openthos_version_default"/>
+
+        <!--browser version-->
+        <Preference android:key="browser_version"
+            style="?android:preferenceInformationStyle"
+            android:title="@string/browser_title"
+            android:summary="@string/browser_version_default"/>
+
+        <!-- CPU info -->
+        <Preference android:key="cpu_info"
+            style="?android:preferenceInformationStyle"
+            android:title="@string/cpu_info_title"
+            android:summary="@string/cpu_info_default"/>
+
+        <!-- memory -->
+        <Preference android:key="memory_info"
+            style="?android:preferenceInformationStyle"
+            android:title="@string/memory_info_title"
+            android:summary="@string/memory_info_default"/>
+
+        <!-- hard disk -->
+        <Preference android:key="hard_disk_info"
+            style="?android:preferenceInformationStyle"
+            android:title="@string/hard_disk_info_title"
+            android:summary="@string/hard_disk_info_default"/>
+
 </PreferenceScreen>
