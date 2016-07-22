@@ -67,7 +67,7 @@ public class AppViewHolder {
 
     }
 
-    static public AppViewHolder fireWallHolder(LayoutInflater inflater, View convertView) {
+    /*static public AppViewHolder fireWallHolder(LayoutInflater inflater, View convertView) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.firewall_applications_item, null);
 
@@ -87,7 +87,7 @@ public class AppViewHolder {
             // and the ImageView.
             return (AppViewHolder)convertView.getTag();
         }
-    }
+    }*/
 
     void updateSizeText(CharSequence invalidSizeStr, int whichSize) {
         if (ManageApplications.DEBUG) Log.i(ManageApplications.TAG, "updateSizeText of " + entry.label + " " + entry
