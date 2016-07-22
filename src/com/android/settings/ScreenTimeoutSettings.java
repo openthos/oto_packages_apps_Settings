@@ -24,8 +24,8 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
         mSharedPreferences = getActivity().getSharedPreferences("charge", Context.MODE_PRIVATE);
         mCharging = (ListPreference)findPreference("screen_timeout_charging");
         mNotCharging = (ListPreference)findPreference("screen_timeout_notcharging");
-        int chargeTime = mSharedPreferences.getInt("charging", 1);
-        int noChargeTime = mSharedPreferences.getInt("nocharging", 0);
+        int chargeTime = mSharedPreferences.getInt("charging", 6);
+        int noChargeTime = mSharedPreferences.getInt("nocharging", 6);
         if (isCharging()) {
             Settings.System.putInt(getContentResolver(),
                                    android.provider.Settings.System.SCREEN_OFF_TIMEOUT,
@@ -36,7 +36,9 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
                                    mTimes[noChargeTime]);
         }
         mCharging.setSummary(getEnt(mTimes[chargeTime]));
+        mCharging.setValue(String.valueOf( mTimes[chargeTime]));
         mNotCharging.setSummary(getEnt(mTimes[noChargeTime]));
+        mNotCharging.setValue(String.valueOf( mTimes[noChargeTime]));
 
         mCharging.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override

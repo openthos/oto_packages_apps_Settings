@@ -22,7 +22,7 @@
             android:persistent="false"
             android:entries="@array/screen_timeout_entries"
             android:entryValues="@array/screen_timeout_values"
-            android:defaultValue="30000"
+            android:defaultValue="1800000"
             android:summary="@string/screen_timeout_charging_summary"/>
 
         <ListPreference
@@ -31,7 +31,7 @@
             android:persistent="false"
             android:entries="@array/screen_timeout_entries"
             android:entryValues="@array/screen_timeout_values"
-            android:defaultValue="15000"
+            android:defaultValue="1800000"
             android:summary="@string/screen_timeout_notcharging_summary"/>
 
 </PreferenceScreen>
