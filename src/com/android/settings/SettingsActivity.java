@@ -118,6 +118,7 @@ import com.android.settings.wifi.SavedAccessPointsWifiSettings;
 import com.android.settings.wifi.WifiSettings;
 import com.android.settings.wifi.p2p.WifiP2pSettings;
 import com.android.settings.CloudServiceFragment;
+import com.android.settings.FireWallSettings;
 import com.android.settings.SystemResetSetting;
 
 
@@ -277,7 +278,12 @@ public class SettingsActivity extends Activity
             R.id.home_settings,
             R.id.dashboard,
             R.id.cloud_service,
-            R.id.system_reset
+            R.id.system_reset,
+            /**
+             * Date: 20 July 2016
+             * Expand settings with Account manager settings.
+             */
+            R.id.firewall_settings
     };
 
     private static final String[] ENTRY_FRAGMENTS = {
@@ -374,7 +380,12 @@ public class SettingsActivity extends Activity
             QuickLaunchSettings.class.getName(),
             ApnSettings.class.getName(),
             CloudServiceFragment.class.getName(),
-            SystemResetSetting.class.getName()
+            SystemResetSetting.class.getName(),
+            /**
+             * Date: 20 July 2016
+             * Expand settings with Account manager settings.
+             */
+            FireWallSettings.class.getName()
     };
 
 

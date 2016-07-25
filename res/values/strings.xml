@@ -4461,6 +4461,13 @@
     <!-- Dialog title for confirmation to erase backup data from server -->
     <string name="backup_erase_dialog_message">Stop backing up your Wi\u2011Fi passwords, bookmarks, other settings, and app data, plus erase all copies on Google servers?</string>
 
+    <!-- FireWall Settings screen --><skip />
+    <!-- FireWall settings menu title -->
+    <string name="firewall_settings">FireWall</string>
+    <string name="available_net_applist">会接入网络的应用列表</string>
+    <string name="out_communicate">出站通信</string>
+    <string name="in_communicate">入站通信</string>
+
     <!-- Device admin settings screen --><skip />
     <!-- Device admin settings activity title -->
     <string name="device_admin_settings_title">Device administration settings</string>

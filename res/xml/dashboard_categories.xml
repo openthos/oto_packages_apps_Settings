@@ -274,6 +274,14 @@
                 android:icon="@drawable/ic_settings_backup"
                 />
 
+        <!-- Firewall -->
+        <dashboard-tile
+                android:id="@+id/firewall_settings"
+                android:title="@string/firewall_settings"
+                android:fragment="com.android.settings.FireWallSettings"
+                android:icon="@drawable/ic_settings_dock"
+                />
+
     </dashboard-category>
 
     <!-- SYSTEM -->

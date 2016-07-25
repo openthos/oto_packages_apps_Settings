@@ -95,7 +95,8 @@ public class ApplicationsState {
         long externalSize;
         public boolean isChecked = false;
         public boolean runModeIsChecked = false;
-
+        public boolean inNetLicenseChecked=false;
+        public boolean outNetLicenseChecked=false;
         boolean mounted;
         
         public  String getNormalizedLabel() {

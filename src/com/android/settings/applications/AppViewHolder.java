@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Switch;
 
 // View Holder used when displaying views
 public class AppViewHolder {
@@ -19,6 +20,8 @@ public class AppViewHolder {
     public TextView appSize;
     public TextView disabled;
     public CheckBox checkBox;
+    public Switch inNetLicenseSwitch;
+    public Switch outNetLicenseSwitch;
 
     static public AppViewHolder createOrRecycle(LayoutInflater inflater, View convertView) {
         if (convertView == null) {
@@ -67,7 +70,7 @@ public class AppViewHolder {
 
     }
 
-    /*static public AppViewHolder fireWallHolder(LayoutInflater inflater, View convertView) {
+    static public AppViewHolder fireWallHolder(LayoutInflater inflater, View convertView) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.firewall_applications_item, null);
 
@@ -80,6 +83,9 @@ public class AppViewHolder {
             holder.appSize = (TextView) convertView.findViewById(R.id.app_size);
             holder.disabled = (TextView) convertView.findViewById(R.id.app_disabled);
             holder.checkBox = (CheckBox) convertView.findViewById(R.id.app_on_sdcard);
+            holder.inNetLicenseSwitch = (Switch) convertView.findViewById(R.id.app_in_net_license);
+            holder.outNetLicenseSwitch = (Switch) convertView.findViewById(
+                                                                  R.id.app_out_net_license);
             convertView.setTag(holder);
             return holder;
         } else {
@@ -87,7 +93,7 @@ public class AppViewHolder {
             // and the ImageView.
             return (AppViewHolder)convertView.getTag();
         }
-    }*/
+    }
 
     void updateSizeText(CharSequence invalidSizeStr, int whichSize) {
         if (ManageApplications.DEBUG) Log.i(ManageApplications.TAG, "updateSizeText of " + entry.label + " " + entry
