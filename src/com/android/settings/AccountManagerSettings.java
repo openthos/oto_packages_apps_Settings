@@ -35,7 +35,7 @@ import android.widget.EditText;
 
 import com.android.settings.accountmanager.OpenthosIDSettings;
 import com.android.settings.accountmanager.ComputerUserNameSettings;
-import com.android.emindsoft.tools.ChangeBuildPropTools;
+import com.android.otosoft.tools.ChangeBuildPropTools;
 
 public class AccountManagerSettings extends SettingsPreferenceFragment implements
         Preference.OnPreferenceChangeListener , Preference.OnPreferenceClickListener{

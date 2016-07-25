@@ -39,7 +39,7 @@ import com.android.settings.SettingsActivity;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.widget.SwitchBar;
 import com.android.settings.widget.SwitchBar.OnSwitchChangeListener;
-import com.android.emindsoft.tools.ChangeBuildPropTools;
+import com.android.otosoft.tools.ChangeBuildPropTools;
 
 public class ComputerUserNameSettings extends SettingsPreferenceFragment
         implements OnPreferenceClickListener {
