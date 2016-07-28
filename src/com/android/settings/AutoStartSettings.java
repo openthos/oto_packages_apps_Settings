@@ -17,9 +17,15 @@
 package com.android.settings;
 
 import android.app.Fragment;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,18 +39,21 @@ import com.android.settings.applications.ApplicationsState.*;
 import com.android.settings.applications.ApplicationsState.AppEntry;
 import com.android.settings.applications.ManageApplications.*;
 
+import java.io.DataOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class AutoStartSettings extends Fragment implements ApplicationsState.Callbacks {
-    private ApplicationsState mApplicationsState;
-    private ApplicationsState.Session mSession;
     private AppViewHolder mHolder;
     private View mLoadingContainer;
     private View mListContainer;
     private ListView mListView;
-    private ArrayList<ApplicationsState.AppEntry> mBaseEntries;
-    private ArrayList<ApplicationsState.AppEntry> mEntries;
-    CharSequence mCurFilterPrefix;
+    private PackageManager mPackageManager;
+    private Intent intent;
+    private ArrayList<HashMap<String, Object>> appList;
+    private List<ResolveInfo> allowInfoList;
+    private List<ResolveInfo> forbidInfoList;
 
     @Override
     public void onRunningStateChanged(boolean running){};
@@ -66,104 +75,237 @@ public class AutoStartSettings extends Fragment implements ApplicationsState.Cal
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       View mRootView = inflater.inflate(R.layout.autostart_applications_apps, container, false);
-       mListContainer = mRootView.findViewById(R.id.list_container);
-       if (mListContainer != null) {
-           // Create adapter and list view here
-           View emptyView = mListContainer.findViewById(com.android.internal.R.id.empty);
-           ListView lv = (ListView) mListContainer.findViewById(android.R.id.list);
-           if (emptyView != null) {
-               lv.setEmptyView(emptyView);
-           }
-           mListView = lv;
-           mApplicationsState = ApplicationsState.getInstance(getActivity().getApplication());
-           mSession=mApplicationsState.newSession(this);
-           mSession.resume();
-           ArrayList<ApplicationsState.AppEntry> entries
-                                            = mSession.rebuild(ApplicationsState.ALL_ENABLED_FILTER,
-                                                               ApplicationsState.SIZE_COMPARATOR);
-           mBaseEntries = entries;
-           if (mBaseEntries != null) {
-               mEntries = applyPrefixFilter(mCurFilterPrefix, mBaseEntries);
-           } else {
-               mEntries = null;
-           }
-           MyAdapter adapter=new MyAdapter(getActivity());
-           mListView.setAdapter(adapter);
+        View mRootView = inflater.inflate(R.layout.autostart_applications_apps, container, false);
+        mListContainer = mRootView.findViewById(R.id.list_container);
+        mPackageManager = getActivity().getPackageManager();
+        if (mListContainer != null) {
+            // Create adapter and list view here
+            View emptyView = mListContainer.findViewById(com.android.internal.R.id.empty);
+            mListView = (ListView) mListContainer.findViewById(android.R.id.list);
+            if (emptyView != null) {
+                mListView.setEmptyView(emptyView);
+            }
+            appList = new ArrayList<HashMap<String, Object>>();
+            updateAppList();
+            /*
+             * if (mBaseEntries != null) { mEntries =
+             * applyPrefixFilter(mCurFilterPrefix, mBaseEntries); } else {
+             * mEntries = null; }
+             */
+            MyAdapter adapter = new MyAdapter(getActivity());
+            mListView.setAdapter(adapter);
         }
         return mRootView;
     }
 
-    ArrayList<ApplicationsState.AppEntry> applyPrefixFilter(CharSequence prefix,
-                                              ArrayList<ApplicationsState.AppEntry> origEntries) {
-        if (prefix == null || prefix.length() == 0) {
-            return origEntries;
-        } else {
-            String prefixStr = ApplicationsState.normalize(prefix.toString());
-            final String spacePrefixStr = " " + prefixStr;
-            ArrayList<ApplicationsState.AppEntry> newEntries
-                    = new ArrayList<ApplicationsState.AppEntry>();
-            for (int i=0; i<origEntries.size(); i++) {
-                ApplicationsState.AppEntry entry = origEntries.get(i);
-                //repair
-                String nlabel = entry.getNormalizedLabel();
-                if (nlabel.startsWith(prefixStr) || nlabel.indexOf(spacePrefixStr) != -1) {
-                    newEntries.add(entry);
+    public void updateAppList() {
+        intent = new Intent(Intent.ACTION_BOOT_COMPLETED);
+        allowInfoList = mPackageManager.queryBroadcastReceivers(intent,
+                                                                PackageManager.GET_RECEIVERS);
+        int k = 0;
+        while (k < allowInfoList.size()) {
+            if (((allowInfoList.get(k).activityInfo.applicationInfo.flags
+                                                             & ApplicationInfo.FLAG_SYSTEM) == 1)
+                || ((allowInfoList.get(k).activityInfo.applicationInfo.flags
+                                               & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 1)) {
+                allowInfoList.remove(k);
+            } else {
+                k++;
+            }
+        }
+        String appName = null;
+        String packageReceiver = null;
+        Object icon = null;
+        if (allowInfoList.size() > 0) {
+            appName = mPackageManager.getApplicationLabel(allowInfoList.get(0)
+                                                        .activityInfo.applicationInfo).toString();
+            packageReceiver = allowInfoList.get(0).activityInfo.packageName + "/"
+                                + allowInfoList.get(0).activityInfo.name;
+            icon = mPackageManager.getApplicationIcon(allowInfoList
+                                                          .get(0).activityInfo.applicationInfo);
+            for (int i = 1; i < allowInfoList.size(); i++) {
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                if (appName.equals(mPackageManager.getApplicationLabel(allowInfoList
+                                            .get(i).activityInfo.applicationInfo).toString())) {
+                    packageReceiver = packageReceiver + ";"
+                                      + allowInfoList.get(i).activityInfo.packageName
+                                      + "/" + allowInfoList.get(i).activityInfo.name;
+                } else {
+                    map.put("icon", icon);
+                    map.put("appName", appName);
+                    map.put("packageReceiver", packageReceiver);
+                    map.put("isChecked", true);
+                    appList.add(map);
+                    packageReceiver = allowInfoList.get(i).activityInfo.packageName + "/"
+                            + allowInfoList.get(i).activityInfo.name;
+                    appName = mPackageManager.getApplicationLabel(allowInfoList.get(i)
+                                                        .activityInfo.applicationInfo).toString();
+                    icon = mPackageManager.getApplicationIcon(allowInfoList.
+                                                             get(i).activityInfo.applicationInfo);
                 }
             }
-            return newEntries;
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("icon", icon);
+            map.put("appName", appName);
+            map.put("packageReceiver", packageReceiver);
+            map.put("isChecked", true);
+            appList.add(map);
         }
+
+        forbidInfoList = mPackageManager.queryBroadcastReceivers(intent,
+                                                          PackageManager.GET_DISABLED_COMPONENTS);
+        k = 0;
+        while (k < forbidInfoList.size()) {
+            if (((forbidInfoList.get(k).activityInfo.applicationInfo.flags
+                                                         & ApplicationInfo.FLAG_SYSTEM) == 1)
+                || ((forbidInfoList.get(k).activityInfo.applicationInfo.flags
+                                                & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 1)) {
+                forbidInfoList.remove(k);
+            } else {
+                k++;
+            }
+        }
+
+        k = 0;
+        while (k < forbidInfoList.size()) {
+            ComponentName mComponentName = new ComponentName(forbidInfoList
+                                                                .get(k).activityInfo.packageName,
+                                                         forbidInfoList.get(k).activityInfo.name);
+            if (mPackageManager.getComponentEnabledSetting(mComponentName) != 2) {
+               forbidInfoList.remove(k);
+            } else {
+                k++;
+            }
+        }
+
+        if (forbidInfoList.size() > 0) {
+            appName = mPackageManager.getApplicationLabel(forbidInfoList
+                                          .get(0).activityInfo.applicationInfo).toString();
+            packageReceiver = forbidInfoList.get(0).activityInfo.packageName + "/"
+                              + forbidInfoList.get(0).activityInfo.name;
+            icon = mPackageManager.getApplicationIcon(forbidInfoList
+                                                          .get(0).activityInfo.applicationInfo);
+            for (int i = 1; i < forbidInfoList.size(); i++) {
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                if (appName.equals(mPackageManager.getApplicationLabel(forbidInfoList.get(i)
+                                                      .activityInfo.applicationInfo).toString())) {
+                    packageReceiver = packageReceiver + ";"
+                                      + forbidInfoList.get(i).activityInfo.packageName + "/"
+                                      + forbidInfoList.get(i).activityInfo.name;
+                } else {
+                    map.put("icon", icon);
+                    map.put("appName", appName);
+                    map.put("packageReceiver", packageReceiver);
+                    map.put("isChecked", false);
+                    appList.add(map);
+                    packageReceiver = forbidInfoList.get(i).activityInfo.packageName + "/"
+                            + forbidInfoList.get(i).activityInfo.name;
+                    appName = mPackageManager.getApplicationLabel(forbidInfoList.get(i)
+                                                  .activityInfo.applicationInfo).toString();
+                    icon = mPackageManager.getApplicationIcon(forbidInfoList
+                                                  .get(i).activityInfo.applicationInfo);
+                }
+            }
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("icon", icon);
+            map.put("appName", appName);
+            map.put("packageReceiver", packageReceiver);
+            map.put("isChecked", false);
+            appList.add(map);
+        }
+
     }
 
     class MyAdapter extends BaseAdapter {
         private LayoutInflater inflater;
+
         public MyAdapter(Context context){
             inflater = LayoutInflater.from(context);
         }
 
         @Override
         public int getCount() {
-            return mEntries != null ? mEntries.size() : 0;
+            return appList != null ? appList.size() : 0;
         }
 
         @Override
         public Object getItem(int i) {
-            return mEntries.get(i);
+            return appList.get(i);
         }
 
         @Override
         public long getItemId(int i) {
-            return mEntries.get(i).id;
+            return i;
         }
 
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
             mHolder = AppViewHolder.autoStartHolder(inflater, view);
             view = mHolder.rootView;
-            // Bind the data efficiently with the mHolder
-            ApplicationsState.AppEntry entry = mEntries.get(i);
-            Log.i("1542",""+mEntries.get(i).label);
-            mHolder.entry = entry;
-            if (entry.label != null) {
-                mHolder.appName.setText(entry.label);
-            }
-            mApplicationsState.ensureIcon(entry);
-            if (entry.icon != null) {
-            mHolder.appIcon.setImageDrawable(entry.icon);
-            mHolder.appSwitch.setOnClickListener(new android.view.View.OnClickListener() {
-                  public void onClick(View v) {
-                          v.setSelected(!v.isSelected());
-                          mEntries.get(i).isChecked = !mEntries.get(i).isChecked;
-                      }
-                  });
-            }
-
-            if (!entry.isChecked) {
+            mHolder.appName.setText(appList.get(i).get("appName").toString());
+            mHolder.appIcon.setImageDrawable((Drawable) appList.get(i).get("icon"));
+            if (!(appList.get(i).get("isChecked") == true)) {
                 mHolder.appSwitch.setSelected(false);
-            } else if (entry.isChecked) {
+            } else if (appList.get(i).get("isChecked") == true) {
                 mHolder.appSwitch.setSelected(true);
             }
+            mHolder.appSwitch.setOnClickListener(new android.view.View.OnClickListener() {
+                public void onClick(View v) {
+                    v.setSelected(!v.isSelected());
+                    appList.get(i).put("isChecked", !(Boolean) (appList.get(i).get("isChecked")));
+                    changeAutoStartState(appList.get(i));
+                }
+            });
             return view;
         }
+
+        public void changeAutoStartState(final HashMap<String, Object> hashMap) {
+            new Thread() {
+                public void run() {
+                    String cmd;
+                    if (!(Boolean) hashMap.get("isChecked")) {
+                         String[] packageReceiverList = hashMap.get("packageReceiver")
+                                                                    .toString().split(";");
+                         for (int j = 0; j < packageReceiverList.length; j++) {
+                             cmd = "pm disable " + packageReceiverList[j];
+                             cmd = cmd.replace("$", "\"" + "$" + "\"");
+                             execCmd(cmd);
+                         }
+                    } else {
+                         String[] packageReceiverList = hashMap.get("packageReceiver")
+                                                                    .toString().split(";");
+                         for (int j = 0; j < packageReceiverList.length; j++) {
+                             cmd = "pm enable " + packageReceiverList[j];
+                             cmd = cmd.replace("$", "\"" + "$" + "\"");
+                             execCmd(cmd);
+                         }
+                    }
+                }
+            }.start();
+        }
+    }
+
+    public static boolean execCmd(String cmd) {
+        Process process = null;
+        DataOutputStream os = null;
+        try {
+            process = Runtime.getRuntime().exec("su");
+            os = new DataOutputStream(process.getOutputStream());
+            os.writeBytes(cmd + "\n");
+            os.writeBytes("exit\n");
+            os.flush();
+            process.waitFor();
+        } catch (Exception e) {
+            return false;
+        } finally {
+            try {
+                if (os != null) {
+                    os.close();
+                }
+                process.destroy();
+            } catch (Exception e) {
+            }
+        }
+        return true;
     }
 }
