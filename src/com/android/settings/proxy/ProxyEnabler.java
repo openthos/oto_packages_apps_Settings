@@ -51,10 +51,12 @@ public class ProxyEnabler implements SwitchBar.OnSwitchChangeListener {
     private Context mContext;
     private SwitchBar mSwitchBar;
     private boolean mListeningToOnSwitchChange = false;
+    private View mView;
 
-    public ProxyEnabler(Context context, SwitchBar switchBar) {
+    public ProxyEnabler(Context context, SwitchBar switchBar, View view) {
         mContext = context;
         mSwitchBar = switchBar;
+        mView = view;
         setupSwitchBar();
     }
 
@@ -92,6 +94,10 @@ public class ProxyEnabler implements SwitchBar.OnSwitchChangeListener {
 
     @Override
     public void onSwitchChanged(Switch switchView, boolean isChecked) {
-
+       if (switchView.isChecked()) {
+           mView.setVisibility(View.VISIBLE);
+        } else {
+           mView.setVisibility(View.INVISIBLE);
+        }
     }
 }

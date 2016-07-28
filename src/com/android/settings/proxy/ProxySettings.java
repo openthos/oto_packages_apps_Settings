@@ -37,6 +37,7 @@ import android.provider.Settings.SettingNotFoundException;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.preference.CheckBoxPreference;
 
@@ -47,29 +48,18 @@ import com.android.settings.widget.SwitchBar;
 import com.android.settings.SettingsActivity;
 import android.widget.Switch;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.net.EthernetManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.util.Slog;
-import android.widget.Toast;
-import android.os.Looper;
 
-public class ProxySettings extends SettingsPreferenceFragment implements
-        Preference.OnPreferenceChangeListener{
-    private static final String TAG = "ProxySettings";
-    private static final String KEY_PROXY_INTERFACE = "proxy_interface";
+public class ProxySettings extends SettingsPreferenceFragment{
     private ProxyEnabler mProxyEnabler;
-    private Preference mProxyPref;
-    private AlertDialog mDialog = null;
-    private ConnectivityManager mCM;
+    private View mRootView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.proxy_settings);
-        final PreferenceScreen preferenceScreen = getPreferenceScreen();
-        mProxyPref = preferenceScreen.findPreference(KEY_PROXY_INTERFACE);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mRootView = inflater.inflate(R.layout.proxy_settings,container, false);
+        return mRootView;
     }
 
     @Override
@@ -107,47 +97,7 @@ public class ProxySettings extends SettingsPreferenceFragment implements
     /* package */
     ProxyEnabler createProxyEnabler() {
         final SettingsActivity activity = (SettingsActivity) getActivity();
-        return new ProxyEnabler(activity, activity.getSwitchBar());
+        return new ProxyEnabler(activity, activity.getSwitchBar(), mRootView);
     }
 
-    public boolean onPreferenceChange(Preference preference, Object objValue) {
-        return true;
-    }
-
-    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-        if (preference == mProxyPref) {
-            final SettingsActivity activity = (SettingsActivity) getActivity();
-            if (activity.getSwitchBar().isChecked()) {
-                showProxyDialog();
-            } else {
-                Toast.makeText(getActivity(), "please turn on proxy", Toast.LENGTH_LONG).show();
-            }
-        }
-        return false;
-    }
-
-    private void showProxyDialog() {
-        if (mDialog != null && mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        final View proxyDialog = layoutInflater.inflate(R.layout.proxy_dialog, null);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.proxy_settings);
-        builder.setView(proxyDialog);
-        builder.setCancelable(true);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-
-            }
-        });
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-            }
-        });
-        mDialog = builder.create();
-        mDialog.show();
-    }
 }
