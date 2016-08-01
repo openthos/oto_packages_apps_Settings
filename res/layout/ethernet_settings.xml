@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ethernet_linearl"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="invisible" >
+
+    <View
+        android:layout_weight=".5"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
+    <RelativeLayout
+        android:layout_weight="5"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" >
+        <TextView
+            android:id="@+id/tv_config_ethernet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eth_config_title"
+            android:textColor="#000000"
+            android:textSize="25sp" />
+        <TextView
+            android:id="@+id/tv_connect_type"
+            android:layout_below="@+id/tv_config_ethernet"
+            android:layout_alignLeft="@+id/tv_config_ethernet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eth_con_type" />
+        <RadioGroup
+            android:id="@+id/rg_select"
+            android:layout_below="@+id/tv_connect_type"
+            android:layout_alignLeft="@+id/tv_connect_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <RadioButton
+                android:id="@+id/btn_dhcp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eth_con_type_dhcp" />
+            <RadioButton
+                android:id="@+id/btn_staticip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eth_con_type_manual" />
+        </RadioGroup>
+        <TextView
+            android:id="@+id/tv_ipaddress"
+            android:layout_below="@+id/rg_select"
+            android:layout_alignLeft="@+id/rg_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eth_ipaddr" />
+        <EditText
+            android:id="@+id/ed_ipaddress"
+            android:layout_below="@+id/tv_ipaddress"
+            android:layout_alignLeft="@+id/tv_ipaddress"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_network"
+            android:layout_below="@+id/ed_ipaddress"
+            android:layout_alignLeft="@+id/ed_ipaddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eth_network_prefix_length" />
+        <EditText
+            android:id="@+id/ed_network"
+            android:layout_below="@+id/tv_network"
+            android:layout_alignLeft="@+id/tv_network"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_dns_address"
+            android:layout_below="@+id/ed_network"
+            android:layout_alignLeft="@+id/ed_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eth_dns" />
+        <EditText
+            android:id="@+id/ed_dns_address"
+            android:layout_below="@+id/tv_dns_address"
+            android:layout_alignLeft="@+id/tv_dns_address"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="40dp"
+            android:layout_marginRight="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:id="@+id/tv_discard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eth_select_discard"
+                android:layout_marginRight="25sp" />
+            <TextView
+                android:id="@+id/tv_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eth_select_save" />
+        </LinearLayout>
+    </RelativeLayout>
+    <View
+        android:layout_weight=".5"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
+</LinearLayout>

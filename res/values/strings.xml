@@ -6127,6 +6127,8 @@
     <string name="eth_con_type_dhcp">DHCP</string>
     <string name="eth_con_type_manual">Static IP</string>
     <string name="eth_dns">DNS address</string>
+    <string name="eth_select_discard">DISCARD</string>
+    <string name="eth_select_save">SAVE</string>
     <string name="eth_gw">Gateway address</string>
     <string name="eth_ipaddr">IP address</string>
     <string name="eth_quick_toggle_title">Ethernet</string>

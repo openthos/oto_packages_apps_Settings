@@ -53,14 +53,17 @@ public class EthernetEnabler implements SwitchBar.OnSwitchChangeListener {
     private boolean mListeningToOnSwitchChange = false;
     private EthernetDialog mEthDialog = null;
     private EthernetManager mEthManager;
+    private View view;
     public void setConfigDialog(EthernetDialog Dialog) {
         mEthDialog = Dialog;
     }
 
-    public EthernetEnabler(Context context, SwitchBar switchBar,EthernetManager ethernetManager) {
+    public EthernetEnabler(Context context, SwitchBar switchBar,EthernetManager ethernetManager,
+                           View view) {
         mContext = context;
         mSwitchBar = switchBar;
         mEthManager = ethernetManager;
+        this.view = view;
         setupSwitchBar();
     }
 
@@ -108,7 +111,9 @@ public class EthernetEnabler implements SwitchBar.OnSwitchChangeListener {
         if(isChecked) {
             //if(mEthDialog != null)
                 //mEthDialog.show();
+            view.setVisibility(View.VISIBLE);
         } else if(mEthManager != null) {
+            view.setVisibility(View.INVISIBLE);
             mEthManager.stop();
         }
 
