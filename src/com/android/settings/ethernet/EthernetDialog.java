@@ -48,7 +48,8 @@ import android.widget.Toast;
 import android.net.EthernetManager;
 import android.provider.Settings;
 
-class EthernetDialog extends AlertDialog implements DialogInterface.OnClickListener, DialogInterface.OnShowListener,
+public class EthernetDialog extends AlertDialog implements DialogInterface.OnClickListener,
+        DialogInterface.OnShowListener,
         DialogInterface.OnDismissListener{
     private final String TAG = "EthConfDialog";
     private static final boolean localLOGV = false;

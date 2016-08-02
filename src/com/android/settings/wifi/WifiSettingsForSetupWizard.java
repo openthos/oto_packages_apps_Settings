@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.net.wifi.WifiConfiguration;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,8 +34,12 @@ import android.widget.AbsListView.LayoutParams;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.net.EthernetManager;
+import android.provider.Settings;
 
+import com.android.settings.ethernet.EthernetDialog;
 import com.android.settings.R;
 
 /**
@@ -47,7 +52,7 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
 
     private static final String TAG = "WifiSettingsForSetupWizard";
 
-    // show a text regarding data charges when wifi connection is required during setup wizard
+    // show a text regarding dat charges when wifi connection is required during setup wizard
     protected static final String EXTRA_SHOW_WIFI_REQUIRED_INFO = "wifi_show_wifi_required_info";
 
     private View mAddOtherNetworkItem;
@@ -55,20 +60,43 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
     private TextView mEmptyFooter;
     private boolean mListLastEmpty = false;
     private WifiManager mWifiManager;
+    private TextView mEthernetState;
+    private EthernetDialog mEthDialog = null;
+    private ConnectivityManager mCM;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.setup_preference, container, false);
+        final View view = inflater.inflate(R.layout.setup_preference1, container, false);
 
         final ListView list = (ListView) view.findViewById(android.R.id.list);
         final View title = view.findViewById(R.id.title);
+        mEthernetState = (TextView) view.findViewById(R.id.ethernet_info);
         mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         if (title == null) {
             final View header = inflater.inflate(R.layout.setup_wizard_header, list, false);
             list.addHeaderView(header, null, false);
         }
+
+        mCM = (ConnectivityManager)getActivity().getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+        mEthDialog = new EthernetDialog(getActivity(),(EthernetManager)
+                                        getSystemService(Context.ETHERNET_SERVICE),mCM);
+        boolean enable = isEthernet(mCM);
+        if (enable) {
+            mEthernetState.setText(getText(R.string.network_is_available));
+        } else {
+            mEthernetState.setText(getText(R.string.network_is_not_available));
+        }
+
+        mEthernetState.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mEthDialog != null)
+                    mEthDialog.show();
+            }
+        });
 
         mAddOtherNetworkItem = inflater.inflate(R.layout.setup_wifi_add_network, list, false);
         list.addFooterView(mAddOtherNetworkItem, null, true);
@@ -125,6 +153,15 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
             mWifiManager.setWifiEnabled(true);
         }
         return null;
+    }
+
+   public static boolean isEthernet(ConnectivityManager cm) {
+        NetworkInfo networkINfo = cm.getActiveNetworkInfo();
+        if (networkINfo != null
+                && networkINfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
+            return true;
+        }
+        return false;
     }
 
     @Override

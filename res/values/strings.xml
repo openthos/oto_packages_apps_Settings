@@ -6212,4 +6212,14 @@
     <string name="memory_info_default">Unknown</string>
     <string name="hard_disk_info_title">Hard disk</string>
     <string name="hard_disk_info_default">Unknown</string>
+
+    <string name="wifi_info_title">Wifi</string>
+    <string name="ethernet_info_title">Ethernet</string>
+    <string name="setup_back">Back</string>
+    <string name="setup_next">Next</string>
+    <string name="setup_skip">Skip</string>
+    <string name="setup_network_title">setting your optnethos</string>
+    <string name="setup_network_setting">network settings</string>
+    <string name="network_is_available">the ethernet is available</string>
+    <string name="network_is_not_available">the ethernet is not available</string>
 </resources>

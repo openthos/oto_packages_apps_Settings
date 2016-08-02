@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (c) 2014 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/firstboot_bg">
+    <LinearLayout
+            android:layout_width="800dp"
+            android:layout_height="550dp"
+            android:layout_gravity="center"
+            android:gravity ="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:background="#056f00"
+                android:textColor="#ffffff"
+                android:textSize="12sp"
+                android:paddingLeft="20dp"
+                android:gravity ="center_vertical"
+                android:text="@string/setup_network_title"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:textColor="#ffffff"
+                android:textSize="28sp"
+                android:background="#259b24"
+                android:gravity ="center_vertical"
+                android:paddingLeft="72dp"
+                android:text="@string/setup_network_setting"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="188dp"
+                android:background="@drawable/setup_wizard_card_bg"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="72dp"
+                    android:text="@string/wifi_info_title"/>
+
+                <TextView
+                    android:id="@+id/wifi_required_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:text="@string/wifi_required_info_text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:visibility="gone"/>
+
+                <ListView
+                    android:id="@android:id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="152dp"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:clipToPadding="false"
+                    android:drawSelectorOnTop="false"
+                    android:headerDividersEnabled="false"
+                    android:scrollbarAlwaysDrawVerticalTrack="true" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ethernet_setting"
+                android:layout_width="match_parent"
+                android:layout_height="205dp"
+                android:background="@drawable/setup_wizard_card_bg"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:paddingLeft="72dp"
+                    android:gravity ="center_vertical"
+                    android:text="@string/ethernet_info_title" />
+
+                <TextView
+                    android:id="@+id/ethernet_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:paddingLeft="72dp"
+                    android:gravity ="center_vertical"
+                    android:text="@string/ethernet_settings" />
+
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#888888"/>
+
+           <fragment android:name="com.android.setupwizard.navigationbar.SetupWizardNavBar"
+            android:id="@+id/navigation_bar"
+            style="@style/setup_wizard_navbar_style" />
+
+    </LinearLayout>
+
+</FrameLayout>
