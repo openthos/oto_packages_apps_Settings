@@ -2599,6 +2599,14 @@
   <string name="energy_save_mode_saving">节能</string>
   <string name="energy_save_mode_efficient">高效</string>
   <!--
+       Date: 15 july 2016
+       Run Mode saving mode settings names and other strings.
+    -->
+  <string name="run_mode_settings">运行模式</string>
+  <string name="run_mode_auto">自动选择</string>
+  <string name="run_mode_phone">手机模式</string>
+  <string name="run_mode_desktop">桌面模式</string>
+  <!--
        Date: 19 july 2016
        LockScreen settings names and other strings.
     -->

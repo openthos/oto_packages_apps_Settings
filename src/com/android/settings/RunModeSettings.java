@@ -136,7 +136,7 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
 
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
-            mHolder = AppViewHolder.autoStartHolder(inflater, view);
+            mHolder = AppViewHolder.runModeHolder(inflater, view);
             view = mHolder.rootView;
 
             // Bind the data efficiently with the mHolder
@@ -149,19 +149,6 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
             mApplicationsState.ensureIcon(entry);
             if (entry.icon != null) {
                 mHolder.appIcon.setImageDrawable(entry.icon);
-                mHolder.appSwitch.setOnClickListener(new android.view.View.OnClickListener() {
-
-                    public void onClick(View v ) {
-                        v.setSelected(!v.isSelected());
-                        mEntries.get(i).runModeIsChecked=!mEntries.get(i).runModeIsChecked;
-                    }
-                });
-            }
-
-            if (!entry.runModeIsChecked) {
-                mHolder.appSwitch.setSelected(false);
-            } else if (entry.runModeIsChecked) {
-                mHolder.appSwitch.setSelected(true);
             }
             return view;
         }

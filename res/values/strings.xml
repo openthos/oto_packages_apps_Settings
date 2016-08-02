@@ -6173,6 +6173,9 @@
        Run Mode saving mode settings names and other strings.
     -->
     <string name="run_mode_settings">Run Mode</string>
+    <string name="run_mode_auto">AUTO</string>
+    <string name="run_mode_phone">PHONE</string>
+    <string name="run_mode_desktop">DESKTOP</string>
     <!--
        Date: 19 july 2016
        LockScreen settings names and other strings.
