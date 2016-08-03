@@ -6225,4 +6225,5 @@
     <string name="setup_network_setting">network settings</string>
     <string name="network_is_available">the ethernet is available</string>
     <string name="network_is_not_available">the ethernet is not available</string>
+    <string name="ethernet_card">Network card</string>
 </resources>

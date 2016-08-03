@@ -2664,4 +2664,5 @@
   <string name="auto_start">自启管理</string>
   <string name="eth_select_discard">放弃</string>
   <string name="eth_select_save">保存</string>
+  <string name="ethernet_card">网卡１</string>
 </resources>
