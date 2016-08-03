@@ -2654,4 +2654,14 @@
   <string name="setup_network_setting">网络设置</string>
   <string name="network_is_available">以太网可用</string>
   <string name="network_is_not_available">以太网不可用</string>
+  <!--
+          Date: 03 Aug 2016
+          About settings names and other strings.
+  -->
+  <!-- Jabol settings screen heading -->
+  <string name="jabol_settings">单窗口管理</string>
+  <string name="tieto_multiwindow_title">禁用叠拓多窗口</string>
+  <string name="auto_start">自启管理</string>
+  <string name="eth_select_discard">放弃</string>
+  <string name="eth_select_save">保存</string>
 </resources>
