@@ -4464,9 +4464,9 @@
     <!-- FireWall Settings screen --><skip />
     <!-- FireWall settings menu title -->
     <string name="firewall_settings">FireWall</string>
-    <string name="available_net_applist">会接入网络的应用列表</string>
-    <string name="out_communicate">出站通信</string>
-    <string name="in_communicate">入站通信</string>
+    <string name="available_net_applist">Application NetWork</string>
+    <string name="out_communicate">Out Communication</string>
+    <string name="in_communicate">In Communication</string>
 
     <!-- Device admin settings screen --><skip />
     <!-- Device admin settings activity title -->

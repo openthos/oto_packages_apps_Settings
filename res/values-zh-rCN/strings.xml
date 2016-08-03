@@ -2620,6 +2620,7 @@
   <string name="sync_calendar">日历</string>
   <string name="sync_memorandum">备忘录</string>
   <string name="sync_photoalbum">相册</string>
+  <string name="cloud_service">云服务</string>
   <!--
        name:system reset
        author:wang zhixu
@@ -2665,4 +2666,12 @@
   <string name="eth_select_discard">放弃</string>
   <string name="eth_select_save">保存</string>
   <string name="ethernet_card">网卡１</string>
+  <!--
+       FireWall
+  -->
+  <string name="firewall_settings">防火墙</string>
+  <string name="available_net_applist">应用网络</string>
+  <string name="out_communicate">出站通信</string>
+  <string name="in_communicate">进站通信</string>
+
 </resources>
