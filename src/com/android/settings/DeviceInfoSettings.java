@@ -17,9 +17,12 @@
 package com.android.settings;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -40,6 +43,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcel;
+import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.SELinux;
 import android.os.SystemClock;
@@ -69,12 +73,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DeviceInfoSettings extends SettingsPreferenceFragment implements Indexable {
+public class DeviceInfoSettings extends SettingsPreferenceFragment implements
+       Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, Indexable {
 
     private static final String LOG_TAG = "DeviceInfoSettings";
     private static final String FILENAME_PROC_VERSION = "/proc/version";
     private static final String FILENAME_MSV = "/sys/board_properties/soc/msv";
 
+    private static final String KEY_SYSTEM_RESET = "system_reset";
     private static final String KEY_CONTAINER = "container";
     private static final String KEY_REGULATORY_INFO = "regulatory_info";
     private static final String KEY_TERMS = "terms";
@@ -111,11 +117,15 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
     int mDevHitCountdown;
     Toast mDevHitToast;
 
+    private PreferenceScreen mSystemReset;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         addPreferencesFromResource(R.xml.device_info_settings);
+        mSystemReset = (PreferenceScreen) findPreference(KEY_SYSTEM_RESET);
+        mSystemReset.setOnPreferenceClickListener(this);
 
         // Create an EGL Context
         // References:
@@ -298,6 +308,15 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
     }
 
     @Override
+    public boolean onPreferenceClick(Preference pref) {
+        if (pref == mSystemReset) {
+            showDialog();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         if (preference.getKey().equals(KEY_FIRMWARE_VERSION)) {
             System.arraycopy(mHits, 1, mHits, 0, mHits.length-1);
@@ -358,6 +377,11 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
             sendFeedback();
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        return true;
     }
 
     private void removePreferenceIfPropertyMissing(PreferenceGroup preferenceGroup,
@@ -656,6 +680,43 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         }
 
         return pi.versionName;
+    }
+
+    private void showDialog() {
+        AlertDialog.Builder builder=new Builder(getActivity());
+        builder.setMessage(getActivity().getResources().
+                           getString(R.string.system_reset_dialog_info));
+        builder.setPositiveButton(getActivity().
+                                  getResources().getString(R.string.system_reset_dialog_continue),
+                                  new android.content.DialogInterface.OnClickListener() {
+                                      public void onClick(DialogInterface dialog, int which) {
+                                          try {
+                                              File doc=new File("/data");
+                                              File file =new File(doc, "rec_reset");
+                                              file.createNewFile();
+                                              reset();
+                                          } catch (Exception e) {
+                                              // TODO: handle exception
+                                          }
+                                      }
+                                  });
+        builder.setNegativeButton(getActivity().
+                                  getResources().getString(R.string.system_reset_dialog_cancel),
+                                  new android.content.DialogInterface.OnClickListener() {
+                                      public void onClick(DialogInterface dialog, int which) {
+                                          dialog.cancel();
+                                      }
+                                  });
+        builder.show();
+    }
+
+    private void reset() {
+        //Intent iReboot = new Intent(Intent.ACTION_REBOOT);
+        //iReboot.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //getActivity().startActivity(iReboot);
+        PowerManager pm = (PowerManager)getActivity().getApplicationContext().
+                                                 getSystemService(Context.POWER_SERVICE);
+        pm.reboot(null);
     }
 
 }

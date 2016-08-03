@@ -345,13 +345,6 @@
                 android:fragment="com.android.settings.CloudServiceFragment"
                 android:icon="@drawable/ico_cloud"
                 />
-        <!-- About System Reset -->
-        <dashboard-tile
-                android:id="@+id/system_reset"
-                android:title="@string/system_reset"
-                android:fragment="com.android.settings.SystemResetSetting"
-                android:icon="@drawable/ic_system_reset"
-                />
 
     </dashboard-category>
 
