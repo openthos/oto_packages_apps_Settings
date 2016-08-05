@@ -47,7 +47,8 @@ import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.android.settings.SettingsPreferenceFragment;
-import com.android.settings.R;import android.net.LinkAddress;
+import com.android.settings.R;
+import android.net.LinkAddress;
 import com.android.settings.widget.SwitchBar;
 import com.android.settings.SettingsActivity;
 import android.widget.Switch;
@@ -151,14 +152,14 @@ public class EthernetSettings extends SettingsPreferenceFragment {
         mDiscard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handle_saveconf();
+
             }
         });
 
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                handle_saveconf();
             }
         });
         UpdateInfo();

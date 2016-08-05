@@ -125,6 +125,13 @@
                 android:id="@+id/tv_proxy_restore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:paddingRight="6dp"
+                android:paddingLeft="6dp"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
+                android:textColor="#000000"
+                android:background="@drawable/click_color"
                 android:text="@string/proxy_settings_restore"
                 android:layout_marginRight="30sp"/>
 
@@ -132,6 +139,13 @@
                 android:id="@+id/tv_proxy_reset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:paddingRight="6dp"
+                android:paddingLeft="6dp"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
+                android:textColor="#000000"
+                android:background="@drawable/click_color"
                 android:text="@string/proxy_settings_reset"/>
         </LinearLayout>
     </RelativeLayout>
