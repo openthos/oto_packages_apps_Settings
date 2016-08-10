@@ -72,6 +72,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.File;
+import java.text.DecimalFormat;
+import java.lang.Math;
+import java.io.InputStreamReader;
 
 public class DeviceInfoSettings extends SettingsPreferenceFragment implements
        Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, Indexable {
@@ -215,7 +219,7 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         }
 
         //set the browser/cpu/memory/harddisk info
-        setStringSummary(KEY_CPU_INFO, Build.CPU_ABI);
+        setStringSummary(KEY_CPU_INFO,getCpuInfo());
         setStringSummary(KEY_BROWSER_VERSION, getBrowserVersion());
         setStringSummary(KEY_MEMORY_INFO, getTotalMemory());
         setStringSummary(KEY_HARD_DISK_INFO, getHardDiskMemory());
@@ -249,7 +253,7 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         getPreferenceScreen().removePreference(findPreference(KEY_SECURITY_PATCH));
 
         //Do not show openGL driver version
-        getPreferenceScreen().removePreference(findPreference(KEY_OPENGL_VERSION));
+        //getPreferenceScreen().removePreference(findPreference(KEY_OPENGL_VERSION));
 
         //Do not show build number
         getPreferenceScreen().removePreference(findPreference(KEY_BUILD_NUMBER));
@@ -633,7 +637,7 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         String str1 = "/proc/meminfo";
         String str2;
         String[] arrayOfString;
-        long initial_memory = 0;
+        double initial_memory = 0d;
         try
         {
             FileReader localFileReader = new FileReader(str1);
@@ -653,7 +657,7 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         catch (IOException e)
         {
         }
-        return initial_memory / 1024 / 1024 + "G";
+        return Math.ceil(initial_memory / 1024 / 1024) + "G";
     }
 
     //get the hard disk memroy
@@ -666,6 +670,31 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         return (availCount * blockSize) / 1024 / 1024 / 1024 + "G";
     }
 
+    //get CPU Information
+    private String getCpuInfo() {
+        String command="cat /proc/cpuinfo";
+        Process pro;
+        String line = null;
+        int count = 0;
+        String strInfo = "";
+        Runtime r = Runtime.getRuntime();
+        BufferedReader in = null;
+        try {
+            pro = r.exec(command);
+            in = new BufferedReader(new InputStreamReader(pro.getInputStream()));
+            while((line=in.readLine())!=null) {
+                count++;
+                if(count == 5) {
+                    //get location
+                    int location = line.indexOf(':');
+                    strInfo="CPU  " + line.substring(location + 2, line.length() - 1);
+                }
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        return strInfo;
+    }
     //get the browser version
     private String getBrowserVersion(){
         PackageInfo pi = null;
