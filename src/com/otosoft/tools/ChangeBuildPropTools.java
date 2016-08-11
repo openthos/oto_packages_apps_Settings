@@ -84,4 +84,27 @@ public class ChangeBuildPropTools {
             e.printStackTrace();
         }
     }
+
+    public static String getPropertyValue(String key){
+        try {
+            File file = new File("/system/build.prop");
+            InputStream in = new FileInputStream(file);
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+            BufferedReader buff = new BufferedReader(inputStreamReader);
+            String result = "";
+            String line = null;
+            while ((line = buff.readLine()) != null) {
+                Log.e(TAG,"line:" + line);
+                if (line.startsWith(key)) {
+                    result = line.substring(line.indexOf("=") + 1, line.length());
+                    break;
+                }
+            }
+            return result;
+        } catch (IOException e) {
+            Log.e(TAG,e.getLocalizedMessage());
+            e.printStackTrace();
+            return null;
+        }
+   }
 }

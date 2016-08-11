@@ -54,7 +54,6 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
     private AlertDialog mDialog = null;
     private String defaultComputerName;
     private String computerName;
-    private String userName;
 
     private PreferenceGroup mAccountManagerSettings;
 
@@ -72,11 +71,8 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         mComputerName = (PreferenceScreen) findPreference(KEY_COMPUTER_NAME);
         mComputerName.setPersistent(true);
 
-        defaultComputerName = SystemProperties.get(RO_PROPERTY_HOST);
+        defaultComputerName = ChangeBuildPropTools.getPropertyValue(RO_PROPERTY_HOST);
         mComputerName.setSummary(defaultComputerName);
-
-        userName = SystemProperties.get(RO_PROPERTY_USER);
-        mComputerUserName.setSummary(userName);
 
         mComputerName.setOnPreferenceClickListener(this);
 

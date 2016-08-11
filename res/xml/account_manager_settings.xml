@@ -30,7 +30,6 @@
     <PreferenceScreen
         android:key="computer_username"
         android:title="@string/computer_username_settings_title"
-        android:summary="@string/computer_username_summary"
     />
     <!-- the computer user name -->
     <PreferenceScreen

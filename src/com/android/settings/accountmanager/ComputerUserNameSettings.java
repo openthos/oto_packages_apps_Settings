@@ -65,7 +65,7 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
         mScreenPasswordPref = findPreference(KEY_SCREEN_PASSWORD);
         mScreenPasswordPref.setOnPreferenceClickListener(this);
 
-        userName = SystemProperties.get(RO_PROPERTY_USER);
+        userName = ChangeBuildPropTools.getPropertyValue(RO_PROPERTY_USER);
         mComputerUserNamePref.setSummary(userName);
 
     }
