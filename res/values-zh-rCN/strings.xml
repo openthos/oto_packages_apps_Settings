@@ -2630,7 +2630,7 @@
   <string name="system_reset_dialog_info">这将删除所有媒体和数据，并还原所有设置。是否继续？</string>
   <string name="system_reset_info">系统重置将清除所有的数据，请提前做好备份！</string>
   <string name="system_reset_dialog_cancel">取消</string>
-  <string name="system_reset_dialog_continue">继</string>
+  <string name="system_reset_dialog_continue">继续</string>
   <!--
            Date: 21 july 2016
            About settings names and other strings.
