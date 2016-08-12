@@ -2674,4 +2674,11 @@
   <string name="out_communicate">出站通信</string>
   <string name="in_communicate">进站通信</string>
 
+  <!--
+        Date: 9 august 2016
+        Power manager names and other strings.
+    -->
+  <string name="power_manager_summary_title">电源管理</string>
+  <string name="power_manager_settings">电源管理</string>
+  <string name="battery_info_title">电量详细信息</string>
 </resources>

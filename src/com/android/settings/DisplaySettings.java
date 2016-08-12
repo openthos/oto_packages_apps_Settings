@@ -74,7 +74,6 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_DOZE = "doze";
     private static final String KEY_AUTO_BRIGHTNESS = "auto_brightness";
     private static final String KEY_AUTO_ROTATE = "auto_rotate";
-    private static final String KEY_ENERGY_SAVING_MODE = "energy_saving_mode";
 
     private static final int DLG_GLOBAL_CHANGE_WARNING = 1;
 
@@ -87,7 +86,6 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private SwitchPreference mLiftToWakePreference;
     private SwitchPreference mDozePreference;
     private SwitchPreference mAutoBrightnessPreference;
-    private Preference mScreenEnergySavingModePreference;
     private AlertDialog mDialog = null;
 
     @Override
@@ -104,9 +102,6 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                         com.android.internal.R.bool.config_dreamsSupported) == false) {
             getPreferenceScreen().removePreference(mScreenSaverPreference);
         }
-
-        mScreenEnergySavingModePreference = findPreference(KEY_ENERGY_SAVING_MODE);
-        mScreenEnergySavingModePreference.setOnPreferenceClickListener(this);
 
 /*        mScreenTimeoutPreference = (ListPreference) findPreference(KEY_SCREEN_TIMEOUT);
         final long currentTimeout = Settings.System.getLong(resolver, SCREEN_OFF_TIMEOUT,
@@ -403,9 +398,6 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             } else {
                 mFontSizePref.click();
             }
-        } else if (preference == mScreenEnergySavingModePreference) {
-            showEnergeySavingModeDialog();
-            return true;
         }
         return false;
     }
@@ -448,29 +440,4 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                 }
             };
 
-    private void showEnergeySavingModeDialog(){
-        if (mDialog != null && mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        final View energySavingModeDialog = layoutInflater
-                .inflate(R.layout.energy_saving_mode_dialog, null);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.energy_save_mode);
-        builder.setView(energySavingModeDialog);
-        builder.setCancelable(true);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-
-            }
-        });
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-            }
-        });
-        mDialog = builder.create();
-        mDialog.show();
-    }
 }

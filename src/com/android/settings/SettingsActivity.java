@@ -103,6 +103,7 @@ import com.android.settings.notification.NotificationAccessSettings;
 import com.android.settings.notification.NotificationSettings;
 import com.android.settings.notification.NotificationStation;
 import com.android.settings.notification.ZenModeSettings;
+import com.android.settings.PowerManagerSettings;
 import com.android.settings.print.PrintJobSettingsFragment;
 import com.android.settings.print.PrintSettingsFragment;
 import com.android.settings.proxy.ProxySettings;
@@ -256,6 +257,11 @@ public class SettingsActivity extends Activity
             R.id.application_settings,
             R.id.apps_compatibility_settings,
             R.id.battery_settings,
+            /**
+             * Date: 9 August 2016
+             * Expand settings with Power manager settings.
+            */
+            R.id.power_manager_settings,
             R.id.personal_section,
             R.id.location_settings,
             R.id.security_settings,
@@ -348,6 +354,11 @@ public class SettingsActivity extends Activity
             AndroidBeam.class.getName(),
             WifiDisplaySettings.class.getName(),
             PowerUsageSummary.class.getName(),
+            /**
+             * Date: 9 August 2016
+             * Expand settings with Power manager settings.
+             */
+            PowerManagerSettings.class.getName(),
             AccountSyncSettings.class.getName(),
             AccountSettings.class.getName(),
             CryptKeeperSettings.class.getName(),
@@ -1257,9 +1268,10 @@ public class SettingsActivity extends Activity
                 } else if (id == R.id.battery_settings) {
                     // Remove battery settings when battery is not available. (e.g. TV)
 
-                    if (!mBatteryPresent) {
-                        removeTile = true;
-                    }
+                    removeTile = true;
+                    //if (!mBatteryPresent) {
+                    //    removeTile = true;
+                    //}
                 } else if (id == R.id.home_settings) {
                     if (!updateHomeSettingTiles(tile)) {
                         removeTile = true;

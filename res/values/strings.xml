@@ -6226,4 +6226,12 @@
     <string name="network_is_available">the ethernet is available</string>
     <string name="network_is_not_available">the ethernet is not available</string>
     <string name="ethernet_card">Network card</string>
+
+    <!--
+        Date: 9 august 2016
+        Power manager names and other strings.
+    -->
+    <string name="power_manager_summary_title">PowerManager</string>
+    <string name="power_manager_settings">PowerManager</string>
+    <string name="battery_info_title">Battery Info</string>
 </resources>

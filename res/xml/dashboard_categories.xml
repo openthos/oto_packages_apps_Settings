@@ -152,6 +152,14 @@
                 android:icon="@drawable/ic_settings_battery"
                 />
 
+        <!-- PowerManager -->
+        <dashboard-tile
+                android:id="@+id/power_manager_settings"
+                android:title="@string/power_manager_summary_title"
+                android:fragment="com.android.settings.PowerManagerSettings"
+                android:icon="@drawable/ic_settings_battery"
+                />
+
         <!-- Application Settings -->
         <dashboard-tile
                 android:id="@+id/application_settings"

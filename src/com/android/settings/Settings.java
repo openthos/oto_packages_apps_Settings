@@ -126,5 +126,10 @@ public class Settings extends SettingsActivity {
      * Expand settings with Proxy settings.
      */
     public static class ProxySettingsActivity extends SettingsActivity { /* empty */ }
+     /**
+     * Date: 9 August 2016
+     * Expand settings with Power manager settings.
+     */
+    public static class PowerManagerSettingsActivity extends SettingsActivity { /* empty */ }
 }
 
