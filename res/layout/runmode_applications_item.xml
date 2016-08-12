@@ -79,6 +79,7 @@
             android:ellipsize="marquee" />
      </GridLayout>
      <RadioGroup
+         android:id="@+id/radiogroup"
          android:layout_weight="1"
          android:layout_width="0dp"
          android:layout_height="wrap_content"

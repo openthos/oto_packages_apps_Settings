@@ -17,6 +17,10 @@
 package com.android.settings;
 
 import android.app.Fragment;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -24,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import com.android.settings.applications.ApplicationsState.*;
 import com.android.settings.applications.*;
 import com.android.settings.applications.ManageApplications.*;
@@ -43,9 +48,11 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
     private View mLoadingContainer;
     private View mListContainer;
     private ListView mListView;
+    private HashMap<String,Integer> map;
     private ArrayList<ApplicationsState.AppEntry> mBaseEntries;
     private ArrayList<ApplicationsState.AppEntry> mEntries;
     private ImageView mImageView;
+    private ContentResolver mResolver;
 
     CharSequence mCurFilterPrefix;
 
@@ -64,6 +71,17 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mResolver = getActivity().getContentResolver();
+        Uri uriQuery = Uri.parse("content: //com.otosoft.tools.myprovider/selectState");
+        Cursor cursor = mResolver.query(uriQuery, null, null, null, null);
+        map = new HashMap();
+        if(cursor != null){
+            while(cursor.moveToNext()) {
+                map.put(cursor.getString(cursor.getColumnIndex("appPackage")),
+                        cursor.getInt(cursor.getColumnIndex("state")));
+            }
+        }
+
         View mRootView = inflater.inflate(R.layout.runmode_applications_apps, container, false);
         mListContainer = mRootView.findViewById(R.id.list_container);
         if (mListContainer != null) {
@@ -140,7 +158,7 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
             view = mHolder.rootView;
 
             // Bind the data efficiently with the mHolder
-            ApplicationsState.AppEntry entry = mEntries.get(i);
+            final  ApplicationsState.AppEntry entry = mEntries.get(i);
             mHolder.entry = entry;
 
             if (entry.label != null) {
@@ -150,6 +168,68 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
             if (entry.icon != null) {
                 mHolder.appIcon.setImageDrawable(entry.icon);
             }
+            //estimate whether the button state changed !!
+            if (map.get(entry.appPackage) == null) {
+                Uri uriInsert = Uri.parse("content: //com.otosoft.tools.myprovider/selectState");
+                ContentValues values = new ContentValues();
+                values.put("appPackage", entry.appPackage);
+                values.put("state", 0);
+                mResolver.insert(uriInsert, values);
+
+                map.put(entry.appPackage, 0);
+                mHolder.buttonAuto.setChecked(true);
+            } else {
+                int buttonSelected = (Integer) map.get(entry.appPackage);
+                switch (buttonSelected){
+                    case 0:
+                        mHolder.buttonAuto.setChecked(true);
+                        break;
+                    case 1:
+                        mHolder.buttonPhone.setChecked(true);
+                        break;
+                    case 2:
+                        mHolder.buttonDesktop.setChecked(true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            mHolder.buttonAuto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Uri uriUpdate = Uri.parse("content://com.otosoft.tools.myprovider/selectState");
+                    map.put(entry.appPackage, 0);
+                    ContentValues values_0 = new ContentValues();
+                    values_0.put("state", 0);
+                    mResolver.update(uriUpdate, values_0, "appPackage = ?",
+                              new String[] { entry.appPackage });
+                }
+            });
+
+            mHolder.buttonPhone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Uri uriUpdate = Uri.parse("content://com.otosoft.tools.myprovider/selectState");
+                    map.put(entry.appPackage, 1);
+                    ContentValues values_1 = new ContentValues();
+                    values_1.put("state", 1);
+                    mResolver.update(uriUpdate, values_1, "appPackage = ?",
+                              new String[] { entry.appPackage });
+                }
+            });
+
+            mHolder.buttonDesktop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Uri uriUpdate = Uri.parse("content://com.otosoft.tools.myprovider/selectState");
+                    map.put(entry.appPackage, 2);
+                    ContentValues values_2 = new ContentValues();
+                    values_2.put("state", 2);
+                    mResolver.update(uriUpdate, values_2, "appPackage = ?",
+                              new String[] { entry.appPackage });
+                }
+            });
             return view;
         }
     }

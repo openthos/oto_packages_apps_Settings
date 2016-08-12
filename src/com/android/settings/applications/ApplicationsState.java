@@ -98,6 +98,7 @@ public class ApplicationsState {
         public boolean inNetLicenseChecked=false;
         public boolean outNetLicenseChecked=false;
         boolean mounted;
+        public String appPackage;
         
         public  String getNormalizedLabel() {
             if (normalizedLabel != null) {
@@ -136,6 +137,7 @@ public class ApplicationsState {
                     this.mounted = true;
                     CharSequence label = info.loadLabel(context.getPackageManager());
                     this.label = label != null ? label.toString() : info.packageName;
+                    appPackage = info.packageName;
                 }
             }
         }

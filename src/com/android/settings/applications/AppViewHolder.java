@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Switch;
 
@@ -22,6 +24,9 @@ public class AppViewHolder {
     public CheckBox checkBox;
     public Switch inNetLicenseSwitch;
     public Switch outNetLicenseSwitch;
+    public RadioButton buttonAuto;
+    public RadioButton buttonPhone;
+    public RadioButton buttonDesktop;
 
     static public AppViewHolder createOrRecycle(LayoutInflater inflater, View convertView) {
         if (convertView == null) {
@@ -81,6 +86,9 @@ public class AppViewHolder {
             holder.appSize = (TextView) convertView.findViewById(R.id.app_size);
             holder.disabled = (TextView) convertView.findViewById(R.id.app_disabled);
             holder.checkBox = (CheckBox) convertView.findViewById(R.id.app_on_sdcard);
+            holder.buttonAuto = (RadioButton) convertView.findViewById(R.id.btn_auto);
+            holder.buttonPhone = (RadioButton) convertView.findViewById(R.id.btn_phone);
+            holder.buttonDesktop = (RadioButton) convertView.findViewById(R.id.btn_desktop);
             convertView.setTag(holder);
             return holder;
         } else {
