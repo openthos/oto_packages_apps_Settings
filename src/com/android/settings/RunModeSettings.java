@@ -72,7 +72,7 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mResolver = getActivity().getContentResolver();
-        Uri uriQuery = Uri.parse("content: //com.otosoft.tools.myprovider/selectState");
+        Uri uriQuery = Uri.parse("content://com.otosoft.tools.myprovider/selectState");
         Cursor cursor = mResolver.query(uriQuery, null, null, null, null);
         map = new HashMap();
         if(cursor != null){
@@ -170,7 +170,7 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
             }
             //estimate whether the button state changed !!
             if (map.get(entry.appPackage) == null) {
-                Uri uriInsert = Uri.parse("content: //com.otosoft.tools.myprovider/selectState");
+                Uri uriInsert = Uri.parse("content://com.otosoft.tools.myprovider/selectState");
                 ContentValues values = new ContentValues();
                 values.put("appPackage", entry.appPackage);
                 values.put("state", 0);
