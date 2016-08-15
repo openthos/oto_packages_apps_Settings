@@ -2681,4 +2681,24 @@
   <string name="power_manager_summary_title">电源管理</string>
   <string name="power_manager_settings">电源管理</string>
   <string name="battery_info_title">电量详细信息</string>
+
+ <!--
+     System upgrade
+  -->
+  <string name="system_upgrade">系统升级配置</string>
+  <string name="system_upgrade_default_url">升级地址</string>
+  <string name="system_upgrade_default_path">下载路径</string>
+  <string name="system_upgrade_dialog_cancel">取消</string>
+  <string name="system_upgrade_dialog_continue">确认</string>
+  <string name="system_upgrade_dialog_title">系统配置升级</string>
+  <string name="system_upgrade_dialog_checkbox_default">默认</string>
+  <string name="system_upgrade_dialog_textview_url">更新地址:</string>
+  <string name="system_upgrade_dialog_textview_path">下载路径:</string>
+  <string name="system_upgrade_dialog_toast_attention">不能为空</string>
+  <string name="system_upgrade_dialog_toast_default">执行默认</string>
+
+ <!--
+     System update
+  -->
+  <string name="system_promotion">系统升级</string>
 </resources>

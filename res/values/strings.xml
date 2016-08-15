@@ -6202,6 +6202,28 @@
     <string name="system_reset_dialog_cancel">Cancel</string>
     <string name="system_reset_dialog_continue">Continue</string>
     <!--
+         name:system upgrade
+         author:cao yongren
+         date:2016-08-12
+    -->
+    <string name="system_upgrade">System Upgrade configure </string>
+    <string name="system_upgrade_default_url">Default update url</string>
+    <string name="system_upgrade_default_path">Default download path</string>
+    <string name="system_upgrade_dialog_cancel">Cancel</string>
+    <string name="system_upgrade_dialog_continue">Continue</string>
+    <string name="system_upgrade_dialog_title">System update configuration</string>
+    <string name="system_upgrade_dialog_checkbox_default">default</string>
+    <string name="system_upgrade_dialog_textview_url">     Upgrade url:</string>
+    <string name="system_upgrade_dialog_textview_path">Download path:</string>
+    <string name="system_upgrade_dialog_toast_attention">Can not be empty !</string>
+    <string name="system_upgrade_dialog_toast_default">Execute default !</string>
+
+    <!--
+        name:system promation
+        author:cao yongren
+    -->
+    <string name="system_promotion">System Update</string>
+    <!--
            Date: 21 july 2016
            About settings names and other strings.
         -->

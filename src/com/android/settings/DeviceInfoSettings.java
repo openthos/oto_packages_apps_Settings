@@ -77,6 +77,15 @@ import java.text.DecimalFormat;
 import java.lang.Math;
 import java.io.InputStreamReader;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Toast;
+
 public class DeviceInfoSettings extends SettingsPreferenceFragment implements
        Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, Indexable {
 
@@ -85,6 +94,8 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
     private static final String FILENAME_MSV = "/sys/board_properties/soc/msv";
 
     private static final String KEY_SYSTEM_RESET = "system_reset";
+    private static final String KEY_SYSTEM_UPGRADE = "system_upgrade";
+    private static final String KEY_SYSTEM_UPDATE = "system_promotion";
     private static final String KEY_CONTAINER = "container";
     private static final String KEY_REGULATORY_INFO = "regulatory_info";
     private static final String KEY_TERMS = "terms";
@@ -122,6 +133,12 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
     Toast mDevHitToast;
 
     private PreferenceScreen mSystemReset;
+    private PreferenceScreen mSystemUpgrade;
+    private PreferenceScreen mSystemUpdate;
+    /*  upgrade  */
+    // private Context mContext=null;
+    private SharedPreferences presUpdate = null;
+    private SharedPreferences.Editor editorUpdate = null;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -130,6 +147,10 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
         addPreferencesFromResource(R.xml.device_info_settings);
         mSystemReset = (PreferenceScreen) findPreference(KEY_SYSTEM_RESET);
         mSystemReset.setOnPreferenceClickListener(this);
+        mSystemUpgrade = (PreferenceScreen) findPreference(KEY_SYSTEM_UPGRADE);
+        mSystemUpgrade.setOnPreferenceClickListener(this);
+        mSystemUpdate = (PreferenceScreen) findPreference(KEY_SYSTEM_UPDATE);
+        mSystemUpdate.setOnPreferenceClickListener(this);
 
         // Create an EGL Context
         // References:
@@ -316,6 +337,15 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         if (pref == mSystemReset) {
             showDialog();
             return true;
+        }
+        if (pref == mSystemUpgrade) {
+            upgradeDialog();
+            return true;
+        }
+        if (pref == mSystemUpdate) {
+           // code  update
+           updateControl();
+           return true;
         }
         return false;
     }
@@ -631,7 +661,7 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
             }
         };
 
-        //get the total memory
+    //get the total memory
     private String getTotalMemory()
     {
         String str1 = "/proc/meminfo";
@@ -701,7 +731,7 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         try {
             PackageManager pm = getActivity().getPackageManager();
             pi = pm.getPackageInfo("com.android.browser",
-                    PackageManager.GET_CONFIGURATIONS);
+                               PackageManager.GET_CONFIGURATIONS);
 
             return pi.versionName;
         } catch (Exception e) {
@@ -709,6 +739,91 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         }
 
         return pi.versionName;
+    }
+    /* upgrade dialog method */
+    private void upgradeDialog() {
+        final String strUrl = getActivity().getResources().getString
+                                           (R.string.system_upgrade_default_url);
+        final String strPath = getActivity().getResources().getString
+                                           (R.string.system_upgrade_default_path);
+        /* initial of Dialog view */
+        final View viewOsUpgade = LayoutInflater.from(getActivity()).inflate
+                                           (R.layout.dialog_system_upgrade,null);
+        final CheckBox checkBoxDefault = (CheckBox) viewOsUpgade.findViewById
+                                           (R.id.checkBox_dialog_default);
+        final EditText editTextUrl = (EditText)viewOsUpgade.findViewById
+                                           (R.id.edit_dialog_Upgrade);
+        final EditText editTextPath = (EditText)viewOsUpgade.findViewById
+                                           (R.id.edit_dialog_download);
+        /* start status */
+        editTextUrl.setText(strUrl);
+        editTextPath.setText(strPath);
+        editTextUrl.setEnabled(false);
+        editTextPath.setEnabled(false);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // builder.setIcon(R.mipmap.ic_launcher);
+        builder.setTitle(getActivity().getResources().getString
+                                         (R.string.system_upgrade_dialog_title));
+        initPres();
+        checkBoxDefault.setOnCheckedChangeListener(new CompoundButton.
+                                                             OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    editTextUrl.setEnabled(false);
+                    editTextPath.setEnabled(false);
+                    editTextUrl.setText(strUrl); //default
+                    editTextPath.setText(strPath);
+                } else {
+                    editTextUrl.setEnabled(true);
+                    editTextPath.setEnabled(true);
+                    editTextUrl.setText("");
+                    editTextPath.setText("");
+                }
+            }
+        });
+        builder.setView(viewOsUpgade);
+        builder.setNegativeButton(getActivity().getResources().getString(R.string.
+                         system_upgrade_dialog_cancel),null);
+        builder.setPositiveButton(getActivity().getResources().getString(R.string.
+                         system_upgrade_dialog_continue), new DialogInterface.
+                                                                   OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String upgradeUrl = editTextUrl.getText()+"";
+                String downloadPath = editTextPath.getText()+"";
+                if (checkBoxDefault.isChecked()) { //selected default
+                        editorUpdate.putBoolean("default",checkBoxDefault.isChecked());
+                    /*  default save null and null  */
+                    Toast.makeText(getActivity(),getActivity().getResources().getString
+                                  (R.string.system_upgrade_dialog_toast_default),
+                                                                 Toast.LENGTH_LONG).show();
+                } else {
+                    if(upgradeUrl == "" || downloadPath == ""){//regex
+                    Toast.makeText(getActivity(),getActivity().getResources().getString
+                                  (R.string.system_upgrade_dialog_toast_attention),
+                                                                 Toast.LENGTH_LONG).show();
+                    } else {
+                        editorUpdate.putBoolean("default",checkBoxDefault.isChecked());
+                        editorUpdate.putString("url",upgradeUrl);
+                        editorUpdate.putString("path",downloadPath);
+                    }
+                }
+                editorUpdate.commit();
+            }
+        });
+        builder.show();
+    }
+    /* initials of prefrerence */
+    private void initPres() {
+        presUpdate = getActivity().getSharedPreferences("update", Context.MODE_APPEND |
+                            Context.MODE_WORLD_READABLE | Context.MODE_WORLD_WRITEABLE);
+        editorUpdate = presUpdate.edit();
+    }
+   //update system
+    private void updateControl(){
+         Toast.makeText(getActivity(),"update system's control ",Toast.LENGTH_LONG).show();
     }
 
     private void showDialog() {

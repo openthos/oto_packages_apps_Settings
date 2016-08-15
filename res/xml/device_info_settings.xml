@@ -42,6 +42,12 @@
         </PreferenceScreen>
         <PreferenceScreen android:key="system_reset"
         android:title="@string/system_reset"/>
+        <!-- System upgrade -->
+        <PreferenceScreen android:key="system_upgrade"
+        android:title="@string/system_upgrade"/>
+         <!-- System promotion -->
+        <PreferenceScreen android:key="system_promotion"
+        android:title="@string/system_promotion"/>
         <!-- Legal Information -->
         <PreferenceScreen
                 android:key="container"
