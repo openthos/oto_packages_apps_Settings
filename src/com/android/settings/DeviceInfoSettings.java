@@ -78,6 +78,7 @@ import java.lang.Math;
 import java.io.InputStreamReader;
 
 import android.content.Context;
+import android.content.ComponentName;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,6 +126,8 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
     private static final String KEY_CPU_INFO = "cpu_info";
     private static final String KEY_MEMORY_INFO = "memory_info";
     private static final String KEY_HARD_DISK_INFO = "hard_disk_info";
+    private static final String OTO_OTA_PACKAGE_NAME = "com.openthos.ota";
+    private static final String OTO_OTA_CLASS_NAME = "com.openthos.ota.MainActivity";
 
     static final int TAPS_TO_BE_A_DEVELOPER = 7;
 
@@ -823,7 +826,11 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
     }
    //update system
     private void updateControl(){
-         Toast.makeText(getActivity(),"update system's control ",Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        ComponentName cn = new ComponentName(OTO_OTA_PACKAGE_NAME, OTO_OTA_CLASS_NAME);
+        intent.setComponent(cn);
+        startActivity(intent);
     }
 
     private void showDialog() {
