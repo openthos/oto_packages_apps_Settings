@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/* //device/apps/Settings/res/layout/display.xml
+**
+** Copyright 2007, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/info_layout"
+    android:orientation="vertical"
+    android:padding="10sp">
+    <RadioGroup
+        android:id="@+id/resolution_setting_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <RadioButton
+            android:id="@+id/resolution_setting_one"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/str_resolution_setting_one"
+            />
+        <RadioButton
+            android:id="@+id/resolution_setting_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_resolution_setting_two"
+            />
+        <RadioButton
+            android:id="@+id/resolution_setting_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_resolution_setting_three"
+            />
+        <RadioButton
+            android:id="@+id/resolution_setting_four"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/str_resolution_setting_four"
+            />
+        <RadioButton
+            android:id="@+id/resolution_setting_five"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_resolution_setting_five"
+            />
+        <RadioButton
+            android:id="@+id/resolution_setting_six"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_resolution_setting_six"
+            />
+        <RadioButton
+            android:id="@+id/resolution_setting_seven"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/str_resolution_setting_seven"
+            />
+        <RadioButton
+            android:id="@+id/resolution_setting_eight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_resolution_setting_eight"
+            />
+        <RadioButton
+            android:id="@+id/resolution_setting_nine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_resolution_setting_nine"
+            />
+        <RadioButton
+            android:id="@+id/resolution_setting_ten"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/str_resolution_setting_ten"
+            />
+        <RadioButton
+            android:id="@+id/resolution_setting_eleven"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_resolution_setting_eleven"
+            />
+    </RadioGroup>
+</LinearLayout>

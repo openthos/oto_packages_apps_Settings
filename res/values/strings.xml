@@ -6256,4 +6256,22 @@
     <string name="power_manager_summary_title">PowerManager</string>
     <string name="power_manager_settings">PowerManager</string>
     <string name="battery_info_title">Battery Info</string>
+
+    <!--
+       Date: 17 Aug 2016
+       Resolution settings names and other strings.
+    -->
+    <string name="resolution_setting_title">Resolution</string>
+    <string name="resolution_setting_summary">settings resolution</string>
+    <string name="str_resolution_setting_one">1920x1080(16:9)</string>
+    <string name="str_resolution_setting_two">1680x1050(16:10)</string>
+    <string name="str_resolution_setting_three">1600x1024(3:2)</string>
+    <string name="str_resolution_setting_four">1440x900(16:10)</string>
+    <string name="str_resolution_setting_five">1400x11050(4:3)</string>
+    <string name="str_resolution_setting_six">1360x768(16:9)</string>
+    <string name="str_resolution_setting_seven">1280x1024(5:4)</string>
+    <string name="str_resolution_setting_eight">1280x960(4:3)</string>
+    <string name="str_resolution_setting_nine">1152x864(4:3)</string>
+    <string name="str_resolution_setting_ten">1024x768(4:3)</string>
+    <string name="str_resolution_setting_eleven">800x600(4:3)</string>
 </resources>

@@ -2701,4 +2701,11 @@
      System update
   -->
   <string name="system_promotion">系统升级</string>
+
+ <!--
+       Date: 17 Aug 2016
+       Resolution settings names and other strings.
+    -->
+  <string name="resolution_setting_title">屏幕分辨率</string>
+  <string name="resolution_setting_summary">设置屏幕分辨率</string>
 </resources>
