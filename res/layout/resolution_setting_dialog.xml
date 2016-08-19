@@ -40,59 +40,5 @@
             android:layout_height="wrap_content"
             android:text="@string/str_resolution_setting_two"
             />
-        <RadioButton
-            android:id="@+id/resolution_setting_three"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/str_resolution_setting_three"
-            />
-        <RadioButton
-            android:id="@+id/resolution_setting_four"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/str_resolution_setting_four"
-            />
-        <RadioButton
-            android:id="@+id/resolution_setting_five"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/str_resolution_setting_five"
-            />
-        <RadioButton
-            android:id="@+id/resolution_setting_six"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/str_resolution_setting_six"
-            />
-        <RadioButton
-            android:id="@+id/resolution_setting_seven"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/str_resolution_setting_seven"
-            />
-        <RadioButton
-            android:id="@+id/resolution_setting_eight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/str_resolution_setting_eight"
-            />
-        <RadioButton
-            android:id="@+id/resolution_setting_nine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/str_resolution_setting_nine"
-            />
-        <RadioButton
-            android:id="@+id/resolution_setting_ten"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/str_resolution_setting_ten"
-            />
-        <RadioButton
-            android:id="@+id/resolution_setting_eleven"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/str_resolution_setting_eleven"
-            />
     </RadioGroup>
 </LinearLayout>

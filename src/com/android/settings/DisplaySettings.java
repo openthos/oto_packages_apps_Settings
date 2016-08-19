@@ -56,7 +56,17 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Display;
+import android.view.IWindowManager;
+import android.widget.Toast;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.os.Parcel;
+import android.os.IBinder;
+import android.os.ServiceManager;
+import android.os.SystemClock;
 
+import java.lang.Integer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +87,13 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_RESOLUTION_SETTING = "resolution_setting";
 
     private static final int DLG_GLOBAL_CHANGE_WARNING = 1;
+    private static final int SUBSTRING_LENGTH = 4;
+    private static final int RESOLUTION_ONE_X = 1920;
+    private static final int RESOLUTION_ONE_Y = 1920;
+    private static final int RESOLUTION_TWO_X = 1360;
+    private static final int RESOLUTION_TWO_Y = 768;
+    private static final int SET_RESOLUTION = 19; // in ISurfaceComposer.h:BnSurfaceComposer
+    private static final int RESIZE_SLEEP = 1000;
 
     private WarnedListPreference mFontSizePref;
 
@@ -89,6 +106,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private SwitchPreference mAutoBrightnessPreference;
     private Preference mResolutionSetting;
     private AlertDialog mDialog = null;
+    private IWindowManager mWm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,6 +122,9 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                         com.android.internal.R.bool.config_dreamsSupported) == false) {
             getPreferenceScreen().removePreference(mScreenSaverPreference);
         }
+
+        mWm = IWindowManager.Stub.asInterface(ServiceManager.checkService(
+                Context.WINDOW_SERVICE));
 
         mResolutionSetting = findPreference(KEY_RESOLUTION_SETTING);
         mResolutionSetting.setOnPreferenceClickListener(this);
@@ -459,10 +480,70 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         builder.setTitle(R.string.resolution_setting_title);
         builder.setView(resolutionSettingDialog);
         builder.setCancelable(true);
+
+        RadioGroup rg = (RadioGroup) resolutionSettingDialog.findViewById(
+                                                                 R.id.resolution_setting_group);
+        final RadioButton rbOne = (RadioButton) resolutionSettingDialog.findViewById(
+                                                                 R.id.resolution_setting_one);
+        final RadioButton rbTwo = (RadioButton) resolutionSettingDialog.findViewById(
+                                                                 R.id.resolution_setting_two);
+        int maxSize;
+        int currentSize;
+        String maxResolution = SystemProperties.get("persist.sys.max.display.size");
+        String currentResolution = SystemProperties.get("persist.sys.display.size");
+
+        if ("".equals(maxResolution)) {
+            maxSize = 1920;
+        } else {
+            maxSize = Integer.parseInt(maxResolution.substring(0,SUBSTRING_LENGTH));
+        }
+
+        if ("".equals(currentResolution)) {
+            currentSize = maxSize;
+        } else {
+            currentSize = Integer.parseInt(maxResolution.substring(0,SUBSTRING_LENGTH));
+        }
+
+        if (maxSize < RESOLUTION_ONE_X && maxSize > RESOLUTION_TWO_X) {
+            rbOne.setVisibility(View.GONE);
+        } else if (maxSize < RESOLUTION_TWO_X){
+            rbOne.setVisibility(View.GONE);
+            rbTwo.setVisibility(View.GONE);
+            Toast.makeText(getActivity(),
+                    "your device current max resolution is not support 1366x768 and 1920x1080",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            if (currentSize == RESOLUTION_ONE_X) {
+                rbOne.setChecked(true);
+            } else if (currentSize == RESOLUTION_TWO_X) {
+                rbTwo.setChecked(true);
+            } else {
+                rbOne.setChecked(false);
+                rbTwo.setChecked(false);
+            }
+        }
+
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == rbOne.getId()) {
+                    rbOne.setChecked(true);
+                } else if (checkedId == rbTwo.getId()) {
+                    rbTwo.setChecked(true);
+                }
+            }
+        });
+
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-
+                if (rbOne.isChecked()) {
+                    SystemProperties.set("persist.sys.display.size","1920x1080@60");
+                    updateResolution(RESOLUTION_ONE_X,RESOLUTION_ONE_Y);
+                } else if(rbTwo.isChecked()) {
+                    SystemProperties.set("persist.sys.display.size","1360x768@60");
+                    updateResolution(RESOLUTION_TWO_X,RESOLUTION_TWO_Y);
+                }
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -472,6 +553,26 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         });
         mDialog = builder.create();
         mDialog.show();
+    }
+
+    private void updateResolution(final int width,final int height){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mWm.setForcedDisplaySize(Display.DEFAULT_DISPLAY, width, height);
+                    IBinder surfaceFlinger = ServiceManager.getService("SurfaceFlinger");
+                    SystemClock.sleep(RESIZE_SLEEP);
+                    if (surfaceFlinger != null) {
+                        Parcel data = Parcel.obtain();
+                        data.writeInterfaceToken("android.ui.ISurfaceComposer");
+                        surfaceFlinger.transact(SET_RESOLUTION , data, null, 0);
+                        data.recycle();
+                    }
+                } catch(RemoteException e) {
+                }
+            }
+        }).start();
     }
 
 }
