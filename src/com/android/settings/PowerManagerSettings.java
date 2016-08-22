@@ -38,7 +38,13 @@ import android.view.View;
 import android.provider.SearchIndexableResource;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.search.Indexable;
-
+import android.content.Context;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.content.SharedPreferences;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.lang.Integer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +56,9 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
 
     private Preference mScreenEnergySavingModePreference;
     private AlertDialog mDialog = null;
+    private SharedPreferences mSharedPreferences;
+    private String energySavingMode;
+    private int cpuCount = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +68,10 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
 
         mScreenEnergySavingModePreference = (PreferenceScreen) findPreference(KEY_ENERGY_SAVING_MODE);
         mScreenEnergySavingModePreference.setOnPreferenceClickListener(this);
+
+        mSharedPreferences = getActivity().getSharedPreferences("ernegysavemode",
+                                                                Context.MODE_PRIVATE);
+        energySavingMode = mSharedPreferences.getString("mode", "balance");
     }
 
     @Override
@@ -123,10 +136,57 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
         builder.setTitle(R.string.energy_save_mode);
         builder.setView(energySavingModeDialog);
         builder.setCancelable(true);
+
+        RadioGroup rg = (RadioGroup) energySavingModeDialog.findViewById(
+                                                                R.id.energy_save_mode_group);
+        final RadioButton rbBalance = (RadioButton) energySavingModeDialog.findViewById(
+                                                                R.id.energy_save_mode_balance);
+        final RadioButton rbSaving = (RadioButton) energySavingModeDialog.findViewById(
+                                                                R.id.energy_save_mode_saving);
+        final RadioButton rbEfficient = (RadioButton) energySavingModeDialog.findViewById(
+                                                                R.id.energy_save_mode_efficient);
+
+        String cpuInfo = exec("cat /proc/cpuinfo| grep processor|wc -l");
+        if (cpuInfo != "") {
+            cpuCount = Integer.parseInt(cpuInfo);
+        }
+
+        if ("balance".equals(energySavingMode)) {
+            rbBalance.setChecked(true);
+        } else if ("saving".equals(energySavingMode)) {
+            rbSaving.setChecked(true);
+        } else if ("efficient".equals(energySavingMode)) {
+            rbEfficient.setChecked(true);
+        }
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == rbBalance.getId()) {
+                    rbBalance.setChecked(true);
+                } else if (checkedId == rbSaving.getId()) {
+                    rbSaving.setChecked(true);
+                } else if (checkedId == rbEfficient.getId()) {
+                    rbEfficient.setChecked(true);
+                }
+            }
+        });
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                if (rbBalance.isChecked()) {
+                    energySavingModeSetting("powersave",cpuCount);
+                    editor.putString("mode", "balance");
+                    editor.commit();
+                } else if (rbSaving.isChecked()) {
+                    energySavingModeSetting("powersave",cpuCount);
+                    editor.putString("mode", "saving");
+                    editor.commit();
+                } else if (rbEfficient.isChecked()) {
+                    energySavingModeSetting("performance",cpuCount);
+                    editor.putString("mode", "efficient");
+                    editor.commit();
+                }
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -136,5 +196,30 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
         });
         mDialog = builder.create();
         mDialog.show();
+    }
+
+    private void energySavingModeSetting(String mode , int count) {
+        for (int i = 0; i < count; i++) {
+            exec("echo \""+mode+"\" > /sys/devices/system/cpu/"
+                 + "cpu" + i + "/cpufreq/scaling_governor");
+        }
+    }
+
+    public String exec(String cmd) {
+        try {
+            String[] cmdA = { "/system/bin/su", "-c", cmd};
+            Process process = Runtime.getRuntime().exec(cmdA);
+            LineNumberReader br = new LineNumberReader(new InputStreamReader(
+                    process.getInputStream()));
+            StringBuffer sb = new StringBuffer();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
