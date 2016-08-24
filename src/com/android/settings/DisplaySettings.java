@@ -538,11 +538,11 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 if (rbOne.isChecked()) {
-                    SystemProperties.set("persist.sys.display.size","1920x1080@60");
-                    updateResolution(RESOLUTION_ONE_X,RESOLUTION_ONE_Y);
+                    //SystemProperties.set("persist.sys.display.size","1920x1080@60");
+                    //updateResolution(RESOLUTION_ONE_X,RESOLUTION_ONE_Y);
                 } else if(rbTwo.isChecked()) {
-                    SystemProperties.set("persist.sys.display.size","1360x768@60");
-                    updateResolution(RESOLUTION_TWO_X,RESOLUTION_TWO_Y);
+                    //SystemProperties.set("persist.sys.display.size","1360x768@60");
+                    //updateResolution(RESOLUTION_TWO_X,RESOLUTION_TWO_Y);
                 }
             }
         });
