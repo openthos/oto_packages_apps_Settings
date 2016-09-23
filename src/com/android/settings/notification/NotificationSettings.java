@@ -75,7 +75,7 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
     private static final String KEY_NOTIFICATION_PULSE = "notification_pulse";
     private static final String KEY_LOCK_SCREEN_NOTIFICATIONS = "lock_screen_notifications";
     private static final String KEY_NOTIFICATION_ACCESS = "manage_notification_access";
-
+    private static final String KEY_ZEN_MODE = "zen_mode";
     private static final int SAMPLE_CUTOFF = 2000;  // manually cap sample playback at 2 seconds
 
     private final VolumePreferenceCallback mVolumeCallback = new VolumePreferenceCallback();
@@ -91,11 +91,11 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
     private AudioManager mAudioManager;
     private VolumeSeekBarPreference mRingOrNotificationPreference;
 
-    private Preference mPhoneRingtonePreference;
+    //private Preference mPhoneRingtonePreference;
     private Preference mNotificationRingtonePreference;
     private TwoStatePreference mVibrateWhenRinging;
     private TwoStatePreference mNotificationPulse;
-    private DropDownPreference mLockscreen;
+    //private DropDownPreference mLockscreen;
     private Preference mNotificationAccess;
     private boolean mSecure;
     private int mLockscreenSelectedValue;
@@ -135,6 +135,8 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
                             com.android.internal.R.drawable.ic_audio_ring_notif_mute);
             sound.removePreference(sound.findPreference(KEY_RING_VOLUME));
         // }
+        // Remove Interruption.
+        sound.removePreference(sound.findPreference(KEY_ZEN_MODE));
         initRingtones(sound);
         initVibrateWhenRinging(sound);
 
@@ -153,7 +155,7 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
     public void onResume() {
         super.onResume();
         refreshNotificationListeners();
-        lookupRingtoneNames();
+     // lookupRingtoneNames();
         mSettingsObserver.register(true);
         mReceiver.register(true);
         updateRingOrNotificationPreference();
@@ -260,36 +262,35 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
     // === Phone & notification ringtone ===
 
     private void initRingtones(PreferenceCategory root) {
-        mPhoneRingtonePreference = root.findPreference(KEY_PHONE_RINGTONE);
-        if (mPhoneRingtonePreference != null && !mVoiceCapable) {
-            root.removePreference(mPhoneRingtonePreference);
-            mPhoneRingtonePreference = null;
-        }
+        //mPhoneRingtonePreference = root.findPreference(KEY_PHONE_RINGTONE);
+        //if (mPhoneRingtonePreference != null && !mVoiceCapable) {
+            root.removePreference(root.findPreference(KEY_PHONE_RINGTONE));
+        //    mPhoneRingtonePreference = null;
+        // }
         mNotificationRingtonePreference = root.findPreference(KEY_NOTIFICATION_RINGTONE);
-    }
+//    }
 
-    private void lookupRingtoneNames() {
-        AsyncTask.execute(mLookupRingtoneNames);
-    }
-
-    private final Runnable mLookupRingtoneNames = new Runnable() {
-        @Override
-        public void run() {
-            if (mPhoneRingtonePreference != null) {
-                final CharSequence summary = updateRingtoneName(
-                        mContext, RingtoneManager.TYPE_RINGTONE);
-                if (summary != null) {
-                    mHandler.obtainMessage(H.UPDATE_PHONE_RINGTONE, summary).sendToTarget();
-                }
-            }
-            if (mNotificationRingtonePreference != null) {
-                final CharSequence summary = updateRingtoneName(
-                        mContext, RingtoneManager.TYPE_NOTIFICATION);
-                if (summary != null) {
-                    mHandler.obtainMessage(H.UPDATE_NOTIFICATION_RINGTONE, summary).sendToTarget();
-                }
-            }
-        }
+//    private void lookupRingtoneNames() {
+//        AsyncTask.execute(mLookupRingtoneNames);
+//    }
+//   private final Runnable mLookupRingtoneNames = new Runnable() {
+//        @Override
+//       public void run() {
+//            if (mPhoneRingtonePreference != null) {
+//                final CharSequence summary = updateRingtoneName(
+//                        mContext, RingtoneManager.TYPE_RINGTONE);
+//                if (summary != null) {
+//                    mHandler.obtainMessage(H.UPDATE_PHONE_RINGTONE, summary).sendToTarget();
+//               }
+//            }
+//            if (mNotificationRingtonePreference != null) {
+//                final CharSequence summary = updateRingtoneName(
+//                        mContext, RingtoneManager.TYPE_NOTIFICATION);
+//                if (summary != null) {
+//                   mHandler.obtainMessage(H.UPDATE_NOTIFICATION_RINGTONE, summary).sendToTarget();
+//                }
+//          }
+//        }
     };
 
     private static CharSequence updateRingtoneName(Context context, int type) {
@@ -403,61 +404,63 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
     // === Lockscreen (public / private) notifications ===
 
     private void initLockscreenNotifications(PreferenceCategory parent) {
-        mLockscreen = (DropDownPreference) parent.findPreference(KEY_LOCK_SCREEN_NOTIFICATIONS);
-        if (mLockscreen == null) {
-            Log.i(TAG, "Preference not found: " + KEY_LOCK_SCREEN_NOTIFICATIONS);
-            return;
-        }
+    //    mLockscreen = (DropDownPreference) parent.findPreference(KEY_LOCK_SCREEN_NOTIFICATIONS);
+    //     if (mLockscreen == null) {
+    //        Log.i(TAG, "Preference not found: " + KEY_LOCK_SCREEN_NOTIFICATIONS);
+    //        return;
+    //    }
 
-        mLockscreen.addItem(R.string.lock_screen_notifications_summary_show,
-                R.string.lock_screen_notifications_summary_show);
-        if (mSecure) {
-            mLockscreen.addItem(R.string.lock_screen_notifications_summary_hide,
-                    R.string.lock_screen_notifications_summary_hide);
-        }
-        mLockscreen.addItem(R.string.lock_screen_notifications_summary_disable,
-                R.string.lock_screen_notifications_summary_disable);
-        updateLockscreenNotifications();
-        mLockscreen.setCallback(new DropDownPreference.Callback() {
-            @Override
-            public boolean onItemSelected(int pos, Object value) {
-                final int val = (Integer) value;
-                if (val == mLockscreenSelectedValue) {
-                    return true;
-                }
-                final boolean enabled = val != R.string.lock_screen_notifications_summary_disable;
-                final boolean show = val == R.string.lock_screen_notifications_summary_show;
-                Settings.Secure.putInt(getContentResolver(),
-                        Settings.Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS, show ? 1 : 0);
-                Settings.Secure.putInt(getContentResolver(),
-                        Settings.Secure.LOCK_SCREEN_SHOW_NOTIFICATIONS, enabled ? 1 : 0);
-                mLockscreenSelectedValue = val;
-                return true;
-            }
-        });
+    //    mLockscreen.addItem(R.string.lock_screen_notifications_summary_show,
+    //            R.string.lock_screen_notifications_summary_show);
+    //    if (mSecure) {
+    //        mLockscreen.addItem(R.string.lock_screen_notifications_summary_hide,
+    //                R.string.lock_screen_notifications_summary_hide);
+    //    }
+    //    mLockscreen.addItem(R.string.lock_screen_notifications_summary_disable,
+    //            R.string.lock_screen_notifications_summary_disable);
+    //    updateLockscreenNotifications();
+    //    mLockscreen.setCallback(new DropDownPreference.Callback() {
+    //        @Override
+    //        public boolean onItemSelected(int pos, Object value) {
+    //            final int val = (Integer) value;
+    //            if (val == mLockscreenSelectedValue) {
+    //                return true;
+    //            }
+    //            final boolean enabled = val != R.string.lock_screen_notifications_summary_disable;
+    //            final boolean show = val == R.string.lock_screen_notifications_summary_show;
+    //            Settings.Secure.putInt(getContentResolver(),
+    //                    Settings.Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS, show ? 1 : 0);
+    //            Settings.Secure.putInt(getContentResolver(),
+    //                    Settings.Secure.LOCK_SCREEN_SHOW_NOTIFICATIONS, enabled ? 1 : 0);
+    //            mLockscreenSelectedValue = val;
+    //            return true;
+    //        }
+    //    });
+           // When Device is locked
+           parent.removePreference(parent.findPreference(KEY_LOCK_SCREEN_NOTIFICATIONS));
     }
 
-    private void updateLockscreenNotifications() {
-        if (mLockscreen == null) {
-            return;
-        }
-        final boolean enabled = getLockscreenNotificationsEnabled();
-        final boolean allowPrivate = !mSecure || getLockscreenAllowPrivateNotifications();
-        mLockscreenSelectedValue = !enabled ? R.string.lock_screen_notifications_summary_disable :
-                allowPrivate ? R.string.lock_screen_notifications_summary_show :
-                R.string.lock_screen_notifications_summary_hide;
-        mLockscreen.setSelectedValue(mLockscreenSelectedValue);
-    }
+//    private void updateLockscreenNotifications() {
+//        if (mLockscreen == null) {
+//            return;
+//        }
+//        final boolean enabled = getLockscreenNotificationsEnabled();
+//        final boolean allowPrivate = !mSecure || getLockscreenAllowPrivateNotifications();
+//        mLockscreenSelectedValue = !enabled ? R.string.lock_screen_notifications_summary_disable :
+//                allowPrivate ? R.string.lock_screen_notifications_summary_show :
+//                R.string.lock_screen_notifications_summary_hide;
+//        mLockscreen.setSelectedValue(mLockscreenSelectedValue);
+//    }
 
-    private boolean getLockscreenNotificationsEnabled() {
-        return Settings.Secure.getInt(getContentResolver(),
-                Settings.Secure.LOCK_SCREEN_SHOW_NOTIFICATIONS, 0) != 0;
-    }
+//  private boolean getLockscreenNotificationsEnabled() {
+//        return Settings.Secure.getInt(getContentResolver(),
+//                Settings.Secure.LOCK_SCREEN_SHOW_NOTIFICATIONS, 0) != 0;
+//    }
 
-    private boolean getLockscreenAllowPrivateNotifications() {
-        return Settings.Secure.getInt(getContentResolver(),
-                Settings.Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS, 0) != 0;
-    }
+//    private boolean getLockscreenAllowPrivateNotifications() {
+//        return Settings.Secure.getInt(getContentResolver(),
+//                Settings.Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS, 0) != 0;
+//    }
 
     // === Notification listeners ===
 
@@ -517,9 +520,9 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
             if (NOTIFICATION_LIGHT_PULSE_URI.equals(uri)) {
                 updatePulse();
             }
-            if (LOCK_SCREEN_PRIVATE_URI.equals(uri) || LOCK_SCREEN_SHOW_URI.equals(uri)) {
-                updateLockscreenNotifications();
-            }
+           // if (LOCK_SCREEN_PRIVATE_URI.equals(uri) || LOCK_SCREEN_SHOW_URI.equals(uri)) {
+           //     updateLockscreenNotifications();
+           // }
         }
     }
 
@@ -537,9 +540,9 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case UPDATE_PHONE_RINGTONE:
-                    mPhoneRingtonePreference.setSummary((CharSequence) msg.obj);
-                    break;
+                //case UPDATE_PHONE_RINGTONE:
+                //    mPhoneRingtonePreference.setSummary((CharSequence) msg.obj);
+                //    break;
                 case UPDATE_NOTIFICATION_RINGTONE:
                     mNotificationRingtonePreference.setSummary((CharSequence) msg.obj);
                     break;
@@ -601,7 +604,7 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
                 rt.add(KEY_NOTIFICATION_VOLUME);
             } else {
            //     rt.add(KEY_RING_VOLUME);
-                rt.add(KEY_PHONE_RINGTONE);
+           //     rt.add(KEY_PHONE_RINGTONE);
            //     rt.add(KEY_VIBRATE_WHEN_RINGING);
             }
             return rt;
