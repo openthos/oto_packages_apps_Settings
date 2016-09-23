@@ -171,31 +171,32 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             // The following block sets the string used when rotation is locked.
             // If the device locks specifically to portrait or landscape (rather than current
             // rotation), then we use a different string to include this information.
-            if (allowAllRotations(activity)) {
-                rotateLockedResourceId = R.string.display_auto_rotate_stay_in_current;
-            } else {
-                if (RotationPolicy.getRotationLockOrientation(activity)
-                        == Configuration.ORIENTATION_PORTRAIT) {
-                    rotateLockedResourceId =
-                            R.string.display_auto_rotate_stay_in_portrait;
-                } else {
-                    rotateLockedResourceId =
-                            R.string.display_auto_rotate_stay_in_landscape;
-                }
-            }
-            rotatePreference.addItem(activity.getString(rotateLockedResourceId), true);
-            rotatePreference.setSelectedItem(RotationPolicy.isRotationLocked(activity) ?
-                    1 : 0);
-            rotatePreference.setCallback(new Callback() {
-                @Override
-                public boolean onItemSelected(int pos, Object value) {
-                    RotationPolicy.setRotationLock(activity, (Boolean) value);
-                    return true;
-                }
-            });
-        } else {
+          //  if (allowAllRotations(activity)) {
+          //      rotateLockedResourceId = R.string.display_auto_rotate_stay_in_current;
+          //  } else {
+          //      if (RotationPolicy.getRotationLockOrientation(activity)
+          //              == Configuration.ORIENTATION_PORTRAIT) {
+          //          rotateLockedResourceId =
+          //                  R.string.display_auto_rotate_stay_in_portrait;
+          //      } else {
+          //          rotateLockedResourceId =
+          //                  R.string.display_auto_rotate_stay_in_landscape;
+          //      }
+          //  }
+          //  rotatePreference.addItem(activity.getString(rotateLockedResourceId), true);
+          //  rotatePreference.setSelectedItem(RotationPolicy.isRotationLocked(activity) ?
+          //          1 : 0);
+          // rotatePreference.setCallback(new Callback() {
+          //      @Override
+          //      public boolean onItemSelected(int pos, Object value) {
+          //          RotationPolicy.setRotationLock(activity, (Boolean) value);
+          //          return true;
+          //      }
+          //  });
+             }
+          // else {
             removePreference(KEY_AUTO_ROTATE);
-        }
+          //   }
     }
 
     private static boolean allowAllRotations(Context context) {
@@ -462,9 +463,9 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                     if (!isDozeAvailable(context)) {
                         result.add(KEY_DOZE);
                     }
-                    if (!RotationPolicy.isRotationLockToggleVisible(context)) {
-                        result.add(KEY_AUTO_ROTATE);
-                    }
+                   //   if (!RotationPolicy.isRotationLockToggleVisible(context)) {
+                   //     result.add(KEY_AUTO_ROTATE);
+                   // }
                     return result;
                 }
             };
