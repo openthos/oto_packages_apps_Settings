@@ -85,7 +85,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_AUTO_BRIGHTNESS = "auto_brightness";
     private static final String KEY_AUTO_ROTATE = "auto_rotate";
     private static final String KEY_RESOLUTION_SETTING = "resolution_setting";
-
+    private static final String KEY_WIFI_DISPLAY = "wifi_display";
     private static final int DLG_GLOBAL_CHANGE_WARNING = 1;
     private static final int SUBSTRING_LENGTH = 4;
     private static final int RESOLUTION_ONE_X = 1920;
@@ -115,7 +115,8 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         final ContentResolver resolver = activity.getContentResolver();
 
         addPreferencesFromResource(R.xml.display_settings);
-
+        // Remove cast screen.
+        removePreference(KEY_WIFI_DISPLAY);
         mScreenSaverPreference = findPreference(KEY_SCREEN_SAVER);
         if (mScreenSaverPreference != null
                 && getResources().getBoolean(
