@@ -123,17 +123,18 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
                 com.android.internal.R.drawable.ic_audio_vol_mute);
         initVolumePreference(KEY_ALARM_VOLUME, AudioManager.STREAM_ALARM,
                 com.android.internal.R.drawable.ic_audio_alarm_mute);
-        if (mVoiceCapable) {
-            mRingOrNotificationPreference =
-                    initVolumePreference(KEY_RING_VOLUME, AudioManager.STREAM_RING,
-                            com.android.internal.R.drawable.ic_audio_ring_notif_mute);
-            sound.removePreference(sound.findPreference(KEY_NOTIFICATION_VOLUME));
-        } else {
+        // if (mVoiceCapable) {
+        //    mRingOrNotificationPreference =
+        //            initVolumePreference(KEY_RING_VOLUME, AudioManager.STREAM_RING,
+        //                    com.android.internal.R.drawable.ic_audio_ring_notif_mute);
+        //    sound.removePreference(sound.findPreference(KEY_NOTIFICATION_VOLUME));
+        //  }
+        //  else {
             mRingOrNotificationPreference =
                     initVolumePreference(KEY_NOTIFICATION_VOLUME, AudioManager.STREAM_NOTIFICATION,
                             com.android.internal.R.drawable.ic_audio_ring_notif_mute);
             sound.removePreference(sound.findPreference(KEY_RING_VOLUME));
-        }
+        // }
         initRingtones(sound);
         initVibrateWhenRinging(sound);
 
@@ -338,11 +339,11 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
             Log.i(TAG, "Preference not found: " + KEY_VIBRATE_WHEN_RINGING);
             return;
         }
-        if (!mVoiceCapable) {
+       // if (!mVoiceCapable) {
             root.removePreference(mVibrateWhenRinging);
-            mVibrateWhenRinging = null;
-            return;
-        }
+       //     mVibrateWhenRinging = null;
+       //      return;
+       // }
         mVibrateWhenRinging.setPersistent(false);
         updateVibrateWhenRinging();
         mVibrateWhenRinging.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -599,9 +600,9 @@ public class NotificationSettings extends SettingsPreferenceFragment implements 
             if (Utils.isVoiceCapable(context)) {
                 rt.add(KEY_NOTIFICATION_VOLUME);
             } else {
-                rt.add(KEY_RING_VOLUME);
+           //     rt.add(KEY_RING_VOLUME);
                 rt.add(KEY_PHONE_RINGTONE);
-                rt.add(KEY_VIBRATE_WHEN_RINGING);
+           //     rt.add(KEY_VIBRATE_WHEN_RINGING);
             }
             return rt;
         }
