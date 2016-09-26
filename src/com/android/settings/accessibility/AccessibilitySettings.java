@@ -185,7 +185,7 @@ public class AccessibilitySettings extends SettingsPreferenceFragment implements
 
     private SwitchPreference mToggleLargeTextPreference;
     private SwitchPreference mToggleHighTextContrastPreference;
-    private SwitchPreference mTogglePowerButtonEndsCallPreference;
+    //private SwitchPreference mTogglePowerButtonEndsCallPreference;
     private SwitchPreference mToggleLockScreenRotationPreference;
     private SwitchPreference mToggleSpeakPasswordPreference;
     private ListPreference mSelectLongPressTimeoutPreference;
@@ -266,9 +266,9 @@ public class AccessibilitySettings extends SettingsPreferenceFragment implements
         } else if (mToggleHighTextContrastPreference == preference) {
             handleToggleTextContrastPreferenceClick();
             return true;
-        } else if (mTogglePowerButtonEndsCallPreference == preference) {
-            handleTogglePowerButtonEndsCallPreferenceClick();
-            return true;
+        //} else if (mTogglePowerButtonEndsCallPreference == preference) {
+        //  handleTogglePowerButtonEndsCallPreferenceClick();
+        //  return true;
         } else if (mToggleLockScreenRotationPreference == preference) {
             handleLockScreenRotationPreferenceClick();
             return true;
@@ -300,14 +300,13 @@ public class AccessibilitySettings extends SettingsPreferenceFragment implements
                 (mToggleHighTextContrastPreference.isChecked() ? 1 : 0));
     }
 
-    private void handleTogglePowerButtonEndsCallPreferenceClick() {
-        Settings.Secure.putInt(getContentResolver(),
-                Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR,
-                (mTogglePowerButtonEndsCallPreference.isChecked()
-                        ? Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR_HANGUP
-                        : Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR_SCREEN_OFF));
-    }
-
+    //private void handleTogglePowerButtonEndsCallPreferenceClick() {
+    //   Settings.Secure.putInt(getContentResolver(),
+    //         Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR,
+    //       (mTogglePowerButtonEndsCallPreference.isChecked()
+    //             ? Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR_HANGUP
+    //           : Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR_SCREEN_OFF));
+    //}
     private void handleLockScreenRotationPreferenceClick() {
         RotationPolicy.setRotationLockForAccessibility(getActivity(),
                 !mToggleLockScreenRotationPreference.isChecked());
@@ -360,12 +359,13 @@ public class AccessibilitySettings extends SettingsPreferenceFragment implements
         mToggleInversionPreference.setOnPreferenceChangeListener(this);
 
         // Power button ends calls.
-        mTogglePowerButtonEndsCallPreference =
-                (SwitchPreference) findPreference(TOGGLE_POWER_BUTTON_ENDS_CALL_PREFERENCE);
-        if (!KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_POWER)
-                || !Utils.isVoiceCapable(getActivity())) {
-            mSystemsCategory.removePreference(mTogglePowerButtonEndsCallPreference);
-        }
+        //mTogglePowerButtonEndsCallPreference =
+              //(SwitchPreference) findPreference(TOGGLE_POWER_BUTTON_ENDS_CALL_PREFERENCE);
+        //if (!KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_POWER)
+        //        || !Utils.isVoiceCapable(getActivity())) {
+            mSystemsCategory.removePreference((SwitchPreference) findPreference(
+                                                         TOGGLE_POWER_BUTTON_ENDS_CALL_PREFERENCE));
+        //}
 
         // Lock screen rotation.
         mToggleLockScreenRotationPreference =
@@ -542,16 +542,14 @@ public class AccessibilitySettings extends SettingsPreferenceFragment implements
                 Settings.Secure.ACCESSIBILITY_DISPLAY_INVERSION_ENABLED, 0) == 1);
 
         // Power button ends calls.
-        if (KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_POWER)
-                && Utils.isVoiceCapable(getActivity())) {
-            final int incallPowerBehavior = Settings.Secure.getInt(getContentResolver(),
-                    Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR,
-                    Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR_DEFAULT);
-            final boolean powerButtonEndsCall =
-                    (incallPowerBehavior == Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR_HANGUP);
-            mTogglePowerButtonEndsCallPreference.setChecked(powerButtonEndsCall);
-        }
-
+        // if (KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_POWER)
+        //         && Utils.isVoiceCapable(getActivity())) {
+        //   final int incallPowerBehavior = Settings.Secure.getInt(getContentResolver(),
+        //         Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR,
+        //       Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR_DEFAULT);
+        // final boolean powerButtonEndsCall =
+        //       (incallPowerBehavior == Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR_HANGUP);
+        //mTogglePowerButtonEndsCallPreference.setChecked(powerButtonEndsCall);}
         // Auto-rotate screen
         updateLockScreenRotationCheckbox();
 
