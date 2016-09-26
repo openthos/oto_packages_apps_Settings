@@ -267,6 +267,7 @@ public class SettingsActivity extends Activity
             R.id.security_settings,
             R.id.language_settings,
             R.id.user_settings,
+            R.id.privacy_settings,
             /**
              * Date: 5 July 2016
              * Expand settings with Account manager settings.
@@ -365,6 +366,7 @@ public class SettingsActivity extends Activity
             DataUsageSummary.class.getName(),
             DreamSettings.class.getName(),
             UserSettings.class.getName(),
+            PrivacySettings.class.getName(),
             /**
              * Date: 5 July 2016
              * Expand settings with Account manager settings.
@@ -1277,15 +1279,17 @@ public class SettingsActivity extends Activity
                         removeTile = true;
                     }
                 } else if (id == R.id.user_settings) {
-                    boolean hasMultipleUsers =
-                            ((UserManager) getSystemService(Context.USER_SERVICE))
-                                    .getUserCount() > 1;
-                    if (!UserHandle.MU_ENABLED
-                            || (!UserManager.supportsMultipleUsers()
-                                    && !hasMultipleUsers)
-                            || Utils.isMonkeyRunning()) {
-                        removeTile = true;
-                    }
+                    //boolean hasMultipleUsers =
+                    //        ((UserManager) getSystemService(Context.USER_SERVICE))
+                    //                .getUserCount() > 1;
+                    //if (!UserHandle.MU_ENABLED
+                    //        || (!UserManager.supportsMultipleUsers()
+                    //                && !hasMultipleUsers)
+                    //        || Utils.isMonkeyRunning()) {
+                    removeTile = true;
+                    // }
+                } else if (id == R.id.privacy_settings) {
+                    removeTile = true;
                 } else if (id == R.id.nfc_payment_settings) {
                     if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) {
                         removeTile = true;
