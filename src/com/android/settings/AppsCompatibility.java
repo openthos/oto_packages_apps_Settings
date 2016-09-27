@@ -24,25 +24,25 @@ import android.preference.SwitchPreference;
 
 public class AppsCompatibility extends SettingsPreferenceFragment {
 
-    private SwitchPreference mNativeBridgePreference;
+    //private SwitchPreference mNativeBridgePreference;
 
-    private static final String KEY_TOGGLE_NB = "toggle_nb";
-    private static final String PROPERTY_NATIVEBRIDGE = "persist.sys.nativebridge";
+    //private static final String KEY_TOGGLE_NB = "toggle_nb";
+    //private static final String PROPERTY_NATIVEBRIDGE = "persist.sys.nativebridge";
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         addPreferencesFromResource(R.xml.apps_compatibility_prefs);
-        mNativeBridgePreference = (SwitchPreference) findPreference(KEY_TOGGLE_NB);
-        mNativeBridgePreference.setChecked(SystemProperties.getBoolean(PROPERTY_NATIVEBRIDGE, true));
+        //mNativeBridgePreference = (SwitchPreference) findPreference(KEY_TOGGLE_NB);
+        //mNativeBridgePreference.setChecked(SystemProperties.getBoolean(PROPERTY_NATIVEBRIDGE, true));
     }
 
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-        if (preference == mNativeBridgePreference) {
-            SystemProperties.set(PROPERTY_NATIVEBRIDGE, mNativeBridgePreference.isChecked() ? "1" : "0");
-        }
+        //if (preference == mNativeBridgePreference) {
+        //    SystemProperties.set(PROPERTY_NATIVEBRIDGE, mNativeBridgePreference.isChecked() ? "1" : "0");
+        //}
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 }

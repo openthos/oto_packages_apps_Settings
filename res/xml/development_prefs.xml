@@ -16,6 +16,12 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
         android:title="@string/development_settings_title">
+
+    <SwitchPreference android:key="toggle_nb"
+        android:title="@string/nativebridge_toggle_title"
+        android:summary="@string/nativebridge_toggle_summary"
+        android:persistent="false" />
+
     <com.android.settings.BugreportPreference
             android:key="bugreport"
             android:title="@*android:string/bugreport_title"

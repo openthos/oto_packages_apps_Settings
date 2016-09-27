@@ -253,6 +253,10 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
     private boolean mUnavailable;
     private Dialog mRootDialog;
 
+    private SwitchPreference mNativeBridgePreference;
+    private static final String KEY_TOGGLE_NB = "toggle_nb";
+    private static final String PROPERTY_NATIVEBRIDGE = "persist.sys.nativebridge";
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -379,6 +383,10 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         if (!removeRootOptionsIfRequired()) {
             mAllPrefs.add(mRootAccess);
         }
+
+        mNativeBridgePreference = (SwitchPreference) findPreference(KEY_TOGGLE_NB);
+        mNativeBridgePreference.setChecked(SystemProperties.getBoolean
+                                                    (PROPERTY_NATIVEBRIDGE, true));
     }
 
     private ListPreference addListPreference(String prefKey) {
@@ -1417,7 +1425,9 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         if (Utils.isMonkeyRunning()) {
             return false;
         }
-
+        if (preference == mNativeBridgePreference) {
+            SystemProperties.set(PROPERTY_NATIVEBRIDGE, mNativeBridgePreference.isChecked() ? "1" : "0");
+        }
         if (preference == mEnableAdb) {
             if (mEnableAdb.isChecked()) {
                 mDialogClicked = false;

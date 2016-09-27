@@ -17,10 +17,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:settings="http://schemas.android.com/apk/res/com.android.settings"
         android:title="@string/apps_compatibility_title">
-
-    <SwitchPreference android:key="toggle_nb"
-        android:title="@string/nativebridge_toggle_title"
-        android:summary="@string/nativebridge_toggle_summary"
-        android:persistent="false" />
-
+ <!-- <SwitchPreference android:key="toggle_nb"
+            android:title="@string/nativebridge_toggle_title"
+            android:summary="@string/nativebridge_toggle_summary"
+            android:persistent="false" />
+ -->
 </PreferenceScreen>
