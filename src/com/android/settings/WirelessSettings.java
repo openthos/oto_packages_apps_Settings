@@ -94,7 +94,7 @@ public class WirelessSettings extends SettingsPreferenceFragment
     private static final int MANAGE_MOBILE_PLAN_DIALOG_ID = 1;
     private static final String SAVED_MANAGE_MOBILE_PLAN_MSG = "mManageMobilePlanMessage";
 
-    private AppListPreference mSmsApplicationPreference;
+    //private AppListPreference mSmsApplicationPreference;
 
     /**
      * Invoked on each preference click in this hierarchy, overrides
@@ -202,7 +202,7 @@ public class WirelessSettings extends SettingsPreferenceFragment
         if (appName != null) {
             defaultPackageName = appName.getPackageName();
         }
-        mSmsApplicationPreference.setPackageNames(packageNames, defaultPackageName);
+       //mSmsApplicationPreference.setPackageNames(packageNames, defaultPackageName);
     }
 
     @Override
@@ -273,14 +273,14 @@ public class WirelessSettings extends SettingsPreferenceFragment
         mAirplaneModeEnabler = new AirplaneModeEnabler(activity, mAirplaneModePreference);
         mNfcEnabler = new NfcEnabler(activity, nfc, androidBeam);
 
-        mSmsApplicationPreference = (AppListPreference) findPreference(KEY_SMS_APPLICATION);
+        //mSmsApplicationPreference = (AppListPreference) findPreference(KEY_SMS_APPLICATION);
         // Restricted users cannot currently read/write SMS.
-        if (isRestrictedUser) {
+        // if (isRestrictedUser) {
             removePreference(KEY_SMS_APPLICATION);
-        } else {
-            mSmsApplicationPreference.setOnPreferenceChangeListener(this);
-            initSmsApplicationSetting();
-        }
+        //} else {
+        //    mSmsApplicationPreference.setOnPreferenceChangeListener(this);
+        //    initSmsApplicationSetting();
+        //}
 
         // Remove NSD checkbox by default
         getPreferenceScreen().removePreference(nsd);
@@ -352,9 +352,9 @@ public class WirelessSettings extends SettingsPreferenceFragment
         }
 
         // Remove SMS Application if the device does not support SMS
-        if (!isSmsSupported()) {
+        //if (!isSmsSupported()) {
             removePreference(KEY_SMS_APPLICATION);
-        }
+        //}
 
         // Remove Airplane Mode settings if it's a stationary device such as a TV.
         if (mPm.hasSystemFeature(PackageManager.FEATURE_TELEVISION)) {
@@ -465,10 +465,10 @@ public class WirelessSettings extends SettingsPreferenceFragment
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (preference == mSmsApplicationPreference && newValue != null) {
-            SmsApplication.setDefaultApplication(newValue.toString(), getActivity());
-            return true;
-        }
+       //if (preference == mSmsApplicationPreference && newValue != null) {
+       //     SmsApplication.setDefaultApplication(newValue.toString(), getActivity());
+       //     return true;
+       //}
         return false;
     }
 
@@ -535,9 +535,9 @@ public class WirelessSettings extends SettingsPreferenceFragment
                 // Remove SMS Application if the device does not support SMS
                 TelephonyManager tm =
                         (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-                if (!tm.isSmsCapable() || isRestrictedUser) {
-                    result.add(KEY_SMS_APPLICATION);
-                }
+                //if (!tm.isSmsCapable() || isRestrictedUser) {
+                //    result.add(KEY_SMS_APPLICATION);
+                //}
 
                 final PackageManager pm = context.getPackageManager();
 
