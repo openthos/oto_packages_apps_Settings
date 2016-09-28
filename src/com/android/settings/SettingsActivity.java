@@ -1290,6 +1290,8 @@ public class SettingsActivity extends Activity
                     // }
                 } else if (id == R.id.privacy_settings) {
                     removeTile = true;
+                } else if (id == R.id.apps_compatibility_settings) {
+                    removeTile = true;
                 } else if (id == R.id.nfc_payment_settings) {
                     if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) {
                         removeTile = true;
