@@ -19,9 +19,9 @@
         android:key="jabol_settings"
         xmlns:settings="http://schemas.android.com/apk/res/com.android.settings">
 
-    <CheckBoxPreference
+ <!--    <CheckBoxPreference
          android:key="tieto_multiwindow"
          android:title="@string/tieto_multiwindow_title"
          android:persistent="false" />
-
+-->
 </PreferenceScreen>

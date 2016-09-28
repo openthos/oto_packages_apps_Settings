@@ -62,6 +62,7 @@ import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.preference.CheckBoxPreference;
 
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.search.Indexable;
@@ -257,6 +258,15 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
     private static final String KEY_TOGGLE_NB = "toggle_nb";
     private static final String PROPERTY_NATIVEBRIDGE = "persist.sys.nativebridge";
 
+    private static final String TAG2 = "JabolSettings";
+
+    private static final String KEY_JABOL_SETTINGS = "jabol_settings";
+    private static final String KEY_TIETO_MULTIWINDOW = "tieto_multiwindow";
+
+    private CheckBoxPreference mTietoMultiwindow;
+
+    private PreferenceGroup mJabolSettings;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -387,6 +397,16 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         mNativeBridgePreference = (SwitchPreference) findPreference(KEY_TOGGLE_NB);
         mNativeBridgePreference.setChecked(SystemProperties.getBoolean
                                                     (PROPERTY_NATIVEBRIDGE, true));
+
+        ContentResolver resolver = getContentResolver();
+        addPreferencesFromResource(R.xml.jabol_settings);
+
+        mTietoMultiwindow = (CheckBoxPreference) findPreference(KEY_TIETO_MULTIWINDOW);
+        mTietoMultiwindow.setPersistent(false);
+        mTietoMultiwindow.setChecked(Settings.System.getInt(resolver,
+                Settings.System.TIETO_MULTIWINDOW_DISABLED, 0) != 0);
+
+        mJabolSettings = (PreferenceGroup) findPreference(KEY_JABOL_SETTINGS);
     }
 
     private ListPreference addListPreference(String prefKey) {
@@ -1427,6 +1447,12 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         }
         if (preference == mNativeBridgePreference) {
             SystemProperties.set(PROPERTY_NATIVEBRIDGE, mNativeBridgePreference.isChecked() ? "1" : "0");
+        }
+        Log.d(TAG2, "Jabol setting has been changed");
+        if (preference == mTietoMultiwindow) {
+            Settings.System.putInt(getContentResolver(), Settings.System.TIETO_MULTIWINDOW_DISABLED,
+                    mTietoMultiwindow.isChecked() ? 1 : 0);
+            Log.d(TAG2, "Preference has been changed");
         }
         if (preference == mEnableAdb) {
             if (mEnableAdb.isChecked()) {

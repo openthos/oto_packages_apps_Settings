@@ -22,6 +22,11 @@
         android:summary="@string/nativebridge_toggle_summary"
         android:persistent="false" />
 
+    <CheckBoxPreference
+        android:key="tieto_multiwindow"
+        android:title="@string/tieto_multiwindow_title"
+        android:persistent="false" />
+
     <com.android.settings.BugreportPreference
             android:key="bugreport"
             android:title="@*android:string/bugreport_title"
