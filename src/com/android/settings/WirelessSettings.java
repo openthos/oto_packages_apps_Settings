@@ -111,9 +111,10 @@ public class WirelessSettings extends SettingsPreferenceFragment
                 new Intent(TelephonyIntents.ACTION_SHOW_NOTICE_ECM_BLOCK_OTHERS, null),
                 REQUEST_CODE_EXIT_ECM);
             return true;
-        } else if (preference == findPreference(KEY_MANAGE_MOBILE_PLAN)) {
-            onManageMobilePlanClick();
         }
+        // else if (preference == findPreference(KEY_MANAGE_MOBILE_PLAN)) {
+            onManageMobilePlanClick();
+        //}
         // Let the intents be launched by the Preference manager
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
@@ -121,7 +122,7 @@ public class WirelessSettings extends SettingsPreferenceFragment
     private String mManageMobilePlanMessage;
     public void onManageMobilePlanClick() {
         log("onManageMobilePlanClick:");
-        mManageMobilePlanMessage = null;
+       //mManageMobilePlanMessage = null;
         Resources resources = getActivity().getResources();
 
         NetworkInfo ni = mCm.getProvisioningOrActiveNetworkInfo();
@@ -335,21 +336,21 @@ public class WirelessSettings extends SettingsPreferenceFragment
 
         // Remove Mobile Network Settings and Manage Mobile Plan for secondary users,
         // if it's a wifi-only device, or if the settings are restricted.
-        if (isSecondaryUser || Utils.isWifiOnly(getActivity())
-                || mUm.hasUserRestriction(UserManager.DISALLOW_CONFIG_MOBILE_NETWORKS)) {
+        //if (isSecondaryUser || Utils.isWifiOnly(getActivity())
+        //        || mUm.hasUserRestriction(UserManager.DISALLOW_CONFIG_MOBILE_NETWORKS)) {
             removePreference(KEY_MOBILE_NETWORK_SETTINGS);
             removePreference(KEY_MANAGE_MOBILE_PLAN);
-        }
+        //}
         // Remove Mobile Network Settings and Manage Mobile Plan
         // if config_show_mobile_plan sets false.
-        final boolean isMobilePlanEnabled = this.getResources().getBoolean(
-                R.bool.config_show_mobile_plan);
-        if (!isMobilePlanEnabled) {
-            Preference pref = findPreference(KEY_MANAGE_MOBILE_PLAN);
-            if (pref != null) {
+        //final boolean isMobilePlanEnabled = this.getResources().getBoolean(
+        //        R.bool.config_show_mobile_plan);
+        //if (!isMobilePlanEnabled) {
+        //    Preference pref = findPreference(KEY_MANAGE_MOBILE_PLAN);
+        //  if (pref != null) {
                 removePreference(KEY_MANAGE_MOBILE_PLAN);
-            }
-        }
+        //    }
+        //}
 
         // Remove SMS Application if the device does not support SMS
         //if (!isSmsSupported()) {
@@ -519,18 +520,18 @@ public class WirelessSettings extends SettingsPreferenceFragment
                 }
 
                 // Remove Mobile Network Settings and Manage Mobile Plan if it's a wifi-only device.
-                if (isSecondaryUser || Utils.isWifiOnly(context)) {
-                    result.add(KEY_MOBILE_NETWORK_SETTINGS);
-                    result.add(KEY_MANAGE_MOBILE_PLAN);
-                }
+                //if (isSecondaryUser || Utils.isWifiOnly(context)) {
+                //    result.add(KEY_MOBILE_NETWORK_SETTINGS);
+                //    result.add(KEY_MANAGE_MOBILE_PLAN);
+                //}
 
                 // Remove Mobile Network Settings and Manage Mobile Plan
                 // if config_show_mobile_plan sets false.
-                final boolean isMobilePlanEnabled = context.getResources().getBoolean(
-                        R.bool.config_show_mobile_plan);
-                if (!isMobilePlanEnabled) {
-                    result.add(KEY_MANAGE_MOBILE_PLAN);
-                }
+                //final boolean isMobilePlanEnabled = context.getResources().getBoolean(
+                //        R.bool.config_show_mobile_plan);
+                //if (!isMobilePlanEnabled) {
+                //    result.add(KEY_MANAGE_MOBILE_PLAN);
+                //}
 
                 // Remove SMS Application if the device does not support SMS
                 TelephonyManager tm =
