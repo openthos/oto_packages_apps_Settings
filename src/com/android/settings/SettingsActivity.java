@@ -397,6 +397,7 @@ public class SettingsActivity extends Activity
              * Expand settings with Account manager settings.
              */
             com.koushikdutta.superuser.PolicyNativeFragment.class.getName(),
+            com.android.settings.deviceinfo.Memory.class.getName(),
             FireWallSettings.class.getName()
     };
 
@@ -1295,6 +1296,8 @@ public class SettingsActivity extends Activity
                 } else if (id == R.id.apps_compatibility_settings) {
                     removeTile = true;
                 } else if (id == R.id.jabol_settings) {
+                    removeTile = true;
+                } else if (id == R.id.storage_settings){
                     removeTile = true;
                 } else if (id == R.id.nfc_payment_settings) {
                     if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) {
