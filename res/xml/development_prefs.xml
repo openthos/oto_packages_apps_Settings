@@ -27,6 +27,12 @@
         android:title="@string/tieto_multiwindow_title"
         android:persistent="false" />
 
+    <PreferenceScreen
+        android:key="@+id/superuser_settings"
+        android:title="@string/superuser"
+        android:fragment="com.android.settings.cyanogenmod.superuser.PolicyNativeFragment"
+        android:persistent="false" />
+
     <com.android.settings.BugreportPreference
             android:key="bugreport"
             android:title="@*android:string/bugreport_title"
