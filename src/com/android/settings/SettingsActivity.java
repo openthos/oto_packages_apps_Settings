@@ -288,6 +288,7 @@ public class SettingsActivity extends Activity
              * Date: 20 July 2016
              * Expand settings with Account manager settings.
              */
+            R.id.superuser_settings,
             R.id.firewall_settings
     };
 
@@ -395,6 +396,7 @@ public class SettingsActivity extends Activity
              * Date: 20 July 2016
              * Expand settings with Account manager settings.
              */
+            com.koushikdutta.superuser.PolicyNativeFragment.class.getName(),
             FireWallSettings.class.getName()
     };
 
@@ -1313,9 +1315,9 @@ public class SettingsActivity extends Activity
                         removeTile = true;
                     }
                 } else if (id == R.id.superuser_settings) {
-                    if (!DevelopmentSettings.isRootForAppsEnabled()) {
+                    //if (!DevelopmentSettings.isRootForAppsEnabled()) {
                         removeTile = true;
-                    }
+                    //}
                 } else if (id == R.id.development_settings) {
                     if (!showDev || um.hasUserRestriction(
                             UserManager.DISALLOW_DEBUGGING_FEATURES)) {
