@@ -171,6 +171,11 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
 
     private static String DEFAULT_LOG_RING_BUFFER_SIZE_IN_BYTES = "262144"; // 256K
 
+    private static final String KEY_TOGGLE_INSTALL_APPLICATIONS = "toggle_install_applications";
+    private static final String KEY_DEVICE_ADMIN_CATEGORY = "device_admin_category";
+
+    private SwitchPreference mToggleAppInstallation;
+    private DialogInterface mWarnInstallApps;
     private IWindowManager mWindowManager;
     private IBackupManager mBackupManager;
     private DevicePolicyManager mDpm;
@@ -409,7 +414,32 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         mJabolSettings = (PreferenceGroup) findPreference(KEY_JABOL_SETTINGS);
     }
 
-    private ListPreference addListPreference(String prefKey) {
+    // Application install
+    private PreferenceScreen createPreferenceHierarchy() {
+        PreferenceScreen root = getPreferenceScreen();
+        if (root != null) {
+            root.removeAll();
+        }
+        addPreferencesFromResource(R.xml.security_settings);
+        root = getPreferenceScreen();
+        final UserManager um = (UserManager) getActivity().getSystemService(Context.USER_SERVICE);
+        // Application install
+        PreferenceGroup deviceAdminCategory = (PreferenceGroup)
+                root.findPreference(KEY_DEVICE_ADMIN_CATEGORY);
+        mToggleAppInstallation = (SwitchPreference) findPreference(
+                KEY_TOGGLE_INSTALL_APPLICATIONS);
+        mToggleAppInstallation.setChecked(isNonMarketAppsAllowed());
+        // Side loading of apps.
+        // Disable for restricted profiles. For others, check if policy disallows it.
+        mToggleAppInstallation.setEnabled(!um.getUserInfo(UserHandle.myUserId()).isRestricted());
+        if (um.hasUserRestriction(UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES)
+                || um.hasUserRestriction(UserManager.DISALLOW_INSTALL_APPS)) {
+            mToggleAppInstallation.setEnabled(false);
+        }
+        return root;
+    }
+
+   private ListPreference addListPreference(String prefKey) {
         ListPreference pref = (ListPreference) findPreference(prefKey);
         mAllPrefs.add(pref);
         pref.setOnPreferenceChangeListener(this);
@@ -1380,6 +1410,14 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
             public void onClick(DialogInterface dialog, int which) {
                 Utils.setOemUnlockEnabled(getActivity(), true);
                 updateAllOptions();
+                // Application install
+                if (dialog == mWarnInstallApps) {
+                    boolean turnOn = which == DialogInterface.BUTTON_POSITIVE;
+                        setNonMarketAppsAllowed(turnOn);
+                    if (mToggleAppInstallation != null) {
+                        mToggleAppInstallation.setChecked(turnOn);
+                    }
+                }
             }
         };
 
@@ -1653,6 +1691,32 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         }
     }
 
+    // Application install
+    private boolean isNonMarketAppsAllowed() {
+        return Settings.Global.getInt(getContentResolver(),
+                Settings.Global.INSTALL_NON_MARKET_APPS, 0) > 0;
+    }
+
+    private void setNonMarketAppsAllowed(boolean enabled) {
+        final UserManager um = (UserManager) getActivity().getSystemService(Context.USER_SERVICE);
+        if (um.hasUserRestriction(UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES)) {
+            return;
+        }
+        // Change the system setting
+        Settings.Global.putInt(getContentResolver(), Settings.Global.INSTALL_NON_MARKET_APPS,
+                enabled ? 1 : 0);
+    }
+
+    private void warnAppInstallation() {
+        // TODO: DialogFragment?
+        mWarnInstallApps = new AlertDialog.Builder(getActivity()).setTitle(
+                getResources().getString(R.string.error_title))
+                .setIcon(com.android.internal.R.drawable.ic_dialog_alert)
+                .setMessage(getResources().getString(R.string.install_all_warning))
+                .setPositiveButton(android.R.string.yes, this)
+                .setNegativeButton(android.R.string.no, this)
+                .show();
+    }
     public void onClick(DialogInterface dialog, int which) {
         if (dialog == mAdbDialog) {
             if (which == DialogInterface.BUTTON_POSITIVE) {
@@ -1695,6 +1759,14 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
                 writeRootAccessOptions("0");
             }
         }
+        // Application install
+        if (dialog == mWarnInstallApps) {
+            boolean turnOn = which == DialogInterface.BUTTON_POSITIVE;
+            setNonMarketAppsAllowed(turnOn);
+            if (mToggleAppInstallation != null) {
+                mToggleAppInstallation.setChecked(turnOn);
+            }
+        }
     }
 
     public void onDismiss(DialogInterface dialog) {
@@ -1716,6 +1788,10 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
     public void onDestroy() {
         dismissDialogs();
         super.onDestroy();
+        // Application install
+        if (mWarnInstallApps != null) {
+            mWarnInstallApps.dismiss();
+        }
     }
 
     void pokeSystemProperties() {
