@@ -36,6 +36,7 @@ import android.app.Dialog;
 import android.app.admin.DevicePolicyManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -79,6 +80,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
 
     private static final String KEY_SCREEN_TIMEOUT = "screen_timeout";
     private static final String KEY_FONT_SIZE = "font_size";
+    private static final String KEY_BRIGHTNESS = "brightness";
     private static final String KEY_SCREEN_SAVER = "screensaver";
     private static final String KEY_LIFT_TO_WAKE = "lift_to_wake";
     private static final String KEY_DOZE = "doze";
@@ -105,6 +107,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private SwitchPreference mDozePreference;
     private SwitchPreference mAutoBrightnessPreference;
     private Preference mResolutionSetting;
+    private Preference mBrightPref;
     private AlertDialog mDialog = null;
     private IWindowManager mWm;
 
@@ -141,6 +144,8 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         mFontSizePref = (WarnedListPreference) findPreference(KEY_FONT_SIZE);
         mFontSizePref.setOnPreferenceChangeListener(this);
         mFontSizePref.setOnPreferenceClickListener(this);
+        mBrightPref = findPreference(KEY_BRIGHTNESS);
+        mBrightPref.setOnPreferenceClickListener(this);
 
         if (isAutomaticBrightnessAvailable(getResources())) {
             mAutoBrightnessPreference = (SwitchPreference) findPreference(KEY_AUTO_BRIGHTNESS);
@@ -428,6 +433,10 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             }
         } else if (preference == mResolutionSetting) {
             showResolutionSettingDialog();
+            return true;
+        } else if (preference.getKey().equals(KEY_BRIGHTNESS)) {
+            Intent intent = new Intent(Intent.ACTION_SHOW_BRIGHTNESS_DIALOG);
+            getActivity().sendBroadcast(intent);
             return true;
         }
         return false;

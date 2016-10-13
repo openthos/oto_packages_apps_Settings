@@ -30,7 +30,8 @@ public class BrightnessPreference extends Preference {
 
     @Override
     protected void onClick() {
-        getContext().startActivityAsUser(new Intent(Intent.ACTION_SHOW_BRIGHTNESS_DIALOG),
-                UserHandle.CURRENT_OR_SELF);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SHOW_BRIGHTNESS_DIALOG);
+        getContext().sendBroadcast(intent);
     }
 }
