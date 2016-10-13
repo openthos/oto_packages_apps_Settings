@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/hot_key_title">
+    <PreferenceScreen android:key="hot_copy_item"
+        android:title="@string/hot_copy"
+        android:summary="@string/hot_ctrl_c">
+    </PreferenceScreen>
+    <PreferenceScreen android:key="hot_cut_item"
+        android:title="@string/hot_cut"
+        android:summary="@string/hot_ctrl_x">
+    </PreferenceScreen>
+    <PreferenceScreen android:key="hot_paste_item"
+        android:title="@string/hot_paste"
+        android:summary="@string/hot_ctrl_v">
+    </PreferenceScreen>
+    <PreferenceScreen android:key="hot_delete_item"
+        android:title="@string/hot_delete"
+        android:summary="@string/hot_ctrl_delete">
+    </PreferenceScreen>
+
+    <PreferenceScreen android:key="hot_shift_delete_item"
+        android:title="@string/hot_shift_delete"
+        android:summary="@string/hot_ctrl_shift_delete">
+    </PreferenceScreen>
+
+    <PreferenceScreen android:key="hot_rename_item"
+        android:title="@string/hot_rename"
+        android:summary="@string/hot_ctrl_rename">
+    </PreferenceScreen>
+
+    <PreferenceScreen android:key="hot_refresh_item"
+        android:title="@string/hot_refresh"
+        android:summary="@string/hot_ctrl_refresh">
+    </PreferenceScreen>
+
+    <PreferenceScreen android:key="hot_close_item"
+        android:title="@string/hot_close"
+        android:summary="@string/hot_ctrl_close">
+    </PreferenceScreen>
+
+    <PreferenceScreen android:key="hot_switch_item"
+        android:title="@string/hot_switch"
+        android:summary="@string/hot_ctrl_switch">
+    </PreferenceScreen>
+
+    <PreferenceScreen android:key="hot_selection_item"
+        android:title="@string/hot_selection"
+        android:summary="@string/hot_ctrl_selection">
+    </PreferenceScreen>
+
+</PreferenceScreen>

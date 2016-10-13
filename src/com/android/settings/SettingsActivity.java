@@ -119,6 +119,7 @@ import com.android.settings.wifi.SavedAccessPointsWifiSettings;
 import com.android.settings.wifi.WifiSettings;
 import com.android.settings.wifi.p2p.WifiP2pSettings;
 import com.android.settings.CloudServiceFragment;
+import com.android.settings.HotKeySettings;
 import com.android.settings.FireWallSettings;
 
 
@@ -284,6 +285,7 @@ public class SettingsActivity extends Activity
             R.id.home_settings,
             R.id.dashboard,
             R.id.cloud_service,
+            R.id.hot_key,
             /**
              * Date: 20 July 2016
              * Expand settings with Account manager settings.
@@ -392,6 +394,7 @@ public class SettingsActivity extends Activity
             QuickLaunchSettings.class.getName(),
             ApnSettings.class.getName(),
             CloudServiceFragment.class.getName(),
+            HotKeySettings.class.getName(),
             /**
              * Date: 20 July 2016
              * Expand settings with Account manager settings.

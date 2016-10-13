@@ -346,6 +346,7 @@
                 android:fragment="com.android.settings.DeviceInfoSettings"
                 android:icon="@drawable/ic_settings_about"
                 />
+
         <!-- About Cloud -->
         <dashboard-tile
                 android:id="@+id/cloud_service"
@@ -354,6 +355,13 @@
                 android:icon="@drawable/ico_cloud"
                 />
 
+        <!-- Hot Key -->
+        <dashboard-tile
+                android:id="@+id/hot_key"
+                android:title="@string/hot_key_title"
+                android:fragment="com.android.settings.HotKeySettings"
+                android:icon="@drawable/ico_cloud"
+                />
     </dashboard-category>
 
 </dashboard-categories>

@@ -6191,6 +6191,28 @@
     <string name="sync_memorandum">Memorandum</string>
     <string name="sync_photoalbum">Photo Album</string>
     <string name="cloud_service">Cloud Service</string>
+    <!-- hotkey -->
+    <string name="hot_copy">Copy</string>
+    <string name="hot_cut">Cut</string>
+    <string name="hot_paste">Paste</string>
+    <string name="hot_delete">Delete</string>
+    <string name="hot_shift_delete">Shift Delete</string>
+    <string name="hot_rename">Rename</string>
+    <string name="hot_refresh">Refresh</string>
+    <string name="hot_close">Close</string>
+    <string name="hot_switch">Switch</string>
+    <string name="hot_selection">Selection</string>
+    <string name="hot_ctrl_c">Ctrl+C</string>
+    <string name="hot_ctrl_x">Ctrl+X</string>
+    <string name="hot_ctrl_v">Ctrl+V</string>
+    <string name="hot_ctrl_delete">Delete</string>
+    <string name="hot_ctrl_shift_delete">Shift+Delete</string>
+    <string name="hot_ctrl_rename">F2</string>
+    <string name="hot_ctrl_refresh">F5</string>
+    <string name="hot_ctrl_close">Alt+F4</string>
+    <string name="hot_ctrl_switch">Tab</string>
+    <string name="hot_ctrl_selection">Up Down Left Right</string>
+    <string name="hot_key_title">Hot Key</string>
     <!--
         name:system reset
         author:wang zhixu

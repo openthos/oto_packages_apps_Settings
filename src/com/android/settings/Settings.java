@@ -131,5 +131,6 @@ public class Settings extends SettingsActivity {
      * Expand settings with Power manager settings.
      */
     public static class PowerManagerSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class HotKeySettingsActivity extends SettingsActivity { /* empty */ }
 }
 
