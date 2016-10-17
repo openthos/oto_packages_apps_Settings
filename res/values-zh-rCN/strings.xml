@@ -2529,183 +2529,205 @@
    -->
     <string name="account_manager_settings">系统账户管理</string>
 
-  <string name="openthos_id_settings_title">openthos ID</string>
-  <string name="email_address_summary">xxxx@xxx.com</string>
-  <string name="computer_username_settings_title">主机用户名设置</string>
-  <string name="computer_username_summary">John</string>
-  <string name="computer_name_settings_title">主机名 </string>
-  <string name="computer_name_summary">John的主机</string>
-  <string name="openthos_id">改变openthosId地址</string>
+    <string name="openthos_id_settings_title">openthos ID</string>
+    <string name="email_address_summary">xxxx@xxx.com</string>
+    <string name="computer_username_settings_title">主机用户名设置</string>
+    <string name="computer_username_summary">John</string>
+    <string name="computer_name_settings_title">主机名 </string>
+    <string name="computer_name_summary">John的主机</string>
+    <string name="openthos_id">改变openthosId地址</string>
 
-  <string name="computer_username_settings">Setting username</string>
-  <string name="computer_name_settings">设置主机名</string>
-  <string name="change_computer_username">修改用户名</string>
-  <string name="change_screen_password">修改锁屏密码</string>
-  <string name="change_computer_name">修改主机名</string>
+    <string name="computer_username_settings">Setting username</string>
+    <string name="computer_name_settings">设置主机名</string>
+    <string name="change_computer_username">修改用户名</string>
+    <string name="change_screen_password">修改锁屏密码</string>
+    <string name="change_computer_name">修改主机名</string>
 
-  <string name="old_password">旧密码</string>
-  <string name="new_password">新密码</string>
-  <string name="again_new_password">再次输入   </string>
+    <string name="old_password">旧密码</string>
+    <string name="new_password">新密码</string>
+    <string name="again_new_password">再次输入   </string>
   <!--
       Date: 29 june 2016
       Ethernet settings names and other strings.
    -->
-  <string name="ethernet_settings">以太网</string>
-  <!-- Ethernet configuration dialog add by hcldyao-->
-  <string name="eth_config_title">配置以太网</string>
-  <string name="eth_setting">以太网</string>
-  <string name="eth_dev_list">以太网设备:</string>
-  <string name="eth_con_type">链接类型</string>
-  <string name="eth_con_type_dhcp">DHCP</string>
-  <string name="eth_con_type_manual">静态 IP</string>
-  <string name="eth_dns">DNS 地址</string>
-  <string name="eth_gw">网关 地址</string>
-  <string name="eth_ipaddr">IP 地址</string>
-  <string name="eth_quick_toggle_title">以太网</string>
-  <string name="eth_quick_toggle_summary">打开以太网</string>
-  <string name="eth_conf_perf_title">以太网配置</string>
-  <string name="eth_conf_summary">配置以太网设备</string>
-  <string name="eth_mask">子网掩码</string>
-  <string name="eth_toggle_summary_off">关闭以太网</string>
-  <string name="eth_toggle_summary_on">打开以太网</string>
-  <string name="eth_settings_error">错误揉效的字符 0~255</string>
-  <string name="eth_settings_empty">c不能为空</string>
-  <!-- Label for the Network prefix of the network [CHAR LIMIT=25]-->
-  <string name="eth_network_prefix_length">网络前缀长度</string>
-  <!--
+    <string name="ethernet_settings">以太网</string>
+    <!-- Ethernet configuration dialog add by hcldyao-->
+    <string name="eth_config_title">配置以太网</string>
+    <string name="eth_setting">以太网</string>
+    <string name="eth_dev_list">以太网设备:</string>
+    <string name="eth_con_type">链接类型</string>
+    <string name="eth_con_type_dhcp">DHCP</string>
+    <string name="eth_con_type_manual">静态 IP</string>
+    <string name="eth_dns">DNS 地址</string>
+    <string name="eth_gw">网关 地址</string>
+    <string name="eth_ipaddr">IP 地址</string>
+    <string name="eth_quick_toggle_title">以太网</string>
+    <string name="eth_quick_toggle_summary">打开以太网</string>
+    <string name="eth_conf_perf_title">以太网配置</string>
+    <string name="eth_conf_summary">配置以太网设备</string>
+    <string name="eth_mask">子网掩码</string>
+    <string name="eth_toggle_summary_off">关闭以太网</string>
+    <string name="eth_toggle_summary_on">打开以太网</string>
+    <string name="eth_settings_error">错误揉效的字符 0~255</string>
+    <string name="eth_settings_empty">c不能为空</string>
+    <!-- Label for the Network prefix of the network [CHAR LIMIT=25]-->
+    <string name="eth_network_prefix_length">网络前缀长度</string>
+    <!--
         Date: 12 july 2016
         Proxy settings names and other strings.
      -->
-  <string name="proxy_server_address">Proxy server address</string>
-  <string name="proxy_post">端口</string>
-  <string name="proxy_settings">代理</string>
-  <string name="proxy_settings_address">服务器地址</string>
-  <string name="proxy_settings_port">端口</string>
-  <string name="proxy_settings_vertify">需验证</string>
-  <string name="proxy_settings_username">用户名</string>
-  <string name="proxy_settings_password">密码</string>
-  <string name="proxy_settings_restore">保存</string>
-  <string name="proxy_settings_reset">重置</string>
-  <string name="proxy_conf_perf_title">代理设置</string>
-  <string name="proxy_conf_summary">点击配置代理</string>
-  <!--
+    <string name="proxy_server_address">Proxy server address</string>
+    <string name="proxy_post">端口</string>
+    <string name="proxy_settings">代理</string>
+    <string name="proxy_settings_address">服务器地址</string>
+    <string name="proxy_settings_port">端口</string>
+    <string name="proxy_settings_vertify">需验证</string>
+    <string name="proxy_settings_username">用户名</string>
+    <string name="proxy_settings_password">密码</string>
+    <string name="proxy_settings_restore">保存</string>
+    <string name="proxy_settings_reset">重置</string>
+    <string name="proxy_conf_perf_title">代理设置</string>
+    <string name="proxy_conf_summary">点击配置代理</string>
+    <!--
        Date: 14 july 2016
        Energy saving mode settings names and other strings.
     -->
-  <string name="energy_saving_mode_title">节能设置</string>
-  <string name="energy_saving_mode_summary">设置节能模式</string>
-  <string name="energy_save_mode">节能模式</string>
-  <string name="energy_save_mode_balance">平衡</string>
-  <string name="energy_save_mode_saving">节能</string>
-  <string name="energy_save_mode_efficient">高效</string>
-  <!--
+    <string name="energy_saving_mode_title">节能设置</string>
+    <string name="energy_saving_mode_summary">设置节能模式</string>
+    <string name="energy_save_mode">节能模式</string>
+    <string name="energy_save_mode_balance">平衡</string>
+    <string name="energy_save_mode_saving">节能</string>
+    <string name="energy_save_mode_efficient">高效</string>
+    <!--
        Date: 15 july 2016
        Run Mode saving mode settings names and other strings.
     -->
-  <string name="run_mode_settings">运行模式</string>
-  <string name="run_mode_auto">自动选择</string>
-  <string name="run_mode_phone">手机模式</string>
-  <string name="run_mode_desktop">桌面模式</string>
-  <!--
+    <string name="run_mode_settings">运行模式</string>
+    <string name="run_mode_auto">自动选择</string>
+    <string name="run_mode_phone">手机模式</string>
+    <string name="run_mode_desktop">桌面模式</string>
+    <!--
        Date: 19 july 2016
        LockScreen settings names and other strings.
     -->
-  <string name="screen_lock_time_title">锁屏</string>
-  <string name="screen_lock_time_summary">设置锁屏时间</string>
-  <string name="screen_lock_time_charging_summary">{v} 后锁屏</string>
-  <string name="screen_lock_time_notcharging_summary">{v} 后锁屏</string>
-  <!--cloud service-->
-  <string name="sync_contact">通讯录</string>
-  <string name="sync_email">邮箱</string>
-  <string name="sync_calendar">日历</string>
-  <string name="sync_memorandum">备忘录</string>
-  <string name="sync_photoalbum">相册</string>
-  <string name="cloud_service">云服务</string>
-  <!--
+    <string name="screen_lock_time_title">锁屏</string>
+    <string name="screen_lock_time_summary">设置锁屏时间</string>
+    <string name="screen_lock_time_charging_summary">{v} 后锁屏</string>
+    <string name="screen_lock_time_notcharging_summary">{v} 后锁屏</string>
+    <!--cloud service-->
+    <string name="sync_contact">通讯录</string>
+    <string name="sync_email">邮箱</string>
+    <string name="sync_calendar">日历</string>
+    <string name="sync_memorandum">备忘录</string>
+    <string name="sync_photoalbum">相册</string>
+    <string name="cloud_service">云服务</string>
+    <!--
        name:system reset
        author:wang zhixu
        date:2016-07-20
-  -->
-  <string name="system_reset">系统重置</string>
-  <string name="system_reset_dialog_info">这将删除所有媒体和数据，并还原所有设置。是否继续？</string>
-  <string name="system_reset_info">系统重置将清除所有的数据，请提前做好备份！</string>
-  <string name="system_reset_dialog_cancel">取消</string>
-  <string name="system_reset_dialog_continue">继续</string>
-  <!--
+    -->
+    <string name="system_reset">系统重置</string>
+    <string name="system_reset_dialog_info">这将删除所有媒体和数据，并还原所有设置。是否继续？</string>
+    <string name="system_reset_info">系统重置将清除所有的数据，请提前做好备份！</string>
+    <string name="system_reset_dialog_cancel">取消</string>
+    <string name="system_reset_dialog_continue">继续</string>
+    <!--
            Date: 21 july 2016
            About settings names and other strings.
-        -->
-  <string name="openthos_version_title">Openthos版本</string>
-  <string name="openthos_version_default">未知</string>
-  <string name="browser_title">浏览器版本</string>
-  <string name="browser_version_default">未知</string>
-  <string name="cpu_info_title">CPU</string>
-  <string name="cpu_info_default">未知</string>
-  <string name="memory_info_title">内存</string>
-  <string name="memory_info_default">未知</string>
-  <string name="hard_disk_info_title">硬盘</string>
-  <string name="hard_disk_info_default">未知</string>
+    -->
+    <string name="openthos_version_title">Openthos版本</string>
+    <string name="openthos_version_default">未知</string>
+    <string name="browser_title">浏览器版本</string>
+    <string name="browser_version_default">未知</string>
+    <string name="cpu_info_title">CPU</string>
+    <string name="cpu_info_default">未知</string>
+    <string name="memory_info_title">内存</string>
+    <string name="memory_info_default">未知</string>
+    <string name="hard_disk_info_title">硬盘</string>
+    <string name="hard_disk_info_default">未知</string>
 
-  <string name="wifi_info_title">无线网</string>
-  <string name="ethernet_info_title">以太网</string>
-  <string name="setup_back">返回</string>
-  <string name="setup_next">下一步</string>
-  <string name="setup_skip">跳过</string>
-  <string name="setup_network_title">请设置您的openthos</string>
-  <string name="setup_network_setting">网络设置</string>
-  <string name="network_is_available">以太网可用</string>
-  <string name="network_is_not_available">以太网不可用</string>
-  <!--
+    <string name="wifi_info_title">无线网</string>
+    <string name="ethernet_info_title">以太网</string>
+    <string name="setup_back">返回</string>
+    <string name="setup_next">下一步</string>
+    <string name="setup_skip">跳过</string>
+    <string name="setup_network_title">请设置您的openthos</string>
+    <string name="setup_network_setting">网络设置</string>
+    <string name="network_is_available">以太网可用</string>
+    <string name="network_is_not_available">以太网不可用</string>
+    <!--
           Date: 03 Aug 2016
           About settings names and other strings.
-  -->
-  <!-- Jabol settings screen heading -->
-  <string name="jabol_settings">单窗口管理</string>
-  <string name="tieto_multiwindow_title">禁用叠拓多窗口</string>
-  <string name="auto_start">自启管理</string>
-  <string name="eth_select_discard">放弃</string>
-  <string name="eth_select_save">保存</string>
-  <string name="ethernet_card">网卡１</string>
-  <!--
+    -->
+    <!-- Jabol settings screen heading -->
+    <string name="jabol_settings">单窗口管理</string>
+    <string name="tieto_multiwindow_title">禁用叠拓多窗口</string>
+    <string name="auto_start">自启管理</string>
+    <string name="eth_select_discard">放弃</string>
+    <string name="eth_select_save">保存</string>
+    <string name="ethernet_card">网卡１</string>
+    <!--
        FireWall
-  -->
-  <string name="firewall_settings">防火墙</string>
-  <string name="available_net_applist">应用网络</string>
-  <string name="out_communicate">出站通信</string>
-  <string name="in_communicate">进站通信</string>
+    -->
+    <string name="firewall_settings">防火墙</string>
+    <string name="available_net_applist">应用网络</string>
+    <string name="out_communicate">出站通信</string>
+    <string name="in_communicate">进站通信</string>
 
-  <!--
+    <!--
         Date: 9 august 2016
         Power manager names and other strings.
     -->
-  <string name="power_manager_summary_title">电源管理</string>
-  <string name="power_manager_settings">电源管理</string>
-  <string name="battery_info_title">电量详细信息</string>
+    <string name="power_manager_summary_title">电源管理</string>
+    <string name="power_manager_settings">电源管理</string>
+    <string name="battery_info_title">电量详细信息</string>
 
- <!--
+    <!--
      System upgrade
-  -->
-  <string name="system_upgrade">系统升级配置</string>
-  <string name="system_upgrade_default_url">升级地址</string>
-  <string name="system_upgrade_default_path">下载路径</string>
-  <string name="system_upgrade_dialog_cancel">取消</string>
-  <string name="system_upgrade_dialog_continue">确认</string>
-  <string name="system_upgrade_dialog_title">系统配置升级</string>
-  <string name="system_upgrade_dialog_checkbox_default">默认</string>
-  <string name="system_upgrade_dialog_textview_url">更新地址:</string>
-  <string name="system_upgrade_dialog_textview_path">下载路径:</string>
-  <string name="system_upgrade_dialog_toast_attention">不能为空</string>
-  <string name="system_upgrade_dialog_toast_default">执行默认</string>
+    -->
+    <string name="system_upgrade">系统升级配置</string>
+    <string name="system_upgrade_default_url">升级地址</string>
+    <string name="system_upgrade_default_path">下载路径</string>
+    <string name="system_upgrade_dialog_cancel">取消</string>
+    <string name="system_upgrade_dialog_continue">确认</string>
+    <string name="system_upgrade_dialog_title">系统配置升级</string>
+    <string name="system_upgrade_dialog_checkbox_default">默认</string>
+    <string name="system_upgrade_dialog_textview_url">更新地址:</string>
+    <string name="system_upgrade_dialog_textview_path">下载路径:</string>
+    <string name="system_upgrade_dialog_toast_attention">不能为空</string>
+    <string name="system_upgrade_dialog_toast_default">执行默认</string>
 
- <!--
+   <!--
      System update
-  -->
-  <string name="system_promotion">系统升级</string>
+    -->
+    <string name="system_promotion">系统升级</string>
 
- <!--
+   <!--
        Date: 17 Aug 2016
        Resolution settings names and other strings.
     -->
-  <string name="resolution_setting_title">屏幕分辨率</string>
-  <string name="resolution_setting_summary">设置屏幕分辨率</string>
+
+    <string name="resolution_setting_title">屏幕分辨率</string>
+    <string name="resolution_setting_summary">设置屏幕分辨率</string>
+   <!-- Hot Key -->
+    <string name="hot_key_title">热键</string>
+    <string name="hot_copy">复制</string>
+    <string name="hot_cut">剪切</string>
+    <string name="hot_paste">粘贴</string>
+    <string name="hot_delete">放入回收站</string>
+    <string name="hot_shift_delete">永久删除</string>
+    <string name="hot_rename">重命名</string>
+    <string name="hot_refresh">刷新</string>
+    <string name="hot_close">关闭当前程序</string>
+    <string name="hot_switch">左右切换</string>
+    <string name="hot_ctrl_c">Ctrl+C</string>
+    <string name="hot_ctrl_x">Ctrl+X</string>
+    <string name="hot_ctrl_v">Ctrl+V</string>
+    <string name="hot_ctrl_delete">Delete</string>
+    <string name="hot_ctrl_shift_delete">Shift+Delete</string>
+    <string name="hot_ctrl_rename">F2</string>
+    <string name="hot_ctrl_refresh">F5</string>
+    <string name="hot_ctrl_close">Alt+F4</string>
+    <string name="hot_ctrl_switch">Tab</string>
+    <string name="hot_ctrl_selection">Up Down Left Right</string>
 </resources>
