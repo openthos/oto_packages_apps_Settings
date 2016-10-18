@@ -1300,9 +1300,7 @@ public class SettingsActivity extends Activity
                     removeTile = true;
                 } else if (id == R.id.jabol_settings) {
                     removeTile = true;
-                } else if (id == R.id.security_settings) {
-                    removeTile = true;
-                } else if (id == R.id.storage_settings) {
+                } else if (id == R.id.storage_settings){
                     removeTile = true;
                 } else if (id == R.id.nfc_payment_settings) {
                     if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) {
