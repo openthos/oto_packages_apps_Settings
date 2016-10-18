@@ -78,7 +78,7 @@ public class SecuritySettings extends SettingsPreferenceFragment
     private static final String KEY_LOCK_ENABLED = "lockenabled";
     private static final String KEY_VISIBLE_PATTERN = "visiblepattern";
     private static final String KEY_SECURITY_CATEGORY = "security_category";
-    //private static final String KEY_DEVICE_ADMIN_CATEGORY = "device_admin_category";
+    private static final String KEY_DEVICE_ADMIN_CATEGORY = "device_admin_category";
     private static final String KEY_LOCK_AFTER_TIMEOUT = "lock_after_timeout";
     private static final String KEY_OWNER_INFO_SETTINGS = "owner_info_settings";
     private static final String KEY_ADVANCED_SECURITY = "advanced_security";
@@ -95,7 +95,7 @@ public class SecuritySettings extends SettingsPreferenceFragment
     private static final String KEY_CREDENTIAL_STORAGE_TYPE = "credential_storage_type";
     private static final String KEY_RESET_CREDENTIALS = "credentials_reset";
     private static final String KEY_CREDENTIALS_INSTALL = "credentials_install";
-    //private static final String KEY_TOGGLE_INSTALL_APPLICATIONS = "toggle_install_applications";
+    private static final String KEY_TOGGLE_INSTALL_APPLICATIONS = "toggle_install_applications";
     private static final String KEY_POWER_INSTANTLY_LOCKS = "power_button_instantly_locks";
     private static final String KEY_CREDENTIALS_MANAGER = "credentials_management";
     private static final String PACKAGE_MIME_TYPE = "application/vnd.android.package-archive";
@@ -105,9 +105,7 @@ public class SecuritySettings extends SettingsPreferenceFragment
     // These switch preferences need special handling since they're not all stored in Settings.
     private static final String SWITCH_PREFERENCE_KEYS[] = { KEY_LOCK_AFTER_TIMEOUT,
             KEY_LOCK_ENABLED, KEY_VISIBLE_PATTERN, KEY_BIOMETRIC_WEAK_LIVELINESS,
-            KEY_POWER_INSTANTLY_LOCKS, KEY_SHOW_PASSWORD
-            //, KEY_TOGGLE_INSTALL_APPLICATIONS
-};
+            KEY_POWER_INSTANTLY_LOCKS, KEY_SHOW_PASSWORD, KEY_TOGGLE_INSTALL_APPLICATIONS };
 
     // Only allow one trust agent on the platform.
     private static final boolean ONLY_ONE_TRUST_AGENT = true;
@@ -127,8 +125,8 @@ public class SecuritySettings extends SettingsPreferenceFragment
     private KeyStore mKeyStore;
     private Preference mResetCredentials;
 
-    //private SwitchPreference mToggleAppInstallation;
-    //private DialogInterface mWarnInstallApps;
+    private SwitchPreference mToggleAppInstallation;
+    private DialogInterface mWarnInstallApps;
     private SwitchPreference mPowerButtonInstantlyLocks;
 
     private boolean mIsPrimary;
@@ -335,18 +333,18 @@ public class SecuritySettings extends SettingsPreferenceFragment
         }
 
         // Application install
-        //PreferenceGroup deviceAdminCategory = (PreferenceGroup)
-        //        root.findPreference(KEY_DEVICE_ADMIN_CATEGORY);
-        //mToggleAppInstallation = (SwitchPreference) findPreference(
-        //        KEY_TOGGLE_INSTALL_APPLICATIONS);
-        //mToggleAppInstallation.setChecked(isNonMarketAppsAllowed());
+        PreferenceGroup deviceAdminCategory = (PreferenceGroup)
+                root.findPreference(KEY_DEVICE_ADMIN_CATEGORY);
+        mToggleAppInstallation = (SwitchPreference) findPreference(
+                KEY_TOGGLE_INSTALL_APPLICATIONS);
+        mToggleAppInstallation.setChecked(isNonMarketAppsAllowed());
         // Side loading of apps.
         // Disable for restricted profiles. For others, check if policy disallows it.
-        //mToggleAppInstallation.setEnabled(!um.getUserInfo(UserHandle.myUserId()).isRestricted());
-        //if (um.hasUserRestriction(UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES)
-        //        || um.hasUserRestriction(UserManager.DISALLOW_INSTALL_APPS)) {
-        //    mToggleAppInstallation.setEnabled(false);
-        //}
+        mToggleAppInstallation.setEnabled(!um.getUserInfo(UserHandle.myUserId()).isRestricted());
+        if (um.hasUserRestriction(UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES)
+                || um.hasUserRestriction(UserManager.DISALLOW_INSTALL_APPS)) {
+            mToggleAppInstallation.setEnabled(false);
+        }
 
         // Advanced Security features
         PreferenceGroup advancedCategory =
@@ -433,49 +431,49 @@ public class SecuritySettings extends SettingsPreferenceFragment
         return result;
     }
 
-    //private boolean isNonMarketAppsAllowed() {
-        //return Settings.Global.getInt(getContentResolver(),
-                                      //Settings.Global.INSTALL_NON_MARKET_APPS, 0) > 0;
-    //}
+    private boolean isNonMarketAppsAllowed() {
+        return Settings.Global.getInt(getContentResolver(),
+                                      Settings.Global.INSTALL_NON_MARKET_APPS, 0) > 0;
+    }
 
-    //private void setNonMarketAppsAllowed(boolean enabled) {
-    //    final UserManager um = (UserManager) getActivity().getSystemService(Context.USER_SERVICE);
-    //    if (um.hasUserRestriction(UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES)) {
-    //        return;
-    //    }
-    //    Change the system setting
-    //       Settings.Global.putInt(getContentResolver(), Settings.Global.INSTALL_NON_MARKET_APPS,
-    //                            enabled ? 1 : 0);
-    //}
+    private void setNonMarketAppsAllowed(boolean enabled) {
+        final UserManager um = (UserManager) getActivity().getSystemService(Context.USER_SERVICE);
+        if (um.hasUserRestriction(UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES)) {
+            return;
+        }
+        // Change the system setting
+        Settings.Global.putInt(getContentResolver(), Settings.Global.INSTALL_NON_MARKET_APPS,
+                                enabled ? 1 : 0);
+    }
 
-    //private void warnAppInstallation() {
+    private void warnAppInstallation() {
         // TODO: DialogFragment?
-    //    mWarnInstallApps = new AlertDialog.Builder(getActivity()).setTitle(
-    //            getResources().getString(R.string.error_title))
-    //            .setIcon(com.android.internal.R.drawable.ic_dialog_alert)
-    //            .setMessage(getResources().getString(R.string.install_all_warning))
-    //            .setPositiveButton(android.R.string.yes, this)
-    //            .setNegativeButton(android.R.string.no, this)
-    //            .show();
-    //}
+        mWarnInstallApps = new AlertDialog.Builder(getActivity()).setTitle(
+                getResources().getString(R.string.error_title))
+                .setIcon(com.android.internal.R.drawable.ic_dialog_alert)
+                .setMessage(getResources().getString(R.string.install_all_warning))
+                .setPositiveButton(android.R.string.yes, this)
+                .setNegativeButton(android.R.string.no, this)
+                .show();
+    }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        //if (dialog == mWarnInstallApps) {
-            //boolean turnOn = which == DialogInterface.BUTTON_POSITIVE;
-            //setNonMarketAppsAllowed(turnOn);
-            //if (mToggleAppInstallation != null) {
-            //    mToggleAppInstallation.setChecked(turnOn);
-            //}
-        //}
+        if (dialog == mWarnInstallApps) {
+            boolean turnOn = which == DialogInterface.BUTTON_POSITIVE;
+            setNonMarketAppsAllowed(turnOn);
+            if (mToggleAppInstallation != null) {
+                mToggleAppInstallation.setChecked(turnOn);
+            }
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //if (mWarnInstallApps != null) {
-            //mWarnInstallApps.dismiss();
-        //}
+        if (mWarnInstallApps != null) {
+            mWarnInstallApps.dismiss();
+        }
     }
 
     private void setupLockAfterPreference() {
@@ -690,17 +688,16 @@ public class SecuritySettings extends SettingsPreferenceFragment
         } else if (KEY_SHOW_PASSWORD.equals(key)) {
             Settings.System.putInt(getContentResolver(), Settings.System.TEXT_SHOW_PASSWORD,
                     ((Boolean) value) ? 1 : 0);
-        } //else if (KEY_TOGGLE_INSTALL_APPLICATIONS.equals(key)) {
-          //  if ((Boolean) value) {
-                //mToggleAppInstallation.setChecked(false);
-          //      warnAppInstallation();
+        } else if (KEY_TOGGLE_INSTALL_APPLICATIONS.equals(key)) {
+            if ((Boolean) value) {
+                mToggleAppInstallation.setChecked(false);
+                warnAppInstallation();
                 // Don't change Switch status until user makes choice in dialog, so return false.
-          //      result = false;
-          //  }
-          //    else {
-          //      setNonMarketAppsAllowed(false);
-          //  }
-        //}
+                result = false;
+            } else {
+                setNonMarketAppsAllowed(false);
+            }
+        }
         return result;
     }
 
