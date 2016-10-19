@@ -6210,7 +6210,7 @@
     <string name="hot_ctrl_rename">F2</string>
     <string name="hot_ctrl_refresh">F5</string>
     <string name="hot_ctrl_close">Alt+F4</string>
-    <string name="hot_ctrl_switch">Tab</string>
+    <string name="hot_ctrl_switch">Alt+Tab</string>
     <string name="hot_ctrl_selection">Up Down Left Right</string>
     <string name="hot_key_title">Hot Key</string>
     <!--
