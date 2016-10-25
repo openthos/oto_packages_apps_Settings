@@ -3429,7 +3429,7 @@
     <!-- [CHAR LIMIT=NONE] Setting checkbox summary for Whether to include bug report item in power -->
     <string name="bugreport_in_power_summary">Show a button in the power menu for taking a bug report</string>
     <!-- Setting Checkbox title whether to keep the screen on when plugged in to a power source -->
-    <string name="keep_screen_on">Stay awake</string>
+    <!--<string name="keep_screen_on">Stay awake</string>-->
     <!-- setting Checkbox summary whether to keep the screen on when plugged in  -->
     <string name="keep_screen_on_summary">Screen will never sleep while charging</string>
     <!-- Setting Checkbox title whether to enable bluetooth HCI snoop log -->
@@ -6278,6 +6278,7 @@
     <string name="power_manager_summary_title">PowerManager</string>
     <string name="power_manager_settings">PowerManager</string>
     <string name="battery_info_title">Battery Info</string>
+    <string name="keep_screen_on">Stay awake</string>
 
     <!--
        Date: 17 Aug 2016

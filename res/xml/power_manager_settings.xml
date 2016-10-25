@@ -45,4 +45,10 @@
         android:title="@string/battery_info_title"
         android:fragment="com.android.settings.fuelgauge.PowerUsageSummary"/>
 
+    <!--keep screen on -->
+    <SwitchPreference
+        android:key="keep_screen_on"
+        android:title="@string/keep_screen_on"
+        android:summary="@string/keep_screen_on_summary"/>
+
 </PreferenceScreen>
