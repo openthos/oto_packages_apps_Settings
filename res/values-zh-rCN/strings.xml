@@ -2719,7 +2719,8 @@
     <string name="hot_rename">重命名</string>
     <string name="hot_refresh">刷新</string>
     <string name="hot_close">关闭当前程序</string>
-    <string name="hot_switch">左右切换</string>
+    <string name="hot_switch">左右子面板切换</string>
+    <string name="hot_selection">上下左右切换</string>
     <string name="hot_ctrl_c">Ctrl+C</string>
     <string name="hot_ctrl_x">Ctrl+X</string>
     <string name="hot_ctrl_v">Ctrl+V</string>
