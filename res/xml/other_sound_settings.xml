@@ -20,12 +20,12 @@
         xmlns:settings="http://schemas.android.com/apk/res/com.android.settings">
 
     <!-- Dial pad tones -->
-    <SwitchPreference
+    <!--<SwitchPreference
             android:key="dial_pad_tones"
             android:title="@string/dial_pad_tones_title"
             android:switchTextOff=""
             android:switchTextOn=""
-            android:persistent="false" />
+            android:persistent="false" />-->
 
     <!-- Screen locking sounds -->
     <SwitchPreference

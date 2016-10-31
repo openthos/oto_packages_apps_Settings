@@ -5774,7 +5774,7 @@
     <string name="other_sound_settings">Other sounds</string>
 
     <!-- Sound & notification > Other sounds: Title for the option enabling touch sounds for dial pad tones. [CHAR LIMIT=30] -->
-    <string name="dial_pad_tones_title">Dial pad tones</string>
+    <!--<string name="dial_pad_tones_title">Dial pad tones</string>-->
 
     <!-- Sound & notification > Other sounds: Title for the option enabling touch sounds for screen locking sounds. [CHAR LIMIT=30] -->
     <string name="screen_locking_sounds_title">Screen locking sounds</string>
