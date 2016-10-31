@@ -401,7 +401,8 @@ public class SettingsActivity extends Activity
              */
             com.koushikdutta.superuser.PolicyNativeFragment.class.getName(),
             com.android.settings.deviceinfo.Memory.class.getName(),
-            FireWallSettings.class.getName()
+            FireWallSettings.class.getName(),
+            com.android.settings.WallpaperTypeSettings.class.getName()
     };
 
 

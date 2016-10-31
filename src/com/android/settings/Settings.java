@@ -52,6 +52,7 @@ public class Settings extends SettingsActivity {
      */
     public static class JabolSettingsActivity extends SettingsActivity { /* empty */ }
     public static class DisplaySettingsActivity extends SettingsActivity { /* empty */ }
+    public static class WallpaperPickerActivity extends SettingsActivity { /* empty */ }
     public static class DeviceInfoSettingsActivity extends SettingsActivity { /* empty */ }
     public static class ApplicationSettingsActivity extends SettingsActivity { /* empty */ }
     public static class AppsCompatibilityActivity extends SettingsActivity { /* empty */ }
