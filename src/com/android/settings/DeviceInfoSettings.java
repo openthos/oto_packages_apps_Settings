@@ -76,6 +76,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.lang.Math;
 import java.io.InputStreamReader;
+import java.io.FileInputStream;
 
 import android.content.Context;
 import android.content.ComponentName;
@@ -242,11 +243,12 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
             setStringSummary(KEY_SELINUX_STATUS, status);
         }
 
-        //set the browser/cpu/memory/harddisk info
+        //set the browser/cpu/memory/harddisk/openthosVersion info
         setStringSummary(KEY_CPU_INFO,getCpuInfo());
         setStringSummary(KEY_BROWSER_VERSION, getBrowserVersion());
         setStringSummary(KEY_MEMORY_INFO, getTotalMemory());
         setStringSummary(KEY_HARD_DISK_INFO, getHardDiskMemory());
+        setStringSummary(KEY_OPENTHOS_VERSION,getOpenthosVersion());
 
         // Remove selinux information if property is not present
         removePreferenceIfPropertyMissing(getPreferenceScreen(), KEY_SELINUX_STATUS,
@@ -742,6 +744,45 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         }
 
         return pi.versionName;
+    }
+
+    //get the openthos version
+    private String getOpenthosVersion() {
+        String path = "/system/version";
+        String openthosVersion = null;
+        if (new File(path).exists()) {
+            String[] data = getFileDes(path).split("\n");
+            return openthosVersion = data[0].split(":")[1] + "(" + data[1].split(":")[1] + ")";
+        }
+        return openthosVersion;
+    }
+
+    private String getFileDes(String path) {
+        File file = new File(path);
+        BufferedReader br = null;
+        String str = null;
+        StringBuffer data = new StringBuffer();
+
+        try {
+            InputStreamReader read = new InputStreamReader(new FileInputStream(file), "UTF-8");
+            br = new BufferedReader(new FileReader(file));
+            int line = 1;
+            while ((str = br.readLine()) != null) {
+                line++;
+                data.append(str).append("\n");
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+        return data.toString();
     }
     /* upgrade dialog method */
     private void upgradeDialog() {
