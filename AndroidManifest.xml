@@ -2065,6 +2065,14 @@
                 android:label="@string/app_notifications_title"
                 android:exported="true"
                 android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="com.android.settings.NOTIFICATION_APP_LIST" />
+                <action android:name="android.settings.NOTIFICATION_APP_LIST" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.VOICE_LAUNCH" />
+            </intent-filter>
+
             <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
                 android:value="com.android.settings.notification.NotificationAppList" />
             <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
@@ -2243,5 +2251,13 @@
                 android:value="true" />
         </activity>
 
+        <activity-alias android:name="NotificationAppList"
+                android:exported="true"
+                android:targetActivity="Settings$NotificationAppListActivity">
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                android:value="com.android.settings.notification.NotificationAppList" />
+            <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
+                android:resource="@id/notification_settings" />
+        </activity-alias>
     </application>
 </manifest>
