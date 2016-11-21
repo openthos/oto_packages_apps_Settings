@@ -131,6 +131,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
     private static final String OTO_OTA_CLASS_NAME = "com.openthos.ota.MainActivity";
 
     static final int TAPS_TO_BE_A_DEVELOPER = 7;
+    static final int SUMMARY_LIMIT_NUMBER = 100;
 
     long[] mHits = new long[3];
     int mDevHitCountdown;
@@ -696,13 +697,29 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
     }
 
     //get the hard disk memroy
-    private String getHardDiskMemory()
-    {
-        File root = Environment.getRootDirectory();
-        StatFs sf = new StatFs(root.getPath());
-        long blockSize = sf.getBlockSize();
-        long availCount = sf.getAvailableBlocks();
-        return (availCount * blockSize) / 1024 / 1024 / 1024 + "G";
+    private String getHardDiskMemory() {
+        StatFs stat = new StatFs(Environment.getRootDirectory().getPath());
+        return convertStorage(stat.getBlockSize() * stat.getBlockCount() + getSDCardInfo());
+    }
+
+    private String convertStorage(long size) {
+        long mb = 1024 * 1024;
+        long gb = mb * 1024;
+        if (size >= gb) {
+            return String.format("%.1f GB", (float) size/ gb);
+        } else {
+            float f = (float) size / mb;
+            return String.format(f > SUMMARY_LIMIT_NUMBER ? "%.0f MB" : "%.1f MB", f);
+        }
+    }
+
+    private long getSDCardInfo() {
+        File pathFile = Environment.getExternalStorageDirectory();
+        try {
+            android.os.StatFs statfs = new android.os.StatFs(pathFile.getPath());
+            return statfs.getBlockCount() * statfs.getBlockSize();
+        } catch (IllegalArgumentException e) {}
+        return 0;
     }
 
     //get CPU Information
