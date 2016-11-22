@@ -2610,6 +2610,8 @@
        Date: 19 july 2016
        LockScreen settings names and other strings.
     -->
+    <string name="check_password">旧密码输入错误</string>
+    <string name="wrong_password">输入的两次密码不一致或密码为空</string>
     <string name="screen_lock_time_title">锁屏</string>
     <string name="screen_lock_time_summary">设置锁屏时间</string>
     <string name="screen_lock_time_charging_summary">{v} 后锁屏</string>

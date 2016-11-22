@@ -4388,6 +4388,8 @@
     <string name="credentials_reset_hint">Remove all the contents?</string>
     <string name="credentials_password_too_short">The password must have at least 8 characters.</string>
     <!-- Error message [CHAR LIMIT=NONE] -->
+    <string name="check_password">Old password input error</string>
+    <string name="wrong_password">Confirm password is not identical or Password is empty</string>
     <string name="credentials_wrong_password">Incorrect password.</string>
     <!-- Error message [CHAR LIMIT=NONE] -->
     <string name="credentials_reset_warning">Incorrect password. You have one more chance before credential storage is erased.</string>

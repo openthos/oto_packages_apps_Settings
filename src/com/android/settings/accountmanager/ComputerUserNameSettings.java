@@ -17,6 +17,7 @@
 package com.android.settings.accountmanager;
 
 import android.app.AlertDialog;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
@@ -33,6 +34,8 @@ import android.view.textservice.SpellCheckerSubtype;
 import android.view.textservice.TextServicesManager;
 import android.widget.Switch;
 import android.widget.EditText;
+import android.widget.Toast;
+import android.text.TextUtils;
 
 import com.android.settings.R;
 import com.android.settings.SettingsActivity;
@@ -40,6 +43,7 @@ import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.widget.SwitchBar;
 import com.android.settings.widget.SwitchBar.OnSwitchChangeListener;
 import com.android.otosoft.tools.ChangeBuildPropTools;
+import com.android.internal.widget.LockPatternUtils;
 
 public class ComputerUserNameSettings extends SettingsPreferenceFragment
         implements OnPreferenceClickListener {
@@ -55,6 +59,10 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
     private AlertDialog mDialog = null;
     private TextServicesManager mTsm;
     private String userName;
+    private EditText mOldPassword;
+    private EditText mNewPassword;
+    private EditText mAgainnewPassword;
+    private LockPatternUtils mLockPatternUtils;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -66,6 +74,7 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
         mScreenPasswordPref.setOnPreferenceClickListener(this);
 
         userName = ChangeBuildPropTools.getPropertyValue(RO_PROPERTY_USER);
+        mLockPatternUtils = new LockPatternUtils(getActivity());
         mComputerUserNamePref.setSummary(userName);
 
     }
@@ -133,6 +142,9 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         final View screenPasswordDialog = layoutInflater
                 .inflate(R.layout.screen_password_dialog, null);
+        mOldPassword = (EditText) screenPasswordDialog.findViewById(R.id.old_password);
+        mNewPassword = (EditText) screenPasswordDialog.findViewById(R.id.new_password);
+        mAgainnewPassword = (EditText) screenPasswordDialog.findViewById(R.id.again_new_password);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.change_screen_password);
         builder.setView(screenPasswordDialog);
@@ -140,7 +152,13 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-
+                String mOldPasswordpin = mOldPassword.getText().toString();
+                if (mLockPatternUtils.checkPassword(mOldPasswordpin)) {
+                    savePassword();
+                } else {
+                    Toast.makeText(getActivity(),getText(R.string.check_password),
+                    Toast.LENGTH_SHORT).show();
+                }
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -150,6 +168,19 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
         });
         mDialog = builder.create();
         mDialog.show();
+    }
+
+    private void savePassword() {
+        String newpasswordpin=mNewPassword.getText().toString();
+        String againpasswordpin=mAgainnewPassword.getText().toString();
+        if (!TextUtils.isEmpty(newpasswordpin) && !TextUtils.isEmpty(againpasswordpin)
+                                               && newpasswordpin.equals(againpasswordpin)) {
+            mLockPatternUtils.saveLockPassword(newpasswordpin,
+                                               DevicePolicyManager.PASSWORD_QUALITY_NUMERIC, false);
+        } else {
+            Toast.makeText(getActivity(), getText(R.string.wrong_password),
+                           Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void updateComputerUserName(String name){
