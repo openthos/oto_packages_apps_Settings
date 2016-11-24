@@ -37,6 +37,10 @@ import com.android.settings.accountmanager.OpenthosIDSettings;
 import com.android.settings.accountmanager.ComputerUserNameSettings;
 import com.android.otosoft.tools.ChangeBuildPropTools;
 
+import android.content.ContentResolver;
+import android.net.Uri;
+import android.database.Cursor;
+
 public class AccountManagerSettings extends SettingsPreferenceFragment implements
         Preference.OnPreferenceChangeListener , Preference.OnPreferenceClickListener{
 
@@ -56,6 +60,8 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
     private String computerName;
 
     private PreferenceGroup mAccountManagerSettings;
+
+    private ContentResolver mResolver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +102,16 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
             intentComputer.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT_TITLE_RESID,
                     R.string.computer_username_settings_title);
             mComputerUserName.setIntent(intentComputer);
+
+            mResolver = getActivity().getContentResolver();
+            Uri uriQuery = Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
+            Cursor cursor = mResolver.query(uriQuery, null, null, null, null);
+            if (cursor != null) {
+                while(cursor.moveToNext()) {
+                    String id = cursor.getString(cursor.getColumnIndex("openthosID"));
+                    mOpenthosID.setSummary(id);
+               }
+            }
         }
     }
 

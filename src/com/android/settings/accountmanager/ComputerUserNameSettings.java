@@ -44,6 +44,7 @@ import com.android.settings.widget.SwitchBar;
 import com.android.settings.widget.SwitchBar.OnSwitchChangeListener;
 import com.android.otosoft.tools.ChangeBuildPropTools;
 import com.android.internal.widget.LockPatternUtils;
+import android.content.SharedPreferences;
 
 public class ComputerUserNameSettings extends SettingsPreferenceFragment
         implements OnPreferenceClickListener {
@@ -76,7 +77,6 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
         userName = ChangeBuildPropTools.getPropertyValue(RO_PROPERTY_USER);
         mLockPatternUtils = new LockPatternUtils(getActivity());
         mComputerUserNamePref.setSummary(userName);
-
     }
 
 

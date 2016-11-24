@@ -6102,7 +6102,7 @@
     -->
     <string name="account_manager_settings">Account manager</string>
     <string name="openthos_id_settings_title">openthos ID</string>
-    <string name="email_address_summary">xxxx@xxx.com</string>
+    <string name="email_address_summary">unregistered</string>
     <string name="computer_username_settings_title">computer username</string>
     <string name="computer_username_summary">John</string>
     <string name="computer_name_settings_title">computer name</string>

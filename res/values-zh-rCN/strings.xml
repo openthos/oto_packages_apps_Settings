@@ -2530,7 +2530,7 @@
     <string name="account_manager_settings">系统账户管理</string>
 
     <string name="openthos_id_settings_title">openthos ID</string>
-    <string name="email_address_summary">xxxx@xxx.com</string>
+    <string name="email_address_summary">未注册</string>
     <string name="computer_username_settings_title">主机用户名设置</string>
     <string name="computer_username_summary">John</string>
     <string name="computer_name_settings_title">主机名 </string>

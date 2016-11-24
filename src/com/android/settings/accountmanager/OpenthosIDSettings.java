@@ -37,6 +37,13 @@ import com.android.settings.SettingsActivity;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.widget.SwitchBar;
 import com.android.settings.widget.SwitchBar.OnSwitchChangeListener;
+import android.content.SharedPreferences;
+
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.content.ContentValues;
+import android.content.ContentResolver;
 
 public class OpenthosIDSettings extends SettingsPreferenceFragment
         implements  OnPreferenceClickListener {
@@ -44,10 +51,13 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
     private static final boolean DBG = false;
 
     private static final String KEY_OPENTHOS_ID = "openthos_id";
+    private static final String KEY_OPENTHOS_ID_EMAIL = "openthos_id_email";
 
     private Preference mOpenthosIDPref;
     private AlertDialog mDialog = null;
     private TextServicesManager mTsm;
+
+    private ContentResolver mResolver;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -57,8 +67,16 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
         mOpenthosIDPref = findPreference(KEY_OPENTHOS_ID);
         mOpenthosIDPref.setOnPreferenceClickListener(this);
 
+        mResolver = getActivity().getContentResolver();
+        Uri uriQuery = Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
+        Cursor cursor = mResolver.query(uriQuery, null, null, null, null);
+        if (cursor != null) {
+            while(cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndex("openthosID"));
+                mOpenthosIDPref.setSummary(id);
+            }
+        }
     }
-
 
     @Override
     public void onResume() {
