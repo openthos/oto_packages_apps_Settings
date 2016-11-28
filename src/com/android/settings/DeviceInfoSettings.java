@@ -699,7 +699,8 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
     //get the hard disk memroy
     private String getHardDiskMemory() {
         StatFs stat = new StatFs(Environment.getRootDirectory().getPath());
-        return convertStorage(stat.getBlockSize() * stat.getBlockCount() + getSDCardInfo());
+        return convertStorage((long)(stat.getBlockSize()) * (long)(stat.
+                                     getBlockCount()) + getSDCardInfo());
     }
 
     private String convertStorage(long size) {
@@ -717,7 +718,7 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         File pathFile = Environment.getExternalStorageDirectory();
         try {
             android.os.StatFs statfs = new android.os.StatFs(pathFile.getPath());
-            return statfs.getBlockCount() * statfs.getBlockSize();
+            return ((long)statfs.getBlockCount()) * ((long)statfs.getBlockSize());
         } catch (IllegalArgumentException e) {}
         return 0;
     }
