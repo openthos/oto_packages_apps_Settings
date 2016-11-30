@@ -158,7 +158,7 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
    public static boolean isEthernet(ConnectivityManager cm) {
         NetworkInfo networkINfo = cm.getActiveNetworkInfo();
         if (networkINfo != null
-                && networkINfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
+                && networkINfo.getRealType() == ConnectivityManager.TYPE_ETHERNET) {
             return true;
         }
         return false;
