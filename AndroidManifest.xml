@@ -2081,6 +2081,22 @@
                 android:resource="@id/notification_settings" />
         </activity>
 
+        <activity android:name="Settings$PowerManagerSettingsActivity"
+                android:label="@string/app_notifications_title"
+                android:exported="true"
+                android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="com.android.settings.POWERMANAGER_SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.VOICE_LAUNCH" />
+            </intent-filter>
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                android:value="com.android.settings.PowerManagerSettings" />
+            <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
+                android:resource="@id/battery_settings" />
+        </activity>
+
         <!-- Show application-level notification settings (app passed in as extras) -->
         <activity android:name="Settings$AppNotificationSettingsActivity"
                 android:label="@string/app_notifications_title"
@@ -2260,6 +2276,14 @@
                 android:value="com.android.settings.notification.NotificationAppList" />
             <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
                 android:resource="@id/notification_settings" />
+        </activity-alias>
+        <activity-alias android:name="PowerManagerSettings"
+                android:exported="true"
+                android:targetActivity="Settings$PowerManagerSettingsActivity">
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                android:value="com.android.settings.PowerManagerSettings" />
+            <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
+                android:resource="@id/battery_settings" />
         </activity-alias>
     </application>
 </manifest>

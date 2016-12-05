@@ -403,7 +403,8 @@ public class SettingsActivity extends Activity
             com.android.settings.deviceinfo.Memory.class.getName(),
             FireWallSettings.class.getName(),
             com.android.settings.WallpaperTypeSettings.class.getName(),
-            com.android.settings.notification.NotificationAppList.class.getName()
+            com.android.settings.notification.NotificationAppList.class.getName(),
+            com.android.settings.PowerManagerSettings.class.getName()
     };
 
 
