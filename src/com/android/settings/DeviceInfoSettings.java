@@ -87,6 +87,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.net.Uri;
+import android.database.Cursor;
 
 public class DeviceInfoSettings extends SettingsPreferenceFragment implements
        Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, Indexable {
@@ -129,10 +135,8 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
     private static final String KEY_HARD_DISK_INFO = "hard_disk_info";
     private static final String OTO_OTA_PACKAGE_NAME = "com.openthos.ota";
     private static final String OTO_OTA_CLASS_NAME = "com.openthos.ota.MainActivity";
-
     static final int TAPS_TO_BE_A_DEVELOPER = 7;
     static final int SUMMARY_LIMIT_NUMBER = 100;
-
     long[] mHits = new long[3];
     int mDevHitCountdown;
     Toast mDevHitToast;
@@ -140,10 +144,9 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
     private PreferenceScreen mSystemReset;
     private PreferenceScreen mSystemUpgrade;
     private PreferenceScreen mSystemUpdate;
-    /*  upgrade  */
-    // private Context mContext=null;
     private SharedPreferences presUpdate = null;
     private SharedPreferences.Editor editorUpdate = null;
+    private ContentResolver mResolver;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -157,6 +160,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
         mSystemUpdate = (PreferenceScreen) findPreference(KEY_SYSTEM_UPDATE);
         mSystemUpdate.setOnPreferenceClickListener(this);
 
+
         // Create an EGL Context
         // References:
         // [1] http://wlog.flatlib.jp/archive/1/2013-12-22
@@ -166,7 +170,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
         EGLSurface eglSurface = null;
         EGLContext eglContext = null;
 
-Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
+        Log.i(LOG_TAG, "is64Bit = "+Integer.SIZE);
 
         // initialize display
         EGLDisplay eglDisplay = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
@@ -681,10 +685,6 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
             str2 = localBufferedReader.readLine();
 
             arrayOfString = str2.split("\\s+");
-            //for (String num : arrayOfString)
-            //{
-            //    Log.i(str2, num + "\t");
-            //}
 
             initial_memory = Integer.valueOf(arrayOfString[1]).intValue();
             localBufferedReader.close();
@@ -802,12 +802,11 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
         }
         return data.toString();
     }
+
     /* upgrade dialog method */
     private void upgradeDialog() {
         final String strUrl = getActivity().getResources().getString
                                            (R.string.system_upgrade_default_url);
-        final String strPath = getActivity().getResources().getString
-                                           (R.string.system_upgrade_default_path);
         /* initial of Dialog view */
         final View viewOsUpgade = LayoutInflater.from(getActivity()).inflate
                                            (R.layout.dialog_system_upgrade,null);
@@ -815,14 +814,9 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
                                            (R.id.checkBox_dialog_default);
         final EditText editTextUrl = (EditText)viewOsUpgade.findViewById
                                            (R.id.edit_dialog_Upgrade);
-        final EditText editTextPath = (EditText)viewOsUpgade.findViewById
-                                           (R.id.edit_dialog_download);
         /* start status */
         editTextUrl.setText(strUrl);
-        editTextPath.setText(strPath);
         editTextUrl.setEnabled(false);
-        editTextPath.setEnabled(false);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // builder.setIcon(R.mipmap.ic_launcher);
         builder.setTitle(getActivity().getResources().getString
@@ -834,14 +828,10 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     editTextUrl.setEnabled(false);
-                    editTextPath.setEnabled(false);
                     editTextUrl.setText(strUrl); //default
-                    editTextPath.setText(strPath);
                 } else {
                     editTextUrl.setEnabled(true);
-                    editTextPath.setEnabled(true);
                     editTextUrl.setText("");
-                    editTextPath.setText("");
                 }
             }
         });
@@ -853,30 +843,28 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
                                                                    OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String upgradeUrl = editTextUrl.getText()+"";
-                String downloadPath = editTextPath.getText()+"";
-                if (checkBoxDefault.isChecked()) { //selected default
-                        editorUpdate.putBoolean("default",checkBoxDefault.isChecked());
-                    /*  default save null and null  */
-                    Toast.makeText(getActivity(),getActivity().getResources().getString
-                                  (R.string.system_upgrade_dialog_toast_default),
-                                                                 Toast.LENGTH_LONG).show();
+                String upgradeUrl = "";
+                if (checkBoxDefault.isChecked()) {
+                    upgradeUrl = "http://dev.openthos.org/openthos/";
                 } else {
-                    if(upgradeUrl == "" || downloadPath == ""){//regex
-                    Toast.makeText(getActivity(),getActivity().getResources().getString
-                                  (R.string.system_upgrade_dialog_toast_attention),
-                                                                 Toast.LENGTH_LONG).show();
-                    } else {
-                        editorUpdate.putBoolean("default",checkBoxDefault.isChecked());
-                        editorUpdate.putString("url",upgradeUrl);
-                        editorUpdate.putString("path",downloadPath);
-                    }
+                    upgradeUrl = editTextUrl.getText().toString();
                 }
-                editorUpdate.commit();
+                Uri upgradeuri = Uri.parse("content://com.otosoft.tools.myprovider/upgradeUrl");
+                Cursor cursor = getContentResolver().query(upgradeuri, null, null, null, null);
+                mResolver = getActivity().getContentResolver();
+                ContentValues cv = new ContentValues();
+                cv.put("upgradeUrl", upgradeUrl);
+                if (cursor != null && cursor.moveToNext()) {
+                    mResolver.update(upgradeuri, cv, null, null);
+                } else {
+                    mResolver.insert(upgradeuri,cv);
+                }
+                cursor.close();
             }
         });
         builder.show();
     }
+
     /* initials of prefrerence */
     private void initPres() {
         presUpdate = getActivity().getSharedPreferences("update", Context.MODE_APPEND |
