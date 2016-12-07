@@ -740,7 +740,7 @@ Log.i(LOG_TAG, "is64Bit="+Integer.SIZE);
                 if(count == 5) {
                     //get location
                     int location = line.indexOf(':');
-                    strInfo="CPU  " + line.substring(location + 2, line.length() - 1);
+                    strInfo="CPU  " + line.substring(location + 2, line.length());
                 }
             }
         } catch(IOException e) {
