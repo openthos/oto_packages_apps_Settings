@@ -850,16 +850,20 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
                     upgradeUrl = editTextUrl.getText().toString();
                 }
                 Uri upgradeuri = Uri.parse("content://com.otosoft.tools.myprovider/upgradeUrl");
-                Cursor cursor = getContentResolver().query(upgradeuri, null, null, null, null);
-                mResolver = getActivity().getContentResolver();
-                ContentValues cv = new ContentValues();
-                cv.put("upgradeUrl", upgradeUrl);
-                if (cursor != null && cursor.moveToNext()) {
-                    mResolver.update(upgradeuri, cv, null, null);
-                } else {
-                    mResolver.insert(upgradeuri,cv);
+                if (upgradeuri!=null) {
+                    Cursor cursor = getContentResolver().query(upgradeuri, null, null, null, null);
+                    mResolver = getActivity().getContentResolver();
+                    ContentValues cv = new ContentValues();
+                    cv.put("upgradeUrl", upgradeUrl);
+                    if (cursor != null) {
+                        if (cursor.moveToNext()) {
+                            mResolver.update(upgradeuri, cv, null, null);
+                        } else {
+                            mResolver.insert(upgradeuri,cv);
+                        }
+                        cursor.close();
+                    }
                 }
-                cursor.close();
             }
         });
         builder.show();
