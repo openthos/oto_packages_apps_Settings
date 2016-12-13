@@ -6193,6 +6193,13 @@
     <string name="sync_memorandum">Memorandum</string>
     <string name="sync_photoalbum">Photo Album</string>
     <string name="cloud_service">Cloud Service</string>
+    <string name="cloud_appdata">Apps Data</string>
+    <string name="cloud_startmenu">Start Menu</string>
+    <string name="cloud_import">Import</string>
+    <string name="cloud_export">Export</string>
+    <string name="cloud_browser">Browser</string>
+    <string name="cloud_appstore">App Store</string>
+    <string name="cloud_file">File</string>
     <!-- hotkey -->
     <string name="hot_copy">Copy</string>
     <string name="hot_cut">Cut</string>

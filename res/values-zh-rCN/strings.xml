@@ -2623,6 +2623,13 @@
     <string name="sync_memorandum">备忘录</string>
     <string name="sync_photoalbum">相册</string>
     <string name="cloud_service">云服务</string>
+    <string name="cloud_appdata">应用数据</string>
+    <string name="cloud_startmenu">开始菜单</string>
+    <string name="cloud_import">导入</string>
+    <string name="cloud_export">导出</string>
+    <string name="cloud_browser">浏览器</string>
+    <string name="cloud_appstore">应用商店</string>
+    <string name="cloud_file">文档</string>
     <!--
        name:system reset
        author:wang zhixu

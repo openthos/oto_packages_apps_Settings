@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -29,35 +29,35 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_sync_green_holo" />
-        </LinearLayout>
+        </LinearLayout>-->
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="#E3E3E3" />
+            android:background="#E3E3E3" />-->
 
         <LinearLayout
-            android:id="@+id/contact"
+            android:id="@+id/wallpaper_cloud"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <ImageView
+            <!--<ImageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
-                android:padding="5dp"
-                android:src="@drawable/ico_contact" />
+                android:padding="5dp" />-->
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="@string/sync_contact" />
+                android:text="@string/wallpaper_settings_title" />
 
             <Switch
+                android:id="@+id/switch_wallpaper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -71,27 +71,28 @@
             android:background="#E3E3E3" />
 
         <LinearLayout
-            android:id="@+id/calendar"
+            android:id="@+id/wifi_cloud"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <ImageView
+            <!--<ImageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:padding="5dp"
-                android:src="@drawable/ico_calendar" />
+                android:src="@drawable/ico_calendar" />-->
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="@string/sync_calendar" />
+                android:text="@string/wifi_info_title" />
 
             <Switch
+                android:id="@+id/switch_wifi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -110,13 +111,12 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <ImageView
+            <!--imageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
-                android:padding="5dp"
-                android:src="@drawable/ico_email" />
+                android:padding="5dp" />-->
 
             <TextView
                 android:layout_width="0dp"
@@ -126,6 +126,7 @@
                 android:text="@string/sync_email" />
 
             <Switch
+                android:id="@+id/switch_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -139,27 +140,27 @@
             android:background="#E3E3E3" />
 
         <LinearLayout
-            android:id="@+id/memorandum"
+            android:id="@+id/appdata_cloud"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <ImageView
+            <!--<ImageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
-                android:padding="5dp"
-                android:src="@drawable/ico_memorandum" />
+                android:padding="5dp" />-->
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="@string/sync_memorandum" />
+                android:text="@string/cloud_appdata" />
 
             <Switch
+                android:id="@+id/switch_appdata"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -178,13 +179,12 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <ImageView
+            <!--<ImageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
-                android:padding="5dp"
-                android:src="@drawable/ico_photoalbum" />
+                android:padding="5dp" />-->
 
             <TextView
                 android:layout_width="0dp"
@@ -194,11 +194,166 @@
                 android:text="@string/sync_photoalbum" />
 
             <Switch
+                android:id="@+id/switch_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textOff="off"
                 android:textOn="on" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="#E3E3E3" />
+
+        <LinearLayout
+            android:id="@+id/startmenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <!--<ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:padding="5dp" />-->
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/cloud_startmenu" />
+
+            <Switch
+                android:id="@+id/switch_startmenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textOff="off"
+                android:textOn="on" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="#E3E3E3" />
+
+        <LinearLayout
+            android:id="@+id/cloud_browser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <!--<ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:padding="5dp" />-->
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/cloud_browser" />
+
+            <Switch
+                android:id="@+id/switch_browser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textOff="off"
+                android:textOn="on" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="#E3E3E3" />
+
+        <LinearLayout
+            android:id="@+id/cloud_appstore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <!--<ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:padding="5dp" />-->
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/cloud_appstore" />
+
+            <Switch
+                android:id="@+id/switch_appstore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textOff="off"
+                android:textOn="on" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="#E3E3E3" />
+
+        <LinearLayout
+            android:id="@+id/cloud_file"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/cloud_file" />
+
+            <Switch
+                android:id="@+id/switch_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textOff="off"
+                android:textOn="on" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="#E3E3E3" />
+
+        <LinearLayout
+            android:id="@+id/cloud_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/cloud_import"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="@string/cloud_import" />
+
+            <Button
+                android:id="@+id/cloud_export"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="@string/cloud_export" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
