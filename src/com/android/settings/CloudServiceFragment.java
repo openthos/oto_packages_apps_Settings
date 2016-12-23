@@ -27,6 +27,10 @@ import android.widget.Button;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.util.Log;
 import android.widget.Toast;
+import android.text.TextUtils;
+import android.os.Environment;
+import android.net.Uri;
+import android.database.Cursor;
 
 public class CloudServiceFragment extends Fragment implements OnCheckedChangeListener {
     private Switch mswitch_wallpaper;
@@ -225,6 +229,37 @@ public class CloudServiceFragment extends Fragment implements OnCheckedChangeLis
         return iscopy;
     }
 
+    public static boolean writeFile(String fileName, String content, boolean append) {
+        FileWriter fileWriter = null;
+        if (TextUtils.isEmpty(content)) {
+            return false;
+        }
+        try {
+            File file = new File(fileName);
+            if (!file.exists()) {
+                 file.createNewFile();
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        try {
+            fileWriter = new FileWriter(fileName, append);
+            fileWriter.write(content);
+            fileWriter.flush();
+            return true;
+        } catch (IOException e) {
+            return false;
+        } finally {
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     public class cloudReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -233,6 +268,19 @@ public class CloudServiceFragment extends Fragment implements OnCheckedChangeLis
                     oldPath = "data/system/users/0/wallpaper";
                     newPath = "data/data/cloudFolder/wallpaper";
                     copyFile (oldPath,newPath);
+                    break;
+                case BROADCAST_STARTMENU:
+                    Uri uriQuery = Uri.parse(
+                      "content://com.android.systemui.util.StatusBarContentProvider/status_bar_tb");
+                    if (uriQuery != null) {
+                        Cursor cursor = getActivity().getContentResolver().
+                                   query(uriQuery, null, null, null, null);
+                        if (cursor != null && cursor.moveToNext()) {
+                            writeFile("data/data/cloudFolder/CloudStartMenu.xml",
+                                   cursor.getString(cursor.getColumnIndex("pkgname")) + "\n", true);
+                            cursor.close();
+                        }
+                    }
                     break;
             }
         }
