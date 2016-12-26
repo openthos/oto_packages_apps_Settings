@@ -22,4 +22,12 @@
         android:title="@string/openthos_id"
         android:summary="@string/email_address_summary"
         android:persistent="false" />
+    <Preference
+        android:key="openthos_bind"
+        android:title="@string/account_bind"
+        android:persistent="false" />
+    <Preference
+        android:key="openthos_unbund"
+        android:title="@string/account_unbund"
+        android:persistent="false" />
 </PreferenceScreen>

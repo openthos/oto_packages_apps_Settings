@@ -6116,6 +6116,20 @@
     <string name="old_password">old password</string>
     <string name="new_password">new password</string>
     <string name="again_new_password">try again   </string>
+    <string name="account_user_id">OpenthosID</string>
+    <string name="account_user_password">password  </string>
+    <string name="account_bind">bind OpenthosID</string>
+    <string name="account_unbund">unbund OpenthosID</string>
+    <string name="account_judge">Whether to release the binding</string>
+    <string name="account_user_register">register OpenthosID</string>
+    <string name="account_yes">yes</string>
+    <string name="account_no">no</string>
+    <string name="account_user_id">OpenthosID</string>
+    <string name="account_dialog_cancel">cancel</string>
+    <string name="account_dialog_ok">ok</string>
+    <string name="toast_openthos_password_wrong">passowrd is wrong</string>
+    <string name="toast_openthos_id_wrong">OpenthosID is wrong</string>
+    <string name="toast_network_not_connect">Network is not connect</string>
     <!--
         Date: 29 june 2016
         Ethernet settings names and other strings.
