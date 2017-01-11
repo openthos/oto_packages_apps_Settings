@@ -31,6 +31,9 @@ import java.net.UnknownHostException;
 import java.security.KeyStore;
 import java.util.List;
 
+import com.android.settings.accountmanager.OpenthosIDSettings;
+import com.android.settings.accountmanager.CookieUtils;
+
 public class RequestThread extends Thread {
 
     private Handler mHandler;
@@ -89,6 +92,8 @@ public class RequestThread extends Thread {
         int sCode = response.getStatusLine().getStatusCode();
         if (sCode == HttpStatus.SC_OK) {
             String result = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+            mHandler.sendMessage(Message.obtain(mHandler, OpenthosIDSettings.MSG_GET_CSRF_OK,
+                                      CookieUtils.getCookieskey(response).split(";")[0]));
         }
     }
 
@@ -107,6 +112,8 @@ public class RequestThread extends Thread {
             e.printStackTrace();
         }
         int sCode = response.getStatusLine().getStatusCode();
+        mHandler.sendMessage(Message.obtain(mHandler, OpenthosIDSettings.MSG_REGIST_SEAFILE_OK,
+                                                                     sCode));
     }
 
     public static HttpClient getHttpClient(HttpParams params) {
@@ -128,5 +135,5 @@ public class RequestThread extends Thread {
         }
     }
 
-     public enum RequestType {GET, POST}
+    public enum RequestType {GET, POST}
 }

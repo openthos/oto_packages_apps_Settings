@@ -344,6 +344,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
         list.add(new BasicNameValuePair("csrfmiddlewaretoken", mCookie.split("=")[1].trim()));
         list.add(new BasicNameValuePair("email", openthosID));
         list.add(new BasicNameValuePair("password1", password));
+        list.add(new BasicNameValuePair("password2", password));
         RequestThread thread = new RequestThread(mHandler,
                "https://dev.openthos.org/accounts/register/", list, RequestThread.RequestType.POST,
                 mCookie);
