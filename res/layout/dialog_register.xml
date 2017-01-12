@@ -14,7 +14,7 @@
         android:layout_marginLeft="30dp"/>
 
     <EditText
-        android:id="@+id/dialog_name"
+        android:id="@+id/dialog_openthosId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minWidth="100dip" />

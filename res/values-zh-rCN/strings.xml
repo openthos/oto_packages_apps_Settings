@@ -2559,6 +2559,9 @@
     <string name="toast_openthos_password_wrong">密码错误</string>
     <string name="toast_openthos_id_wrong">OpenthosID错误</string>
     <string name="toast_network_not_connect">请检查网络链接</string>
+    <string name="account_dialog_register">改变  OpenthosId</string>
+    <string name="toast_register_fail">注册失败（邮箱被占用，邮箱格式错误）</string>
+    <string name="toast_register_sendmail">已发送邮件到你邮箱</string>
     <!--
       Date: 29 june 2016
       Ethernet settings names and other strings.

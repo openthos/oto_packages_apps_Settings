@@ -6130,6 +6130,9 @@
     <string name="toast_openthos_password_wrong">passowrd is wrong</string>
     <string name="toast_openthos_id_wrong">OpenthosID is wrong</string>
     <string name="toast_network_not_connect">Network is not connect</string>
+    <string name="account_dialog_register">change OpenthosId</string>
+    <string name="toast_register_fail">register fail(Mailbox is occupied, mailbox format is wrong)</string>
+    <string name="toast_register_sendmail">send mail to your mailbox</string>
     <!--
         Date: 29 june 2016
         Ethernet settings names and other strings.

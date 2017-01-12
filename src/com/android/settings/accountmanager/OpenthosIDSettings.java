@@ -66,7 +66,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 import android.database.sqlite.SQLiteDatabase;
-import android.content.Context;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,6 +77,16 @@ import java.io.File;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import android.net.NetworkInfo;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import org.jsoup.nodes.*;
+import org.jsoup.select.Elements;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.support.v4.app.NotificationCompat;
+import android.net.ConnectivityManager;
 
 public class OpenthosIDSettings extends SettingsPreferenceFragment
         implements  OnPreferenceClickListener {
@@ -112,6 +121,8 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
     public static final int MSG_GET_CSRF_OK = 0x1002;
     public static final int MSG_REGIST_SEAFILE = 0x1003;
     public static final int MSG_REGIST_SEAFILE_OK = 0x1004;
+
+    private String mRegisterID;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -162,6 +173,25 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                             values.put("password", password);
                             mResolver.insert(uriInsert, values);
                         }
+                        //register
+                        Document doc = Jsoup.parse(result);
+                        if (doc.select("div.messages").first() != null) {
+                            Toast.makeText(getActivity(),
+                                           getText(R.string.toast_register_fail),
+                                           Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(),
+                                           getText(R.string.toast_register_sendmail),
+                                           Toast.LENGTH_SHORT).show();
+                            NotificationCompat.Builder mBuilder =
+                                new NotificationCompat.Builder(getActivity())
+                                    .setContentTitle("System notification")
+                                    .setContentText("xxxx");
+                            NotificationManager mNotificationManager =
+                                (NotificationManager) getSystemService(
+                                                          Context.NOTIFICATION_SERVICE);
+                            mNotificationManager.notify(0, mBuilder.build());
+                        }
                         break;
                     case MSG_GET_CSRF:
                         getCsrf();
@@ -199,12 +229,38 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
     @Override
     public boolean onPreferenceClick(final Preference pref) {
         if (pref == mOpenthosIDPref) {
-            Intent intent = new Intent();
-            intent.setAction("android.intent.action.VIEW");
-            Uri content_url = Uri.parse("http://dev.openthos.org/?q=user/register");
-            intent.setData(content_url);
-            startActivity(intent);
-            return true;
+            View viewRegister = LayoutInflater.from(getActivity())
+                                                    .inflate(R.layout.dialog_register, null);
+            final EditText openthosIDRegister = (EditText) viewRegister
+                                                  .findViewById(R.id.dialog_openthosId);
+            AlertDialog.Builder builder_register = new AlertDialog.Builder(getActivity());
+            builder_register.setTitle(R.string.account_dialog_register);
+            builder_register.setView(viewRegister);
+            builder_register.setPositiveButton(R.string.account_user_register,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+                        mRegisterID = openthosIDRegister.getText().toString().trim();
+                        params.put("name", mRegisterID);
+                        params.put("mail", mRegisterID);
+                        params.put("form_id", "user_register_form");
+                        params.put("form_build_id",
+                                   "form-WkUSPmAzO4z-HBjYe03NyRvjNsx44ZDrMGJ8nYAJWfU");
+                        ConnectivityManager mCM = (ConnectivityManager)getSystemService(
+                                                      Context.CONNECTIVITY_SERVICE);
+                        NetworkInfo networkINfo = mCM.getActiveNetworkInfo();
+                        if (networkINfo == null) {
+                            Toast.makeText(getActivity(),
+                                           getText(R.string.toast_network_not_connect),
+                                           Toast.LENGTH_SHORT).show();
+                        }
+                        submitRegisterPostData(params, encode);
+                            dialog.dismiss();
+                    }
+                });
+            builder_register.setNegativeButton(R.string.account_dialog_cancel, null);
+            builder_register.show();
         } else if (pref == mBindPref) {
             View viewBind = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_bind, null);
             final EditText userID_bind = (EditText) viewBind.findViewById(R.id.dialog_name);
@@ -296,6 +352,51 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                 }
             }
         }).start();
+    }
+
+    public void submitRegisterPostData(final Map<String, String> params, final String encode) {
+
+        final  byte[] data = getRequestData(params, encode).toString().getBytes();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        HttpURLConnection httpURLConnection=
+                                (HttpURLConnection) HttpUtils.getHttpsURLConnection(
+                                        "http://dev.openthos.org/?q=user/register");
+                        httpURLConnection.setConnectTimeout(3000);
+                        httpURLConnection.setDoInput(true);
+                        httpURLConnection.setDoOutput(true);
+                        httpURLConnection.setRequestMethod("POST");
+                        httpURLConnection.setUseCaches(false);
+                        //set the request body type is text
+                        httpURLConnection.setRequestProperty("Content-Type",
+                                "application/x-www-form-urlencoded");
+                        //set the request body length
+                        httpURLConnection.setRequestProperty("Content-Length",
+                                String.valueOf(data.length));
+                        //get the ouput stream and write to the service
+                        OutputStream outputStream = httpURLConnection.getOutputStream();
+                        outputStream.write(data);
+                        int response = httpURLConnection.getResponseCode();
+                        //get the service response
+                        String data = new String();
+                        if (response == HttpURLConnection.HTTP_OK) {
+                            InputStream inptStream = httpURLConnection.getInputStream();
+                            data = dealResponseResult(inptStream);
+                        }
+                        Message msg = Message.obtain();
+                        msg.what = response;
+                        Bundle bundle_register = new Bundle();
+                        bundle_register.putString("result", data);
+                        bundle_register.putString("ID", mRegisterID);
+                        msg.setData(bundle_register);
+                        mHandler.sendMessage(msg);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
     }
 
     public static StringBuffer getRequestData(Map<String, String> params, String encode) {
