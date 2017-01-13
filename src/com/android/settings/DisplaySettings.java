@@ -81,7 +81,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_SCREEN_TIMEOUT = "screen_timeout";
     private static final String KEY_FONT_SIZE = "font_size";
     private static final String KEY_BRIGHTNESS = "brightness";
-    private static final String KEY_SCREEN_SAVER = "screensaver";
+    //private static final String KEY_SCREEN_SAVER = "screensaver";
     private static final String KEY_LIFT_TO_WAKE = "lift_to_wake";
     private static final String KEY_DOZE = "doze";
     private static final String KEY_AUTO_BRIGHTNESS = "auto_brightness";
@@ -102,7 +102,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private final Configuration mCurConfig = new Configuration();
 
     private ListPreference mScreenTimeoutPreference;
-    private Preference mScreenSaverPreference;
+    //private Preference mScreenSaverPreference;
     private SwitchPreference mLiftToWakePreference;
     private SwitchPreference mDozePreference;
     private SwitchPreference mAutoBrightnessPreference;
@@ -120,12 +120,12 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         addPreferencesFromResource(R.xml.display_settings);
         // Remove cast screen.
         removePreference(KEY_WIFI_DISPLAY);
-        mScreenSaverPreference = findPreference(KEY_SCREEN_SAVER);
-        if (mScreenSaverPreference != null
-                && getResources().getBoolean(
-                        com.android.internal.R.bool.config_dreamsSupported) == false) {
-            getPreferenceScreen().removePreference(mScreenSaverPreference);
-        }
+        //mScreenSaverPreference = findPreference(KEY_SCREEN_SAVER);
+        //if (mScreenSaverPreference != null
+        //        && getResources().getBoolean(
+        //                com.android.internal.R.bool.config_dreamsSupported) == false) {
+        //    getPreferenceScreen().removePreference(mScreenSaverPreference);
+        //}
 
         mWm = IWindowManager.Stub.asInterface(ServiceManager.checkService(
                 Context.WINDOW_SERVICE));
@@ -348,7 +348,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
 
     private void updateState() {
         readFontSizePreference(mFontSizePref);
-        updateScreenSaverSummary();
+        //updateScreenSaverSummary();
 
         // Update auto brightness if it is available.
         if (mAutoBrightnessPreference != null) {
@@ -370,12 +370,12 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         }
     }
 
-    private void updateScreenSaverSummary() {
-        if (mScreenSaverPreference != null) {
-            mScreenSaverPreference.setSummary(
-                    DreamSettings.getSummaryTextWithDreamName(getActivity()));
-        }
-    }
+    //private void updateScreenSaverSummary() {
+    //    if (mScreenSaverPreference != null) {
+    //        mScreenSaverPreference.setSummary(
+    //                DreamSettings.getSummaryTextWithDreamName(getActivity()));
+    //    }
+    //}
 
     public void writeFontSizePreference(Object objValue) {
         try {
@@ -460,10 +460,10 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                 @Override
                 public List<String> getNonIndexableKeys(Context context) {
                     ArrayList<String> result = new ArrayList<String>();
-                    if (!context.getResources().getBoolean(
-                            com.android.internal.R.bool.config_dreamsSupported)) {
-                        result.add(KEY_SCREEN_SAVER);
-                    }
+                    //if (!context.getResources().getBoolean(
+                    //        com.android.internal.R.bool.config_dreamsSupported)) {
+                    //    result.add(KEY_SCREEN_SAVER);
+                    //}
                     if (!isAutomaticBrightnessAvailable(context.getResources())) {
                         result.add(KEY_AUTO_BRIGHTNESS);
                     }
