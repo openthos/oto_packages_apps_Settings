@@ -155,43 +155,48 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                     case HttpURLConnection.HTTP_OK:
                         Bundle b = msg.getData();
                         String result = b.getString("result");
+                        String action = b.getString("action");
                         String code = result.split(":")[1].split("\"")[1].trim();
-                        if (CODE_WRONG_USERNAME.equals(code)) {
-                            Toast.makeText(getActivity(),
-                                    getText(R.string.toast_openthos_id_wrong),
-                                    Toast.LENGTH_SHORT).show();
-                        } else if (CODE_WRONG_PASSWORD.equals(code)) {
-                            Toast.makeText(getActivity(),
-                                    getText(R.string.toast_openthos_password_wrong),
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            mHandler.sendEmptyMessage(MSG_GET_CSRF);
-                            Uri uriInsert =
-                                Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
-                            ContentValues values = new ContentValues();
-                            values.put("openthosID", openthosID);
-                            values.put("password", password);
-                            mResolver.insert(uriInsert, values);
-                            updateID(openthosID);
-                        }
-                        //register
-                        Document doc = Jsoup.parse(result);
-                        if (doc.select("div.messages").first() != null) {
-                            Toast.makeText(getActivity(),
-                                           getText(R.string.toast_register_fail),
-                                           Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(),
-                                           getText(R.string.toast_register_sendmail),
-                                           Toast.LENGTH_SHORT).show();
-                            NotificationCompat.Builder mBuilder =
-                                new NotificationCompat.Builder(getActivity())
-                                    .setContentTitle("System notification")
-                                    .setContentText("xxxx");
-                            NotificationManager mNotificationManager =
-                                (NotificationManager) getSystemService(
-                                                          Context.NOTIFICATION_SERVICE);
-                            mNotificationManager.notify(0, mBuilder.build());
+                        if (action.equals("verify")) {
+                            if (CODE_WRONG_USERNAME.equals(code)) {
+                                Toast.makeText(getActivity(),
+                                        getText(R.string.toast_openthos_id_wrong),
+                                        Toast.LENGTH_SHORT).show();
+                            } else if (CODE_WRONG_PASSWORD.equals(code)) {
+                                Toast.makeText(getActivity(),
+                                        getText(R.string.toast_openthos_password_wrong),
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                mHandler.sendEmptyMessage(MSG_GET_CSRF);
+                                Uri uriInsert =
+                                    Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
+                                ContentValues values = new ContentValues();
+                                values.put("openthosID", openthosID);
+                                values.put("password", password);
+                                mResolver.insert(uriInsert, values);
+                                updateID(openthosID);
+                            }
+                        } else if (action.equals("regist")) {
+                            //register
+                            Document doc = Jsoup.parse(result);
+                            if (doc.select("div.messages").first() != null) {
+                                Toast.makeText(getActivity(),
+                                               getText(R.string.toast_register_fail),
+                                               Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity(),
+                                               getText(R.string.toast_register_sendmail),
+                                               Toast.LENGTH_SHORT).show();
+                                NotificationCompat.Builder mBuilder =
+                                    new NotificationCompat.Builder(getActivity())
+                                        .setContentTitle("System notification")
+                                        .setContentText("xxxx");
+                                NotificationManager mNotificationManager =
+                                    (NotificationManager) getSystemService(
+                                                              Context.NOTIFICATION_SERVICE);
+                                mNotificationManager.notify(0, mBuilder.build());
+                                updateID(openthosID);
+                            }
                         }
                         break;
                     case MSG_GET_CSRF:
@@ -344,8 +349,10 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                     }
                     Message msg = Message.obtain();
                     msg.what = response;
+                    String verify = "verify";
                     Bundle bundle = new Bundle();
                     bundle.putString("result", data);
+                    bundle.putString("action", verify);
                     msg.setData(bundle);
                     mHandler.sendMessage(msg);
                 } catch (IOException e) {
@@ -388,10 +395,12 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                         }
                         Message msg = Message.obtain();
                         msg.what = response;
-                        Bundle bundle_register = new Bundle();
-                        bundle_register.putString("result", data);
-                        bundle_register.putString("ID", mRegisterID);
-                        msg.setData(bundle_register);
+                        String regist = "regist";
+                        Bundle bundle = new Bundle();
+                        bundle.putString("result", data);
+                        bundle.putString("ID", mRegisterID);
+                        bundle.putString("action", regist);
+                        msg.setData(bundle);
                         mHandler.sendMessage(msg);
                     } catch (IOException e) {
                         e.printStackTrace();
