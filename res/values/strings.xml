@@ -6133,6 +6133,7 @@
     <string name="account_dialog_register">change OpenthosId</string>
     <string name="toast_register_fail">register fail(Mailbox is occupied, mailbox format is wrong)</string>
     <string name="toast_register_sendmail">send mail to your mailbox</string>
+    <string name="toast_register_successful">register successful</string>
     <!--
         Date: 29 june 2016
         Ethernet settings names and other strings.

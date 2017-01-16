@@ -172,6 +172,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                             values.put("openthosID", openthosID);
                             values.put("password", password);
                             mResolver.insert(uriInsert, values);
+                            updateID(openthosID);
                         }
                         //register
                         Document doc = Jsoup.parse(result);
@@ -450,5 +451,9 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                "https://dev.openthos.org/accounts/register/", list, RequestThread.RequestType.POST,
                 mCookie);
         thread.start();
+    }
+
+    private void updateID(String ID) {
+        mOpenthosIDPref.setSummary(ID);
     }
 }

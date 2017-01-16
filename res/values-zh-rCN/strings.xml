@@ -2562,6 +2562,7 @@
     <string name="account_dialog_register">改变  OpenthosId</string>
     <string name="toast_register_fail">注册失败（邮箱被占用，邮箱格式错误）</string>
     <string name="toast_register_sendmail">已发送邮件到你邮箱</string>
+    <string name="toast_register_successful">注册成功</string>
     <!--
       Date: 29 june 2016
       Ethernet settings names and other strings.
