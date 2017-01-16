@@ -2535,7 +2535,7 @@
     <string name="computer_username_summary">John</string>
     <string name="computer_name_settings_title">主机名 </string>
     <string name="computer_name_summary">John的主机</string>
-    <string name="openthos_id">改变openthosId地址</string>
+    <string name="openthos_id">注册OpenthosID</string>
 
     <string name="computer_username_settings">Setting username</string>
     <string name="computer_name_settings">设置主机名</string>
@@ -2555,11 +2555,11 @@
     <string name="account_password">  密 码  </string>
     <string name="account_dialog_cancel">取消</string>
     <string name="account_dialog_ok">确定</string>
-    <string name="account_user_register">注册OpenthosID</string>
+    <string name="account_user_register">注册</string>
     <string name="toast_openthos_password_wrong">密码错误</string>
     <string name="toast_openthos_id_wrong">OpenthosID错误</string>
     <string name="toast_network_not_connect">请检查网络链接</string>
-    <string name="account_dialog_register">改变  OpenthosId</string>
+    <string name="account_dialog_register">注册OpenthosID</string>
     <string name="toast_register_fail">注册失败（邮箱被占用，邮箱格式错误）</string>
     <string name="toast_register_sendmail">已发送邮件到你邮箱</string>
     <string name="toast_register_successful">注册成功</string>

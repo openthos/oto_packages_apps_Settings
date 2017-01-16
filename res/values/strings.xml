@@ -6107,7 +6107,7 @@
     <string name="computer_username_summary">John</string>
     <string name="computer_name_settings_title">computer name</string>
     <string name="computer_name_summary">John computer</string>
-    <string name="openthos_id">change the openthosId address</string>
+    <string name="openthos_id">register openthosId</string>
     <string name="computer_username_settings">computer username settings</string>
     <string name="computer_name_settings">computer name settings</string>
     <string name="change_computer_username">change computer username</string>
@@ -6121,7 +6121,7 @@
     <string name="account_bind">bind OpenthosID</string>
     <string name="account_unbund">unbund OpenthosID</string>
     <string name="account_judge">Whether to release the binding</string>
-    <string name="account_user_register">register OpenthosID</string>
+    <string name="account_user_register">register</string>
     <string name="account_yes">yes</string>
     <string name="account_no">no</string>
     <string name="account_user_id">OpenthosID</string>
@@ -6130,7 +6130,7 @@
     <string name="toast_openthos_password_wrong">passowrd is wrong</string>
     <string name="toast_openthos_id_wrong">OpenthosID is wrong</string>
     <string name="toast_network_not_connect">Network is not connect</string>
-    <string name="account_dialog_register">change OpenthosId</string>
+    <string name="account_dialog_register">register OpenthosId</string>
     <string name="toast_register_fail">register fail(Mailbox is occupied, mailbox format is wrong)</string>
     <string name="toast_register_sendmail">send mail to your mailbox</string>
     <string name="toast_register_successful">register successful</string>
