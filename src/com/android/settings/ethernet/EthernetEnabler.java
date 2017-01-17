@@ -45,6 +45,8 @@ import android.widget.Switch;
 import android.util.Slog;
 import android.net.EthernetManager;
 import android.provider.Settings;
+import android.net.NetworkInfo;
+import android.net.ConnectivityManager;
 
 public class EthernetEnabler implements SwitchBar.OnSwitchChangeListener {
     private final String TAG = "EthernetEnabler";
@@ -90,12 +92,24 @@ public class EthernetEnabler implements SwitchBar.OnSwitchChangeListener {
         mSwitchBar.show();
         //set the switchbar default turn on
         mSwitchBar.setChecked(true);
-        int enable = Settings.Global.getInt(mContext.getContentResolver(),Settings.Global.ETHERNET_ON,0);//add by hclydao
+        //int enable = Settings.Global.getInt(mContext.getContentResolver(),
+        //                             Settings.Global.ETHERNET_ON,0);//add by hclydao
+        ConnectivityManager conManager = (ConnectivityManager)mContext.
+                                     getSystemService(Context.CONNECTIVITY_SERVICE);
+        mSwitchBar.setChecked(isEthernet(conManager));
+        /*
         if(enable == EthernetManager.ETH_STATE_ENABLED) {
             mSwitchBar.setChecked(true);
         } else {
             mSwitchBar.setChecked(false);
         }
+        */
+    }
+
+    public static boolean isEthernet(ConnectivityManager cm) {
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null
+                && networkInfo.getRealType() == ConnectivityManager.TYPE_ETHERNET;
     }
 
     public void teardownSwitchBar() {
