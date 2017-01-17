@@ -22,10 +22,10 @@
         android:summary="@string/nativebridge_toggle_summary"
         android:persistent="false" />
 
-    <CheckBoxPreference
+   <!-- <CheckBoxPreference
         android:key="tieto_multiwindow"
         android:title="@string/tieto_multiwindow_title"
-        android:persistent="false" />
+        android:persistent="false" />-->
 
     <PreferenceScreen
         android:key="@+id/superuser_settings"

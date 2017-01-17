@@ -261,9 +261,9 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
     private static final String TAG2 = "JabolSettings";
 
     private static final String KEY_JABOL_SETTINGS = "jabol_settings";
-    private static final String KEY_TIETO_MULTIWINDOW = "tieto_multiwindow";
+    //private static final String KEY_TIETO_MULTIWINDOW = "tieto_multiwindow";
 
-    private CheckBoxPreference mTietoMultiwindow;
+    //private CheckBoxPreference mTietoMultiwindow;
 
     private PreferenceGroup mJabolSettings;
 
@@ -401,10 +401,10 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         ContentResolver resolver = getContentResolver();
         addPreferencesFromResource(R.xml.jabol_settings);
 
-        mTietoMultiwindow = (CheckBoxPreference) findPreference(KEY_TIETO_MULTIWINDOW);
-        mTietoMultiwindow.setPersistent(false);
-        mTietoMultiwindow.setChecked(Settings.System.getInt(resolver,
-                Settings.System.TIETO_MULTIWINDOW_DISABLED, 0) != 0);
+       //mTietoMultiwindow = (CheckBoxPreference) findPreference(KEY_TIETO_MULTIWINDOW);
+       //mTietoMultiwindow.setPersistent(false);
+       //mTietoMultiwindow.setChecked(Settings.System.getInt(resolver,
+       //        Settings.System.TIETO_MULTIWINDOW_DISABLED, 0) != 0);
 
         mJabolSettings = (PreferenceGroup) findPreference(KEY_JABOL_SETTINGS);
     }
@@ -1449,11 +1449,11 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
             SystemProperties.set(PROPERTY_NATIVEBRIDGE, mNativeBridgePreference.isChecked() ? "1" : "0");
         }
         Log.d(TAG2, "Jabol setting has been changed");
-        if (preference == mTietoMultiwindow) {
-            Settings.System.putInt(getContentResolver(), Settings.System.TIETO_MULTIWINDOW_DISABLED,
-                    mTietoMultiwindow.isChecked() ? 1 : 0);
-            Log.d(TAG2, "Preference has been changed");
-        }
+        //if (preference == mTietoMultiwindow) {
+        //    Settings.System.putInt(getContentResolver(), Settings.System.TIETO_MULTIWINDOW_DISABLED,
+        //            mTietoMultiwindow.isChecked() ? 1 : 0);
+        //    Log.d(TAG2, "Preference has been changed");
+        //}
         if (preference == mEnableAdb) {
             if (mEnableAdb.isChecked()) {
                 mDialogClicked = false;
