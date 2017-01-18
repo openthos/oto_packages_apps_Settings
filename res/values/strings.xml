@@ -6131,7 +6131,7 @@
     <string name="toast_openthos_id_wrong">OpenthosID is wrong</string>
     <string name="toast_network_not_connect">Network is not connect</string>
     <string name="account_dialog_register">register OpenthosId</string>
-    <string name="toast_register_fail">register fail(Mailbox is occupied, mailbox format is wrong)</string>
+    <string name="toast_register_fail">register fail(Mailbox is occupied or mailbox format is wrong)</string>
     <string name="toast_register_sendmail">send mail to your mailbox</string>
     <string name="toast_register_successful">register successful</string>
     <!--
