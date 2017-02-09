@@ -30,7 +30,7 @@
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
-                android:layout_height="34dp"
+                android:layout_height="36dp"
                 android:background="#056f00"
                 android:textColor="#ffffff"
                 android:textSize="12sp"
@@ -49,7 +49,7 @@
                 android:text="@string/setup_network_setting"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="188dp"
+                android:layout_height="180dp"
                 android:background="@drawable/setup_wizard_card_bg"
                 android:orientation="vertical">
                 <TextView
@@ -88,7 +88,7 @@
             <LinearLayout
                 android:id="@+id/ethernet_setting"
                 android:layout_width="match_parent"
-                android:layout_height="205dp"
+                android:layout_height="200dp"
                 android:background="@drawable/setup_wizard_card_bg"
                 android:orientation="vertical">
 
