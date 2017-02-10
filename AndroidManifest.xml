@@ -2228,6 +2228,17 @@
         <meta-data android:name="com.android.settings.PRIMARY_PROFILE_CONTROLLED"
             android:value="true" />
         </activity>
+        <activity-alias android:name=".ethernet.EthernetSettings"
+                android:taskAffinity="com.android.settings"
+                android:label="@string/ethernet_settings"
+                android:targetActivity="Settings$EthernetSettingsActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:exported="true">
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                android:value="com.android.settings.ethernet.EthernetSettings" />
+            <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
+                android:resource="@id/ethernet_settings" />
+        </activity-alias>
 
         <!--
             Date: 12 July 2016
