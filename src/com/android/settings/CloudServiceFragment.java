@@ -61,6 +61,7 @@ public class CloudServiceFragment extends Fragment implements OnCheckedChangeLis
     public static final String BROADCAST_APPSTORE= "sendAppstoreBroadcast";
     public static final String BROADCAST_APPDATA = "sendAppdataBroadcast";
     //public static final String BROADCAST_FILE = "sendFileBroadcast";
+    private static final String CLOUDSERVICE_ROOT_PATH = "data/sea/data/sdcard/cloudFolder/";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,19 +77,19 @@ public class CloudServiceFragment extends Fragment implements OnCheckedChangeLis
         intentFilter.addAction(BROADCAST_STARTMENU);
         getActivity().registerReceiver(mCloudReceiver, intentFilter);
 
-        File dirFolder = new File("data/data/cloudFolder");
+        File dirFolder = new File(CLOUDSERVICE_ROOT_PATH);
         if (!dirFolder.exists()) {
             dirFolder.mkdirs();
         }
-        //File fileWallpaperName = new File("data/data/cloudFolder/CloudWallpaper.xml");
-        File fileWifiName = new File("data/data/cloudFolder/CloudWifi.xml");
-        File fileEmailName = new File("data/data/cloudFolder/CloudEmail.xml");
-        File fileAppdataName = new File("data/data/cloudFolder/CloudAppdata.xml");
-        //File filePictureName = new File("data/data/cloudFolder/CloudPicture.xml");
-        File fileStartmenuName = new File("data/data/cloudFolder/CloudStartMenu.xml");
-        File fileAppStoreName = new File("data/data/cloudFolder/CloudAppStore.xml");
-        File fileBrowserName = new File("data/data/cloudFolder/CloudBrowser.xml");
-        //File fileFileName = new File("data/data/cloudFolder/CloudFile.xml");
+        //File fileWallpaperName = new File("data/sea/data/sdcard/cloudFolder/CloudWallpaper.xml");
+        File fileWifiName = new File(CLOUDSERVICE_ROOT_PATH + "CloudWifi.xml");
+        File fileEmailName = new File(CLOUDSERVICE_ROOT_PATH + "CloudEmail.xml");
+        File fileAppdataName = new File(CLOUDSERVICE_ROOT_PATH + "CloudAppdata.xml");
+        //File filePictureName = new File("data/sea/data/sdcard/cloudFolder/CloudPicture.xml");
+        File fileStartmenuName = new File(CLOUDSERVICE_ROOT_PATH + "CloudStartMenu.xml");
+        File fileAppStoreName = new File(CLOUDSERVICE_ROOT_PATH + "CloudAppStore.xml");
+        File fileBrowserName = new File(CLOUDSERVICE_ROOT_PATH + "CloudBrowser.xml");
+        //File fileFileName = new File("data/sea/data/sdcard/cloudFolder/CloudFile.xml");
 
         try {
             //if (!fileWallpaperName.exists()) {
@@ -266,7 +267,7 @@ public class CloudServiceFragment extends Fragment implements OnCheckedChangeLis
             switch (intent.getAction()) {
                 case BROADCAST_WALLPAPER:
                     oldPath = "data/system/users/0/wallpaper";
-                    newPath = "data/data/cloudFolder/wallpaper";
+                    newPath = CLOUDSERVICE_ROOT_PATH + "wallpaper";
                     copyFile (oldPath,newPath);
                     break;
                 case BROADCAST_STARTMENU:
@@ -276,7 +277,7 @@ public class CloudServiceFragment extends Fragment implements OnCheckedChangeLis
                         Cursor cursor = getActivity().getContentResolver().
                                    query(uriQuery, null, null, null, null);
                         if (cursor != null && cursor.moveToNext()) {
-                            writeFile("data/data/cloudFolder/CloudStartMenu.xml",
+                            writeFile(CLOUDSERVICE_ROOT_PATH + "CloudStartMenu.xml",
                                    cursor.getString(cursor.getColumnIndex("pkgname")) + "\n", true);
                             cursor.close();
                         }
