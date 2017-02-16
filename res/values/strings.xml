@@ -6218,6 +6218,7 @@
     <string name="cloud_browser">Browser</string>
     <string name="cloud_appstore">App Store</string>
     <string name="cloud_file">File</string>
+    <string name="cloudfolder_path">data/sea/data/sdcard/cloudFolder/</string>
     <!-- hotkey -->
     <string name="hot_copy">Copy</string>
     <string name="hot_cut">Cut</string>
