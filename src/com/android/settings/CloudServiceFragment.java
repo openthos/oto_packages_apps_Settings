@@ -21,6 +21,9 @@ import android.text.TextUtils;
 import android.net.Uri;
 import android.database.Cursor;
 import android.app.WallpaperManager;
+import android.util.Log;
+import com.android.otosoft.tools.FileUtils;
+import com.android.otosoft.tools.ChangeBuildPropTools;
 
 public class CloudServiceFragment extends Fragment implements OnClickListener {
     private Switch mSwitchWallpaper;
@@ -34,11 +37,20 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
     private Button mButtonImport;
     private Button mButtonExport;
 
-    private String mWallpaperOldPath = "data/system/users/0/wallpaper";
-    private String mWallpaperNewPath = "data/sea/data/sdcard/cloudFolder/wallpaper";
+    private static final String WALLPAPER_OLD_PATH = "data/system/users/0/wallpaper";
+    private static final String WALLPAPER_NEW_PATH = "data/sea/data/sdcard/cloudFolder/wallpaper";
+
+    private static final String EMAIL_FILE_PATH = "data/data/com.android.email";
+    private static final String EMAIL_SEAFILE_PATH = "data/sea/data/sdcard/cloudFolder/email";
+    private static final String PREFS_PATH = EMAIL_FILE_PATH + "/shared_prefs";
+    private static final String PREFS_SEAFILE_PATH = EMAIL_SEAFILE_PATH + "/shared_prefs";
+
 
     private File mCloudFolder;
-
+    private static final String TAG = "CloudServiceFragment";
+    private static final String ROOT_COMMOND = "chmod -R 777 ";
+    private static final int BUF_SIZE = 1024;
+    private boolean DEBUG = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,16 +74,23 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
 
         mButtonImport = (Button) v.findViewById(R.id.cloud_import);
         mButtonExport = (Button) v.findViewById(R.id.cloud_export);
-
         mButtonImport.setOnClickListener(this);
         mButtonExport.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cloud_import:
-                importWallpaperFiles();
+                if (mCloudFolder.exists()) {
+                    if (mSwitchWallpaper.isChecked()) {
+                        importWallpaperFiles();
+                    }
+                    if (mSwitchEmail.isChecked()) {
+                        importEmailFiles();
+                    }
+                }
                 break;
             case R.id.cloud_export:
                 if (!mCloudFolder.exists()) {
@@ -83,6 +102,16 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                 if (mSwitchStartupmenu.isChecked()) {
                     exportStartupmenuFiles();
                 }
+                if (mSwitchEmail.isChecked()) {
+                    File emailFile = new File (EMAIL_SEAFILE_PATH);
+                    if (!emailFile.exists()) {
+                        emailFile.mkdirs();
+                    } else {
+                        FileUtils.deleteGeneralFile(EMAIL_SEAFILE_PATH);
+                        emailFile.mkdirs();
+                    }
+                    exportEmailFiles();
+                }
                 break;
         }
     }
@@ -90,25 +119,39 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
     private void importWallpaperFiles() {
         if (mSwitchWallpaper.isChecked()) {
             InputStream wallpaperFile = null;
-            if (mCloudFolder.exists()){
+            try {
+                wallpaperFile = new FileInputStream(WALLPAPER_NEW_PATH);
+                if (wallpaperFile != null) {
+                    WallpaperManager.getInstance(getActivity()).setStream(wallpaperFile);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
                 try {
-                    wallpaperFile = new FileInputStream(mWallpaperNewPath);
                     if (wallpaperFile != null) {
-                        WallpaperManager manager =
-                                         WallpaperManager.getInstance(getActivity());
-                        manager.setStream(wallpaperFile);
+                        wallpaperFile.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                } finally {
-                    try {
-                        if (wallpaperFile !=null) {
-                            wallpaperFile.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
+            }
+        }
+    }
+
+    public void importEmailFiles() {
+        File emailFiles = new File(EMAIL_SEAFILE_PATH);
+        if (emailFiles.exists()){
+            File emailNewDevicePrefs = new File(PREFS_PATH);
+            if (emailNewDevicePrefs.exists()) {
+                ChangeBuildPropTools.exec(ROOT_COMMOND + PREFS_PATH);
+                FileUtils.deleteGeneralFile(PREFS_PATH);
+            }
+            ChangeBuildPropTools.exec(ROOT_COMMOND + EMAIL_FILE_PATH);
+            ChangeBuildPropTools.exec(ROOT_COMMOND + PREFS_SEAFILE_PATH);
+            if (FileUtils.copyGeneralFile(PREFS_SEAFILE_PATH, EMAIL_FILE_PATH)) {
+                if (DEBUG) Log.i(TAG,"seafile email sync to new device sucessful!");
+            } else {
+                if (DEBUG) Log.i(TAG,"seafile email sync to new device fail!");
             }
         }
     }
@@ -118,11 +161,11 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         FileOutputStream fs = null;
         try {
             int byteRead = 0;
-            File wallpaperOldFile = new File(mWallpaperOldPath);
+            File wallpaperOldFile = new File(WALLPAPER_OLD_PATH);
             if (wallpaperOldFile.exists()) {
-                inStream = new FileInputStream(mWallpaperOldPath);
-                fs = new FileOutputStream(mWallpaperNewPath);
-                byte[] buffer = new byte[1024];
+                inStream = new FileInputStream(WALLPAPER_OLD_PATH);
+                fs = new FileOutputStream(WALLPAPER_NEW_PATH);
+                byte[] buffer = new byte[BUF_SIZE];
                 while ((byteRead = inStream.read(buffer)) != -1) {
                     fs.write(buffer, 0, byteRead);
                 }
@@ -157,6 +200,19 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                 writeFile("data/data/cloudFolder/CloudStartMenu.xml",
                                cursor.getString(cursor.getColumnIndex("pkgname")) + "\n", true);
                 cursor.close();
+            }
+        }
+    }
+
+    private void exportEmailFiles() {
+        File emailSharedPrefs = new File(PREFS_PATH);
+        if (emailSharedPrefs.exists()) {
+            ChangeBuildPropTools.exec(ROOT_COMMOND + PREFS_PATH);
+            ChangeBuildPropTools.exec(ROOT_COMMOND + EMAIL_SEAFILE_PATH);
+            if (FileUtils.copyGeneralFile(PREFS_PATH, EMAIL_SEAFILE_PATH)) {
+                if (DEBUG) Log.i(TAG,"email sync to seafile sucessful!");
+            } else {
+                if (DEBUG) Log.i(TAG,"email sync to seafile fail!");
             }
         }
     }
