@@ -24,6 +24,11 @@ import android.app.WallpaperManager;
 import android.util.Log;
 import com.android.otosoft.tools.FileUtils;
 import com.android.otosoft.tools.ChangeBuildPropTools;
+import android.database.sqlite.SQLiteDatabase;
+import android.content.pm.PackageInfo;
+import android.content.Intent;
+import java.util.List;
+import java.util.ArrayList;
 
 public class CloudServiceFragment extends Fragment implements OnClickListener {
     private Switch mSwitchWallpaper;
@@ -44,7 +49,12 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
     private static final String EMAIL_SEAFILE_PATH = "data/sea/data/sdcard/cloudFolder/email";
     private static final String PREFS_PATH = EMAIL_FILE_PATH + "/shared_prefs";
     private static final String PREFS_SEAFILE_PATH = EMAIL_SEAFILE_PATH + "/shared_prefs";
-
+    private static final String STATUSBAR_DB_PATH
+                         = "data/data/com.android.systemui/databases/Status_bar_database.db";
+    private static final String STARTUPMENU_SEAFILE_PATH
+                         = "data/sea/data/sdcard/cloudFolder/startupmenu";
+    private static final String STATUSBAR_DB_SEAFILE_PATH
+                         = STARTUPMENU_SEAFILE_PATH + "/Status_bar_database.db";
 
     private File mCloudFolder;
     private static final String TAG = "CloudServiceFragment";
@@ -90,6 +100,9 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                     if (mSwitchEmail.isChecked()) {
                         importEmailFiles();
                     }
+                    if (mSwitchStartupmenu.isChecked()) {
+                        importStatusBarFiles();
+                    }
                 }
                 break;
             case R.id.cloud_export:
@@ -100,16 +113,19 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                     exportWallpaperFiles();
                 }
                 if (mSwitchStartupmenu.isChecked()) {
+                    File startupMenuFile = new File (STARTUPMENU_SEAFILE_PATH);
+                    if (startupMenuFile.exists()) {
+                        FileUtils.deleteGeneralFile(STARTUPMENU_SEAFILE_PATH);
+                    }
+                    startupMenuFile.mkdirs();
                     exportStartupmenuFiles();
                 }
                 if (mSwitchEmail.isChecked()) {
                     File emailFile = new File (EMAIL_SEAFILE_PATH);
-                    if (!emailFile.exists()) {
-                        emailFile.mkdirs();
-                    } else {
+                    if (emailFile.exists()) {
                         FileUtils.deleteGeneralFile(EMAIL_SEAFILE_PATH);
-                        emailFile.mkdirs();
                     }
+                    emailFile.mkdirs();
                     exportEmailFiles();
                 }
                 break;
@@ -156,6 +172,31 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         }
     }
 
+    public void importStatusBarFiles() {
+        File statusbarDbFiles = new File(STATUSBAR_DB_SEAFILE_PATH);
+        if (statusbarDbFiles.exists()) {
+            SQLiteDatabase statusbarDb = SQLiteDatabase.openDatabase(
+                          STATUSBAR_DB_SEAFILE_PATH, null, SQLiteDatabase.OPEN_READWRITE);
+            Cursor cursor = statusbarDb.rawQuery("select * from status_bar_tb", null);
+            if (cursor != null) {
+                List<PackageInfo> pkgInfos = getActivity()
+                                        .getPackageManager().getInstalledPackages(0);
+                ArrayList<String> pkgNameLists = new ArrayList();
+                while(cursor.moveToNext()) {
+                    String pkgName = cursor.getString(cursor.getColumnIndex("pkgname"));
+                    for (PackageInfo pkgInfo : pkgInfos) {
+                        if (pkgInfo.packageName.equals(pkgName)) {
+                            pkgNameLists.add(pkgName);
+                        }
+                    }
+                }
+                Intent intent = new Intent(Intent.STATUS_BAR_SEAFILE);
+                intent.putStringArrayListExtra("pkgname", pkgNameLists);
+                getActivity().sendBroadcast(intent);
+            }
+        }
+    }
+
     public void exportWallpaperFiles() {
         InputStream inStream = null;
         FileOutputStream fs = null;
@@ -191,15 +232,13 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
     }
 
     private void exportStartupmenuFiles() {
-        Uri uriQuery = Uri.parse(
-               "content://com.android.systemui.util.StatusBarContentProvider/status_bar_tb");
-        if (uriQuery != null) {
-            Cursor cursor = getActivity().getContentResolver().
-                                       query(uriQuery, null, null, null, null);
-            if (cursor != null && cursor.moveToNext()) {
-                writeFile("data/data/cloudFolder/CloudStartMenu.xml",
-                               cursor.getString(cursor.getColumnIndex("pkgname")) + "\n", true);
-                cursor.close();
+        File statusbarDb = new File(STATUSBAR_DB_PATH);
+        if (statusbarDb.exists()) {
+            ChangeBuildPropTools.exec(ROOT_COMMOND + STATUSBAR_DB_PATH);
+            if (FileUtils.copyGeneralFile(STATUSBAR_DB_PATH, STARTUPMENU_SEAFILE_PATH)) {
+                if (DEBUG) Log.i(TAG,"statusbar sync to seafile sucessful!");
+            } else {
+                if (DEBUG) Log.i(TAG,"statusbar sync to seafile fail!");
             }
         }
     }
@@ -213,37 +252,6 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                 if (DEBUG) Log.i(TAG,"email sync to seafile sucessful!");
             } else {
                 if (DEBUG) Log.i(TAG,"email sync to seafile fail!");
-            }
-        }
-    }
-
-    public static boolean writeFile(String fileName, String content, boolean append) {
-        FileWriter fileWriter = null;
-        if (TextUtils.isEmpty(content)) {
-            return false;
-        }
-        try {
-            File file = new File(fileName);
-            if (!file.exists()) {
-                 file.createNewFile();
-            }
-        } catch (IOException e) {
-            return false;
-        }
-        try {
-            fileWriter = new FileWriter(fileName, append);
-            fileWriter.write(content);
-            fileWriter.flush();
-            return true;
-        } catch (IOException e) {
-            return false;
-        } finally {
-            if (fileWriter != null) {
-                try {
-                    fileWriter.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
