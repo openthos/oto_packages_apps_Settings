@@ -55,6 +55,11 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                          = "data/sea/data/sdcard/cloudFolder/startupmenu";
     private static final String STATUSBAR_DB_SEAFILE_PATH
                          = STARTUPMENU_SEAFILE_PATH + "/Status_bar_database.db";
+    private static final String WIFI_INFO_FILE_PATH = "data/misc/wifi";
+    private static final String WIFI_INFO_FILE_CONTENT = "data/misc/wifi/wpa_supplicant.conf";
+    private static final String WIFI_INFO_SEAFILE_PATH = "data/sea/data/sdcard/cloudFolder/wifi";
+    private static final String WIFI_INFO_SEAFILE_CONTENT =
+                                        "data/sea/data/sdcard/cloudFolder/wifi/wpa_supplicant.conf";
 
     private File mCloudFolder;
     private static final String TAG = "CloudServiceFragment";
@@ -103,6 +108,9 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                     if (mSwitchStartupmenu.isChecked()) {
                         importStatusBarFiles();
                     }
+                    if (mSwitchWifi.isChecked()) {
+                        importWifiFiles();
+                    }
                 }
                 break;
             case R.id.cloud_export:
@@ -127,6 +135,13 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                     }
                     emailFile.mkdirs();
                     exportEmailFiles();
+                }
+                if (mSwitchWifi.isChecked()) {
+                    File wifiInfoSeafile = new File(WIFI_INFO_SEAFILE_PATH);
+                    if (!wifiInfoSeafile.exists()) {
+                        wifiInfoSeafile.mkdirs();
+                    }
+                    exportWifiFiles();
                 }
                 break;
         }
@@ -154,7 +169,7 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         }
     }
 
-    public void importEmailFiles() {
+    private void importEmailFiles() {
         File emailFiles = new File(EMAIL_SEAFILE_PATH);
         if (emailFiles.exists()){
             File emailNewDevicePrefs = new File(PREFS_PATH);
@@ -172,7 +187,7 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         }
     }
 
-    public void importStatusBarFiles() {
+    private void importStatusBarFiles() {
         File statusbarDbFiles = new File(STATUSBAR_DB_SEAFILE_PATH);
         if (statusbarDbFiles.exists()) {
             SQLiteDatabase statusbarDb = SQLiteDatabase.openDatabase(
@@ -197,7 +212,13 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         }
     }
 
-    public void exportWallpaperFiles() {
+    private void importWifiFiles() {
+        ChangeBuildPropTools.exec(ROOT_COMMOND + WIFI_INFO_SEAFILE_CONTENT);
+        ChangeBuildPropTools.exec(ROOT_COMMOND + WIFI_INFO_FILE_PATH);
+        ChangeBuildPropTools.exec("cp -f " + WIFI_INFO_SEAFILE_CONTENT + " " + WIFI_INFO_FILE_PATH);
+    }
+
+    private void exportWallpaperFiles() {
         InputStream inStream = null;
         FileOutputStream fs = null;
         try {
@@ -254,5 +275,11 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                 if (DEBUG) Log.i(TAG,"email sync to seafile fail!");
             }
         }
+    }
+
+    private void exportWifiFiles() {
+        ChangeBuildPropTools.exec(ROOT_COMMOND + WIFI_INFO_FILE_CONTENT);
+        ChangeBuildPropTools.exec(ROOT_COMMOND + WIFI_INFO_SEAFILE_PATH);
+        ChangeBuildPropTools.exec("cp -f " + WIFI_INFO_FILE_CONTENT + " " + WIFI_INFO_SEAFILE_PATH);
     }
 }
