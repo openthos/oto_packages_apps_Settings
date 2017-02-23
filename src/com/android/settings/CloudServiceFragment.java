@@ -60,6 +60,13 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
     private static final String WIFI_INFO_SEAFILE_PATH = "data/sea/data/sdcard/cloudFolder/wifi";
     private static final String WIFI_INFO_SEAFILE_CONTENT =
                                         "data/sea/data/sdcard/cloudFolder/wifi/wpa_supplicant.conf";
+    private static final String BROWSER_INFO_FILE_PATH = "data/data/org.mozilla.fennec_root/files";
+    private static final String BROWSER_INFO_FILE_CONTENT =
+                                                 "data/data/org.mozilla.fennec_root/files/mozilla";
+    private static final String BROWSER_INFO_SEAFILE_PATH =
+                                                 "data/sea/data/sdcard/cloudFolder/browser";
+    private static final String BROWSER_INFO_SEAFILE_CONTENT =
+                                                "data/sea/data/sdcard/cloudFolder/browser/mozilla";
 
     private File mCloudFolder;
     private static final String TAG = "CloudServiceFragment";
@@ -111,6 +118,9 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                     if (mSwitchWifi.isChecked()) {
                         importWifiFiles();
                     }
+                    if (mSwitchBrowser.isChecked()) {
+                        importBrowserFiles();
+                    }
                 }
                 break;
             case R.id.cloud_export:
@@ -142,6 +152,13 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                         wifiInfoSeafile.mkdirs();
                     }
                     exportWifiFiles();
+                }
+                if (mSwitchBrowser.isChecked()) {
+                    File browserInfoSeafile = new File(BROWSER_INFO_SEAFILE_PATH);
+                    if (!browserInfoSeafile.exists()) {
+                        browserInfoSeafile.mkdirs();
+                    }
+                    exportBrowserFiles();
                 }
                 break;
         }
@@ -218,6 +235,13 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         ChangeBuildPropTools.exec("cp -f " + WIFI_INFO_SEAFILE_CONTENT + " " + WIFI_INFO_FILE_PATH);
     }
 
+    private void importBrowserFiles() {
+        ChangeBuildPropTools.exec(ROOT_COMMOND + BROWSER_INFO_FILE_PATH);
+        ChangeBuildPropTools.exec(ROOT_COMMOND + BROWSER_INFO_SEAFILE_CONTENT);
+        ChangeBuildPropTools.exec("cp -rf " + BROWSER_INFO_SEAFILE_CONTENT +" "
+                                  + BROWSER_INFO_FILE_PATH);
+    }
+
     private void exportWallpaperFiles() {
         InputStream inStream = null;
         FileOutputStream fs = null;
@@ -281,5 +305,12 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         ChangeBuildPropTools.exec(ROOT_COMMOND + WIFI_INFO_FILE_CONTENT);
         ChangeBuildPropTools.exec(ROOT_COMMOND + WIFI_INFO_SEAFILE_PATH);
         ChangeBuildPropTools.exec("cp -f " + WIFI_INFO_FILE_CONTENT + " " + WIFI_INFO_SEAFILE_PATH);
+    }
+
+    private void exportBrowserFiles() {
+        ChangeBuildPropTools.exec(ROOT_COMMOND + BROWSER_INFO_FILE_CONTENT);
+        ChangeBuildPropTools.exec(ROOT_COMMOND + BROWSER_INFO_SEAFILE_PATH);
+        ChangeBuildPropTools.exec("cp -rf "+BROWSER_INFO_FILE_CONTENT + " "
+                                   + BROWSER_INFO_SEAFILE_PATH);
     }
 }
