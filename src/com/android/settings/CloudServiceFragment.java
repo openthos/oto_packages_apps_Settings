@@ -42,19 +42,21 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
     private Button mButtonImport;
     private Button mButtonExport;
 
-    private static final String WALLPAPER_OLD_PATH = "data/system/users/0/wallpaper";
-    private static final String WALLPAPER_NEW_PATH = "data/sea/data/sdcard/cloudFolder/wallpaper";
-
+    private static final String WALLPAPER_PATH = "data/system/users/0/wallpaper";
+    private static final String WALLPAPER_SEAFILE_PATH =
+                                        "data/sea/data/sdcard/cloudFolder/wallpaper";
+    private static final String IMAGE_WALLPAPER_SEAFILE_PATH =
+                                        WALLPAPER_SEAFILE_PATH + "/wallpaper";
     private static final String EMAIL_FILE_PATH = "data/data/com.android.email";
     private static final String EMAIL_SEAFILE_PATH = "data/sea/data/sdcard/cloudFolder/email";
     private static final String PREFS_PATH = EMAIL_FILE_PATH + "/shared_prefs";
     private static final String PREFS_SEAFILE_PATH = EMAIL_SEAFILE_PATH + "/shared_prefs";
-    private static final String STATUSBAR_DB_PATH
-                         = "data/data/com.android.systemui/databases/Status_bar_database.db";
-    private static final String STARTUPMENU_SEAFILE_PATH
-                         = "data/sea/data/sdcard/cloudFolder/startupmenu";
-    private static final String STATUSBAR_DB_SEAFILE_PATH
-                         = STARTUPMENU_SEAFILE_PATH + "/Status_bar_database.db";
+    private static final String STATUSBAR_DB_PATH =
+                         "data/data/com.android.systemui/databases/Status_bar_database.db";
+    private static final String STARTUPMENU_SEAFILE_PATH =
+                         "data/sea/data/sdcard/cloudFolder/startupmenu";
+    private static final String STATUSBAR_DB_SEAFILE_PATH =
+                         STARTUPMENU_SEAFILE_PATH + "/Status_bar_database.db";
     private static final String WIFI_INFO_FILE_PATH = "data/misc/wifi";
     private static final String WIFI_INFO_FILE_CONTENT = "data/misc/wifi/wpa_supplicant.conf";
     private static final String WIFI_INFO_SEAFILE_PATH = "data/sea/data/sdcard/cloudFolder/wifi";
@@ -67,6 +69,11 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                                                  "data/sea/data/sdcard/cloudFolder/browser";
     private static final String BROWSER_INFO_SEAFILE_CONTENT =
                                                 "data/sea/data/sdcard/cloudFolder/browser/mozilla";
+    private static final String APPSTORE_SEAFILE_PATH =
+                                        "data/sea/data/sdcard/cloudFolder/appstore";
+    private static final String APPSTORE_PKGNAME_SEAFILE_PATH =
+                                        APPSTORE_SEAFILE_PATH + "/appPkgNames.txt";
+    private static final String APPSTORE_PATH = "data/data/com.openthos.appstore/";
 
     private File mCloudFolder;
     private static final String TAG = "CloudServiceFragment";
@@ -121,6 +128,10 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                     if (mSwitchBrowser.isChecked()) {
                         importBrowserFiles();
                     }
+                    if (mSwitchAppstore.isChecked()) {
+                        getActivity().sendBroadcast(
+                                      new Intent(Intent.ACTION_APPSTORE_SEAFILE));
+                    }
                 }
                 break;
             case R.id.cloud_export:
@@ -128,6 +139,10 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                     mCloudFolder.mkdirs();
                 }
                 if (mSwitchWallpaper.isChecked()) {
+                    File wallpaperSeafile = new File(WALLPAPER_SEAFILE_PATH);
+                    if (!wallpaperSeafile.exists()) {
+                        wallpaperSeafile.mkdirs();
+                    }
                     exportWallpaperFiles();
                 }
                 if (mSwitchStartupmenu.isChecked()) {
@@ -160,6 +175,21 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                     }
                     exportBrowserFiles();
                 }
+                if (mSwitchAppstore.isChecked()) {
+                    File appstoreDirSeafile = new File(APPSTORE_SEAFILE_PATH);
+                    if (!appstoreDirSeafile.exists()) {
+                        appstoreDirSeafile.mkdirs();
+                    }
+                    File appstoreSeafile = new File(APPSTORE_PKGNAME_SEAFILE_PATH);
+                    if (!appstoreSeafile.exists()) {
+                        try {
+                            appstoreSeafile.createNewFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    exportAppstoreFiles();
+                }
                 break;
         }
     }
@@ -168,7 +198,7 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         if (mSwitchWallpaper.isChecked()) {
             InputStream wallpaperFile = null;
             try {
-                wallpaperFile = new FileInputStream(WALLPAPER_NEW_PATH);
+                wallpaperFile = new FileInputStream(IMAGE_WALLPAPER_SEAFILE_PATH);
                 if (wallpaperFile != null) {
                     WallpaperManager.getInstance(getActivity()).setStream(wallpaperFile);
                 }
@@ -243,37 +273,9 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
     }
 
     private void exportWallpaperFiles() {
-        InputStream inStream = null;
-        FileOutputStream fs = null;
-        try {
-            int byteRead = 0;
-            File wallpaperOldFile = new File(WALLPAPER_OLD_PATH);
-            if (wallpaperOldFile.exists()) {
-                inStream = new FileInputStream(WALLPAPER_OLD_PATH);
-                fs = new FileOutputStream(WALLPAPER_NEW_PATH);
-                byte[] buffer = new byte[BUF_SIZE];
-                while ((byteRead = inStream.read(buffer)) != -1) {
-                    fs.write(buffer, 0, byteRead);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (inStream != null) {
-                    inStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (fs != null) {
-                    fs.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        ChangeBuildPropTools.exec(ROOT_COMMOND + WALLPAPER_PATH);
+        ChangeBuildPropTools.exec(ROOT_COMMOND + WALLPAPER_SEAFILE_PATH);
+        ChangeBuildPropTools.exec("cp -f " + WALLPAPER_PATH + " " + WALLPAPER_SEAFILE_PATH);
     }
 
     private void exportStartupmenuFiles() {
@@ -312,5 +314,22 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         ChangeBuildPropTools.exec(ROOT_COMMOND + BROWSER_INFO_SEAFILE_PATH);
         ChangeBuildPropTools.exec("cp -rf "+BROWSER_INFO_FILE_CONTENT + " "
                                    + BROWSER_INFO_SEAFILE_PATH);
+    }
+
+    private void exportAppstoreFiles() {
+        List<PackageInfo> pkgInfos = getActivity()
+                               .getPackageManager().getInstalledPackages(0);
+        try {
+            BufferedWriter appWriter = new BufferedWriter(
+                                       new FileWriter(APPSTORE_PKGNAME_SEAFILE_PATH));
+            for (PackageInfo pkgInfo : pkgInfos) {
+                appWriter.write(pkgInfo.packageName);
+                appWriter.newLine();
+                appWriter.flush();
+            }
+            appWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
