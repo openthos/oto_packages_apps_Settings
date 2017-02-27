@@ -2647,6 +2647,10 @@
     <string name="cloud_browser">浏览器</string>
     <string name="cloud_appstore">应用商店</string>
     <string name="cloud_file">文档</string>
+    <string name="import_reboot_info_warn">导入完成后，要想所有的功能生效，需重启系统。</string>
+    <string name="export_confirm_dialog_info">是否确定将当前设备相关信息同步到你的账户云服务上？</string>
+    <string name="cloud_service_dialog_confirm">确定</string>
+    <string name="cloud_service_dialog_cancel">取消</string>
     <!--
        name:system reset
        author:wang zhixu

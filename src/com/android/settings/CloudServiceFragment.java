@@ -1,11 +1,15 @@
 package com.android.settings;
 
 import android.app.Fragment;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -113,84 +117,58 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         switch (view.getId()) {
             case R.id.cloud_import:
                 if (mCloudFolder.exists()) {
-                    if (mSwitchWallpaper.isChecked()) {
-                        importWallpaperFiles();
-                    }
-                    if (mSwitchEmail.isChecked()) {
-                        importEmailFiles();
-                    }
-                    if (mSwitchStartupmenu.isChecked()) {
-                        importStatusBarFiles();
-                    }
-                    if (mSwitchWifi.isChecked()) {
-                        importWifiFiles();
-                    }
-                    if (mSwitchBrowser.isChecked()) {
-                        importBrowserFiles();
-                    }
-                    if (mSwitchAppstore.isChecked()) {
-                        getActivity().sendBroadcast(
-                                      new Intent(Intent.ACTION_APPSTORE_SEAFILE));
-                    }
+                    importAllFiles();
+                    Toast.makeText(getActivity(),getActivity().getResources().
+                         getString(R.string.import_reboot_info_warn),Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.cloud_export:
-                if (!mCloudFolder.exists()) {
-                    mCloudFolder.mkdirs();
-                }
-                if (mSwitchWallpaper.isChecked()) {
-                    File wallpaperSeafile = new File(WALLPAPER_SEAFILE_PATH);
-                    if (!wallpaperSeafile.exists()) {
-                        wallpaperSeafile.mkdirs();
-                    }
-                    exportWallpaperFiles();
-                }
-                if (mSwitchStartupmenu.isChecked()) {
-                    File startupMenuFile = new File (STARTUPMENU_SEAFILE_PATH);
-                    if (startupMenuFile.exists()) {
-                        FileUtils.deleteGeneralFile(STARTUPMENU_SEAFILE_PATH);
-                    }
-                    startupMenuFile.mkdirs();
-                    exportStartupmenuFiles();
-                }
-                if (mSwitchEmail.isChecked()) {
-                    File emailFile = new File (EMAIL_SEAFILE_PATH);
-                    if (emailFile.exists()) {
-                        FileUtils.deleteGeneralFile(EMAIL_SEAFILE_PATH);
-                    }
-                    emailFile.mkdirs();
-                    exportEmailFiles();
-                }
-                if (mSwitchWifi.isChecked()) {
-                    File wifiInfoSeafile = new File(WIFI_INFO_SEAFILE_PATH);
-                    if (!wifiInfoSeafile.exists()) {
-                        wifiInfoSeafile.mkdirs();
-                    }
-                    exportWifiFiles();
-                }
-                if (mSwitchBrowser.isChecked()) {
-                    File browserInfoSeafile = new File(BROWSER_INFO_SEAFILE_PATH);
-                    if (!browserInfoSeafile.exists()) {
-                        browserInfoSeafile.mkdirs();
-                    }
-                    exportBrowserFiles();
-                }
-                if (mSwitchAppstore.isChecked()) {
-                    File appstoreDirSeafile = new File(APPSTORE_SEAFILE_PATH);
-                    if (!appstoreDirSeafile.exists()) {
-                        appstoreDirSeafile.mkdirs();
-                    }
-                    File appstoreSeafile = new File(APPSTORE_PKGNAME_SEAFILE_PATH);
-                    if (!appstoreSeafile.exists()) {
-                        try {
-                            appstoreSeafile.createNewFile();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    exportAppstoreFiles();
-                }
+                showExportConfirmDialog();
                 break;
+        }
+    }
+
+    private void showExportConfirmDialog() {
+        AlertDialog.Builder builder=new Builder(getActivity());
+        builder.setMessage(getActivity().getResources().
+                           getString(R.string.export_confirm_dialog_info));
+        builder.setPositiveButton(getActivity().
+                                  getResources().getString(R.string.cloud_service_dialog_confirm),
+                                  new android.content.DialogInterface.OnClickListener() {
+                                      public void onClick(DialogInterface dialog, int which) {
+                                          exportAllFiles();
+                                          dialog.dismiss();
+                                      }
+                                  });
+        builder.setNegativeButton(getActivity().
+                                  getResources().getString(R.string.cloud_service_dialog_cancel),
+                                  new android.content.DialogInterface.OnClickListener() {
+                                      public void onClick(DialogInterface dialog, int which) {
+                                          dialog.dismiss();
+                                      }
+                                  });
+        builder.create().show();
+    }
+
+    private void importAllFiles() {
+        if (mSwitchWallpaper.isChecked()) {
+            importWallpaperFiles();
+        }
+        if (mSwitchEmail.isChecked()) {
+            importEmailFiles();
+        }
+        if (mSwitchStartupmenu.isChecked()) {
+            importStatusBarFiles();
+        }
+        if (mSwitchWifi.isChecked()) {
+            importWifiFiles();
+        }
+        if (mSwitchBrowser.isChecked()) {
+            importBrowserFiles();
+        }
+        if (mSwitchAppstore.isChecked()) {
+            getActivity().sendBroadcast(
+                          new Intent(Intent.ACTION_APPSTORE_SEAFILE));
         }
     }
 
@@ -270,6 +248,64 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         ChangeBuildPropTools.exec(ROOT_COMMOND + BROWSER_INFO_SEAFILE_CONTENT);
         ChangeBuildPropTools.exec("cp -rf " + BROWSER_INFO_SEAFILE_CONTENT +" "
                                   + BROWSER_INFO_FILE_PATH);
+    }
+
+    private void exportAllFiles() {
+        if (!mCloudFolder.exists()) {
+            mCloudFolder.mkdirs();
+        }
+        if (mSwitchWallpaper.isChecked()) {
+            File wallpaperSeafile = new File(WALLPAPER_SEAFILE_PATH);
+            if (!wallpaperSeafile.exists()) {
+                wallpaperSeafile.mkdirs();
+            }
+            exportWallpaperFiles();
+        }
+        if (mSwitchStartupmenu.isChecked()) {
+            File startupMenuFile = new File (STARTUPMENU_SEAFILE_PATH);
+            if (startupMenuFile.exists()) {
+                FileUtils.deleteGeneralFile(STARTUPMENU_SEAFILE_PATH);
+            }
+            startupMenuFile.mkdirs();
+            exportStartupmenuFiles();
+        }
+        if (mSwitchEmail.isChecked()) {
+            File emailFile = new File (EMAIL_SEAFILE_PATH);
+            if (emailFile.exists()) {
+                FileUtils.deleteGeneralFile(EMAIL_SEAFILE_PATH);
+            }
+            emailFile.mkdirs();
+            exportEmailFiles();
+        }
+        if (mSwitchWifi.isChecked()) {
+            File wifiInfoSeafile = new File(WIFI_INFO_SEAFILE_PATH);
+            if (!wifiInfoSeafile.exists()) {
+                wifiInfoSeafile.mkdirs();
+            }
+            exportWifiFiles();
+        }
+        if (mSwitchBrowser.isChecked()) {
+            File browserInfoSeafile = new File(BROWSER_INFO_SEAFILE_PATH);
+            if (!browserInfoSeafile.exists()) {
+                browserInfoSeafile.mkdirs();
+            }
+            exportBrowserFiles();
+        }
+        if (mSwitchAppstore.isChecked()) {
+            File appstoreDirSeafile = new File(APPSTORE_SEAFILE_PATH);
+            if (!appstoreDirSeafile.exists()) {
+                appstoreDirSeafile.mkdirs();
+            }
+            File appstoreSeafile = new File(APPSTORE_PKGNAME_SEAFILE_PATH);
+            if (!appstoreSeafile.exists()) {
+                try {
+                    appstoreSeafile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            exportAppstoreFiles();
+        }
     }
 
     private void exportWallpaperFiles() {
