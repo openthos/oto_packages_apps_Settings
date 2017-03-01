@@ -174,19 +174,13 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
 
     private void importWallpaperFiles() {
         if (mSwitchWallpaper.isChecked()) {
-            InputStream wallpaperFile = null;
             try {
-                wallpaperFile = new FileInputStream(IMAGE_WALLPAPER_SEAFILE_PATH);
-                if (wallpaperFile != null) {
-                    WallpaperManager.getInstance(getActivity()).setStream(wallpaperFile);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
+                WallpaperManager.getInstance(getActivity()).setStream(
+                                      new FileInputStream(IMAGE_WALLPAPER_SEAFILE_PATH));
+            } catch (IOException exception) {
                 try {
-                    if (wallpaperFile != null) {
-                        wallpaperFile.close();
-                    }
+                    WallpaperManager.getInstance(getActivity()).setResource(
+                                      com.android.internal.R.drawable.default_wallpaper);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
