@@ -1305,6 +1305,10 @@ public class SettingsActivity extends Activity
                     removeTile = true;
                 } else if (id == R.id.storage_settings){
                     removeTile = true;
+                } else if (id == R.id.firewall_settings) {
+                    removeTile = true;
+                } else if (id == R.id.cloud_service) {
+                    removeTile = true;
                 } else if (id == R.id.nfc_payment_settings) {
                     if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) {
                         removeTile = true;
