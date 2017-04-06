@@ -29,7 +29,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.os.SystemProperties;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
@@ -68,8 +67,7 @@ public class DateTimeSettings extends SettingsPreferenceFragment
 
     // have we been launched from the setup wizard?
     protected static final String EXTRA_IS_FIRST_RUN = "firstRun";
-    private static final String OTO_TIMEZONE_PROPERTY = "persist.sys.openthos.timezone";
-    private static final String OTO_USE_UTC = "persist.sys.openthos.utc";
+
     private SwitchPreference mAutoTimePref;
     private Preference mTimePref;
     private Preference mTime24Pref;
@@ -159,23 +157,14 @@ public class DateTimeSettings extends SettingsPreferenceFragment
 
     public void updateTimeAndDateDisplay(Context context) {
         final Calendar now = Calendar.getInstance();
-	TimeZone tz = TimeZone.getTimeZone(SystemProperties.get(OTO_TIMEZONE_PROPERTY));
-	if (SystemProperties.get(OTO_USE_UTC, "flase").equals("false")) {
-            mDummyDate.setTimeZone(tz);
-	} else {
-	    mDummyDate.setTimeZone(now.getTimeZone());
-	}
+        mDummyDate.setTimeZone(now.getTimeZone());
         // We use December 31st because it's unambiguous when demonstrating the date format.
         // We use 13:00 so we can demonstrate the 12/24 hour options.
         mDummyDate.set(now.get(Calendar.YEAR), 11, 31, 13, 0, 0);
         Date dummyDate = mDummyDate.getTime();
         mDatePref.setSummary(DateFormat.getLongDateFormat(context).format(now.getTime()));
         mTimePref.setSummary(DateFormat.getTimeFormat(getActivity()).format(now.getTime()));
-	if (SystemProperties.get(OTO_USE_UTC,"false").equals("false")) {
-            mTimeZone.setSummary(getTimeZoneText(tz, true));
-	} else {
-            mTimeZone.setSummary(getTimeZoneText(now.getTimeZone(), true));
-	}
+        mTimeZone.setSummary(getTimeZoneText(now.getTimeZone(), true));
         mTime24Pref.setSummary(DateFormat.getTimeFormat(getActivity()).format(dummyDate));
     }
 
