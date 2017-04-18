@@ -17,10 +17,6 @@
 package com.android.settings;
 
 import android.app.Fragment;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -28,33 +24,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import com.android.settings.applications.ApplicationsState.*;
 import com.android.settings.applications.*;
 import com.android.settings.applications.ManageApplications.*;
 import android.content.Context;
-import android.widget.ImageView;
+import android.content.Intent;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.util.Log;
-import android.content.pm.ApplicationInfo;
-import com.android.settings.applications.ApplicationsState.AppEntry;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 
 public class RunModeSettings extends Fragment implements ApplicationsState.Callbacks {
-    private ApplicationsState mApplicationsState;
-    private ApplicationsState.Session mSession;
     private AppViewHolder mHolder;
-    private View mLoadingContainer;
     private View mListContainer;
-    private ListView mListView;
-    private HashMap<String,Integer> map;
-    private ArrayList<ApplicationsState.AppEntry> mBaseEntries;
-    private ArrayList<ApplicationsState.AppEntry> mEntries;
-    private ImageView mImageView;
-    private ContentResolver mResolver;
-
-    CharSequence mCurFilterPrefix;
+    private List<ResolveInfo> mResolveInfos;
+    private PackageManager mPackageManager;
 
     @Override
     public void onRunningStateChanged(boolean running){};
@@ -71,16 +58,10 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mResolver = getActivity().getContentResolver();
-        Uri uriQuery = Uri.parse("content://com.otosoft.tools.myprovider/selectState");
-        Cursor cursor = mResolver.query(uriQuery, null, null, null, null);
-        map = new HashMap();
-        if(cursor != null){
-            while(cursor.moveToNext()) {
-                map.put(cursor.getString(cursor.getColumnIndex("appPackage")),
-                        cursor.getInt(cursor.getColumnIndex("state")));
-            }
-        }
+        mPackageManager = getActivity().getPackageManager();
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        mResolveInfos = mPackageManager.queryIntentActivities(mainIntent, 0);
 
         View mRootView = inflater.inflate(R.layout.runmode_applications_apps, container, false);
         mListContainer = mRootView.findViewById(R.id.list_container);
@@ -91,44 +72,10 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
             if (emptyView != null) {
                 lv.setEmptyView(emptyView);
             }
-            mListView = lv;
-            mApplicationsState = ApplicationsState.getInstance(getActivity().getApplication());
-            mSession=mApplicationsState.newSession(this);
-            mSession.resume();
-            ArrayList<ApplicationsState.AppEntry> entries
-                                     = mSession.rebuild(ApplicationsState.ALL_ENABLED_FILTER,
-                                                        ApplicationsState.SIZE_COMPARATOR);
-            mBaseEntries = entries;
-            if (mBaseEntries != null) {
-                mEntries = applyPrefixFilter(mCurFilterPrefix, mBaseEntries);
-            } else {
-                mEntries = null;
-            }
             RunModeAdapter adapter=new RunModeAdapter(getActivity());
-            mListView.setAdapter(adapter);
+            lv.setAdapter(adapter);
         }
         return mRootView;
-    }
-
-    ArrayList<ApplicationsState.AppEntry> applyPrefixFilter(CharSequence prefix,
-                                               ArrayList<ApplicationsState.AppEntry> origEntries) {
-        if (prefix == null || prefix.length() == 0) {
-            return origEntries;
-        } else {
-            String prefixStr = ApplicationsState.normalize(prefix.toString());
-            final String spacePrefixStr = " " + prefixStr;
-            ArrayList<ApplicationsState.AppEntry> newEntries
-                    = new ArrayList<ApplicationsState.AppEntry>();
-            for (int i=0; i<origEntries.size(); i++) {
-                ApplicationsState.AppEntry entry = origEntries.get(i);
-                // repair
-                String nlabel = entry.getNormalizedLabel();
-                if (nlabel.startsWith(prefixStr) || nlabel.indexOf(spacePrefixStr) != -1) {
-                    newEntries.add(entry);
-                }
-            }
-            return newEntries;
-        }
     }
 
     class RunModeAdapter extends BaseAdapter {
@@ -139,17 +86,17 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
 
         @Override
         public int getCount() {
-            return mEntries != null ? mEntries.size() : 0;
+            return mResolveInfos != null ? mResolveInfos.size() : 0;
         }
 
         @Override
         public Object getItem(int i) {
-            return mEntries.get(i);
+            return mResolveInfos.get(i);
         }
 
         @Override
         public long getItemId(int i) {
-            return mEntries.get(i).id;
+            return 0;
         }
 
         @Override
@@ -157,77 +104,47 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
             mHolder = AppViewHolder.runModeHolder(inflater, view);
             view = mHolder.rootView;
 
-            // Bind the data efficiently with the mHolder
-            final  ApplicationsState.AppEntry entry = mEntries.get(i);
-            mHolder.entry = entry;
+            final ResolveInfo info = mResolveInfos.get(i);
 
-            if (entry.label != null) {
-                mHolder.appName.setText(entry.label);
-            }
-            mApplicationsState.ensureIcon(entry);
-            if (entry.icon != null) {
-                mHolder.appIcon.setImageDrawable(entry.icon);
-            }
-            //estimate whether the button state changed !!
-            if (map.get(entry.appPackage) == null) {
-                Uri uriInsert = Uri.parse("content://com.otosoft.tools.myprovider/selectState");
-                ContentValues values = new ContentValues();
-                values.put("appPackage", entry.appPackage);
-                values.put("state", 0);
-                mResolver.insert(uriInsert, values);
-
-                map.put(entry.appPackage, 0);
-                mHolder.buttonAuto.setChecked(true);
-            } else {
-                int buttonSelected = (Integer) map.get(entry.appPackage);
-                switch (buttonSelected){
-                    case 0:
-                        mHolder.buttonAuto.setChecked(true);
-                        break;
-                    case 1:
-                        mHolder.buttonPhone.setChecked(true);
-                        break;
-                    case 2:
-                        mHolder.buttonDesktop.setChecked(true);
-                        break;
-                    default:
-                        break;
-                }
+            mHolder.appName.setText(info.loadLabel(mPackageManager));
+            mHolder.appIcon.setImageDrawable(info.loadIcon(mPackageManager));
+            int buttonSelected = android.provider.Settings.Global.getInt(
+                     getActivity().getContentResolver(), info.activityInfo.packageName, 0);
+            switch (buttonSelected){
+                case 0:
+                    mHolder.buttonAuto.setChecked(true);
+                    break;
+                case 1:
+                    mHolder.buttonPhone.setChecked(true);
+                    break;
+                case 2:
+                    mHolder.buttonDesktop.setChecked(true);
+                    break;
+                default:
+                    break;
             }
 
             mHolder.buttonAuto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Uri uriUpdate = Uri.parse("content://com.otosoft.tools.myprovider/selectState");
-                    map.put(entry.appPackage, 0);
-                    ContentValues values_0 = new ContentValues();
-                    values_0.put("state", 0);
-                    mResolver.update(uriUpdate, values_0, "appPackage = ?",
-                              new String[] { entry.appPackage });
+                    android.provider.Settings.Global.putInt(
+                        getActivity().getContentResolver(), info.activityInfo.packageName, 0);
                 }
             });
 
             mHolder.buttonPhone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Uri uriUpdate = Uri.parse("content://com.otosoft.tools.myprovider/selectState");
-                    map.put(entry.appPackage, 1);
-                    ContentValues values_1 = new ContentValues();
-                    values_1.put("state", 1);
-                    mResolver.update(uriUpdate, values_1, "appPackage = ?",
-                              new String[] { entry.appPackage });
+                    android.provider.Settings.Global.putInt(
+                        getActivity().getContentResolver(), info.activityInfo.packageName, 1);
                 }
             });
 
             mHolder.buttonDesktop.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Uri uriUpdate = Uri.parse("content://com.otosoft.tools.myprovider/selectState");
-                    map.put(entry.appPackage, 2);
-                    ContentValues values_2 = new ContentValues();
-                    values_2.put("state", 2);
-                    mResolver.update(uriUpdate, values_2, "appPackage = ?",
-                              new String[] { entry.appPackage });
+                    android.provider.Settings.Global.putInt(
+                        getActivity().getContentResolver(), info.activityInfo.packageName, 2);
                 }
             });
             return view;
