@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.util.Log;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.pm.ApplicationInfo;
 
 public class RunModeSettings extends Fragment implements ApplicationsState.Callbacks {
     private AppViewHolder mHolder;
@@ -111,13 +112,13 @@ public class RunModeSettings extends Fragment implements ApplicationsState.Callb
             int buttonSelected = android.provider.Settings.Global.getInt(
                      getActivity().getContentResolver(), info.activityInfo.packageName, 0);
             switch (buttonSelected){
-                case 0:
+                case ApplicationInfo.AUTO_STARTUP_MODE:
                     mHolder.buttonAuto.setChecked(true);
                     break;
-                case 1:
+                case ApplicationInfo.PHONE_STARTUP_MODE:
                     mHolder.buttonPhone.setChecked(true);
                     break;
-                case 2:
+                case ApplicationInfo.DESKTOP_STARTUP_MODE:
                     mHolder.buttonDesktop.setChecked(true);
                     break;
                 default:
