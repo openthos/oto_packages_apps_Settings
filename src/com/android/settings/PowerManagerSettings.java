@@ -63,7 +63,7 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
     private int cpuCount = 1;
 
     private static final String KEEP_SCREEN_ON = "keep_screen_on";
-    //private SwitchPreference mKeepScreenOn;
+    private SwitchPreference mKeepScreenOn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +78,7 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
                                                                 Context.MODE_PRIVATE);
         energySavingMode = mSharedPreferences.getString("mode", "balance");
 
-        //mKeepScreenOn = (SwitchPreference)findPreference(KEEP_SCREEN_ON);
+        mKeepScreenOn = (SwitchPreference)findPreference(KEEP_SCREEN_ON);
     }
 
     @Override
@@ -102,12 +102,12 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
 
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-        //if (preference == mKeepScreenOn) {
-        //    Settings.Global.putInt(getActivity().getContentResolver(),
-        //            Settings.Global.STAY_ON_WHILE_PLUGGED_IN,
-        //            mKeepScreenOn.isChecked() ?
-        //            (BatteryManager.BATTERY_PLUGGED_AC | BatteryManager.BATTERY_PLUGGED_USB) : 0);
-        //}
+        if (preference == mKeepScreenOn) {
+            Settings.Global.putInt(getActivity().getContentResolver(),
+                    Settings.Global.STAY_ON_WHILE_PLUGGED_IN,
+                    mKeepScreenOn.isChecked() ?
+                    (BatteryManager.BATTERY_PLUGGED_AC | BatteryManager.BATTERY_PLUGGED_USB) : 0);
+        }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 

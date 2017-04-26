@@ -25,14 +25,12 @@
         android:summary="@string/energy_saving_mode_summary" />
 
     <!--sleep time setting-->
-    <!--
     <PreferenceScreen
         android:key="screen_timeout"
         android:title="@string/screen_timeout"
         android:summary="@string/screen_timeout_summary"
         settings:keywords="@string/keywords_display_screen_timeout"
         android:fragment="com.android.settings.ScreenTimeoutSettings"/>
-    -->
 
     <!--lock screen time setting -->
     <PreferenceScreen
@@ -48,11 +46,9 @@
         android:fragment="com.android.settings.fuelgauge.PowerUsageSummary"/>
 
     <!--keep screen on -->
-    <!--
     <SwitchPreference
         android:key="keep_screen_on"
         android:title="@string/keep_screen_on"
         android:summary="@string/keep_screen_on_summary"/>
-    -->
 
 </PreferenceScreen>
