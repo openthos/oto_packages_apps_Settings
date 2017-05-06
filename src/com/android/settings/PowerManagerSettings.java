@@ -41,7 +41,6 @@ import com.android.settings.search.Indexable;
 import android.content.Context;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.content.SharedPreferences;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.lang.Integer;
@@ -55,11 +54,12 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
 
     private static final String TAG = "PowerManagerManagerSettings";
     private static final String KEY_ENERGY_SAVING_MODE = "energy_saving_mode";
+    private static final String ENERGY_SAVING_MODE_BALANCE = "energy_saving_mode_balance";
+    private static final String ENERGY_SAVING_MODE_SAVING = "energy_saving_mode_saving";
+    private static final String ENERGY_SAVING_MODE_EFFICIENT = "energy_saving_mode_efficient";
 
     private Preference mScreenEnergySavingModePreference;
     private AlertDialog mDialog = null;
-    private SharedPreferences mSharedPreferences;
-    private String energySavingMode;
     private int cpuCount = 1;
 
     private static final String KEEP_SCREEN_ON = "keep_screen_on";
@@ -68,15 +68,10 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ContentResolver resolver = getContentResolver();
         addPreferencesFromResource(R.xml.power_manager_settings);
 
         mScreenEnergySavingModePreference = (PreferenceScreen) findPreference(KEY_ENERGY_SAVING_MODE);
         mScreenEnergySavingModePreference.setOnPreferenceClickListener(this);
-
-        mSharedPreferences = getActivity().getSharedPreferences("ernegysavemode",
-                                                                Context.MODE_PRIVATE);
-        energySavingMode = mSharedPreferences.getString("mode", "balance");
 
         mKeepScreenOn = (SwitchPreference)findPreference(KEEP_SCREEN_ON);
     }
@@ -142,6 +137,9 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
         if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
         }
+
+        String energySavingMode = Settings.Global.getString(
+                          getActivity().getContentResolver(), KEY_ENERGY_SAVING_MODE);
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         final View energySavingModeDialog = layoutInflater
                 .inflate(R.layout.energy_saving_mode_dialog, null);
@@ -164,12 +162,14 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
             cpuCount = Integer.parseInt(cpuInfo);
         }
 
-        if ("balance".equals(energySavingMode)) {
+        if (ENERGY_SAVING_MODE_BALANCE.equals(energySavingMode)) {
             rbBalance.setChecked(true);
-        } else if ("saving".equals(energySavingMode)) {
+        } else if (ENERGY_SAVING_MODE_SAVING.equals(energySavingMode)) {
             rbSaving.setChecked(true);
-        } else if ("efficient".equals(energySavingMode)) {
+        } else if (ENERGY_SAVING_MODE_EFFICIENT.equals(energySavingMode)) {
             rbEfficient.setChecked(true);
+        } else {
+            rbBalance.setChecked(true);
         }
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -186,19 +186,18 @@ public class PowerManagerSettings extends SettingsPreferenceFragment implements
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
                 if (rbBalance.isChecked()) {
                     energySavingModeSetting("powersave",cpuCount);
-                    editor.putString("mode", "balance");
-                    editor.commit();
+                    Settings.Global.putString(getActivity().getContentResolver(),
+                                   KEY_ENERGY_SAVING_MODE, ENERGY_SAVING_MODE_BALANCE);
                 } else if (rbSaving.isChecked()) {
                     energySavingModeSetting("powersave",cpuCount);
-                    editor.putString("mode", "saving");
-                    editor.commit();
+                    Settings.Global.putString(getActivity().getContentResolver(),
+                                   KEY_ENERGY_SAVING_MODE, ENERGY_SAVING_MODE_SAVING);
                 } else if (rbEfficient.isChecked()) {
                     energySavingModeSetting("performance",cpuCount);
-                    editor.putString("mode", "efficient");
-                    editor.commit();
+                    Settings.Global.putString(getActivity().getContentResolver(),
+                                   KEY_ENERGY_SAVING_MODE, ENERGY_SAVING_MODE_EFFICIENT);
                 }
             }
         });
