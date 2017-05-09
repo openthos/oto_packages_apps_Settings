@@ -80,7 +80,6 @@ import java.io.FileInputStream;
 
 import android.content.Context;
 import android.content.ComponentName;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -144,9 +143,6 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
     private PreferenceScreen mSystemReset;
     private PreferenceScreen mSystemUpgrade;
     private PreferenceScreen mSystemUpdate;
-    private SharedPreferences presUpdate = null;
-    private SharedPreferences.Editor editorUpdate = null;
-    private ContentResolver mResolver;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -813,6 +809,11 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
     private void upgradeDialog() {
         final String strUrl = getActivity().getResources().getString
                                            (R.string.system_upgrade_default_url);
+        final String unDefaultUpgradeUrl = Settings.Global.getString(
+                     getActivity().getContentResolver(), Settings.Global.SYS_UPGRADE_URL);
+        final boolean isDefaultChecked = Settings.Global.getBoolean(
+                  getActivity().getContentResolver(), Settings.Global.SYS_UPGRADE_DEFAULT, true);
+
         /* initial of Dialog view */
         final View viewOsUpgade = LayoutInflater.from(getActivity()).inflate
                                            (R.layout.dialog_system_upgrade,null);
@@ -823,11 +824,13 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
         /* start status */
         editTextUrl.setText(strUrl);
         editTextUrl.setEnabled(false);
+        checkBoxDefault.setChecked(isDefaultChecked ? true : false);
+        editTextUrl.setText(isDefaultChecked ? strUrl : unDefaultUpgradeUrl);
+        editTextUrl.setEnabled(isDefaultChecked ? false : true);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // builder.setIcon(R.mipmap.ic_launcher);
         builder.setTitle(getActivity().getResources().getString
                                          (R.string.system_upgrade_dialog_title));
-        initPres();
         checkBoxDefault.setOnCheckedChangeListener(new CompoundButton.
                                                              OnCheckedChangeListener() {
             @Override
@@ -837,7 +840,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
                     editTextUrl.setText(strUrl); //default
                 } else {
                     editTextUrl.setEnabled(true);
-                    editTextUrl.setText("");
+                    editTextUrl.setText(unDefaultUpgradeUrl);
                 }
             }
         });
@@ -851,37 +854,23 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
             public void onClick(DialogInterface dialog, int which) {
                 String upgradeUrl = "";
                 if (checkBoxDefault.isChecked()) {
-                    upgradeUrl = "http://dev.openthos.org/openthos/";
+                    upgradeUrl = Settings.Global.getString(getActivity().getContentResolver(),
+                                           Settings.Global.SYS_UPGRADE_DEFAULT_URL);
+                    Settings.Global.putBoolean(getActivity().getContentResolver(),
+                                          Settings.Global.SYS_UPGRADE_DEFAULT, true);
                 } else {
                     upgradeUrl = editTextUrl.getText().toString();
-                }
-                Uri upgradeuri = Uri.parse("content://com.otosoft.tools.myprovider/upgradeUrl");
-                if (upgradeuri!=null) {
-                    Cursor cursor = getContentResolver().query(upgradeuri, null, null, null, null);
-                    mResolver = getActivity().getContentResolver();
-                    ContentValues cv = new ContentValues();
-                    cv.put("upgradeUrl", upgradeUrl);
-                    if (cursor != null) {
-                        if (cursor.moveToNext()) {
-                            mResolver.update(upgradeuri, cv, null, null);
-                        } else {
-                            mResolver.insert(upgradeuri,cv);
-                        }
-                        cursor.close();
-                    }
+                    Settings.Global.putBoolean(getActivity().getContentResolver(),
+                                          Settings.Global.SYS_UPGRADE_DEFAULT, false);
+                    Settings.Global.putString(getActivity().getContentResolver(),
+                                          Settings.Global.SYS_UPGRADE_URL, upgradeUrl);
                 }
             }
         });
         builder.show();
     }
 
-    /* initials of prefrerence */
-    private void initPres() {
-        presUpdate = getActivity().getSharedPreferences("update", Context.MODE_APPEND |
-                            Context.MODE_WORLD_READABLE | Context.MODE_WORLD_WRITEABLE);
-        editorUpdate = presUpdate.edit();
-    }
-   //update system
+    //update system
     private void updateControl(){
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
