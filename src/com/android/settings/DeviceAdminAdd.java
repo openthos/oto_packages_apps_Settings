@@ -56,7 +56,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import android.os.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -377,15 +376,6 @@ public class DeviceAdminAdd extends Activity {
         try {
             ActivityManagerNative.getDefault().resumeAppSwitches();
         } catch (RemoteException e) {
-        }
-    }
-
-    @Override
-    public void finish() {
-        try {
-            ActivityManagerNative.getDefault().closeActivity(getWindow().getStackId());
-        } catch (RemoteException e) {
-            e.printStackTrace();
         }
     }
 
