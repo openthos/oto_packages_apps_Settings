@@ -246,7 +246,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
 
         //set the browser/cpu/memory/harddisk/openthosVersion info
         setStringSummary(KEY_CPU_INFO,getCpuInfo());
-        setStringSummary(KEY_BROWSER_VERSION, getBrowserVersion());
+        //setStringSummary(KEY_BROWSER_VERSION, getBrowserVersion());
         setStringSummary(KEY_MEMORY_INFO, getTotalMemory());
         setStringSummary(KEY_HARD_DISK_INFO, getHardDiskMemory());
         setStringSummary(KEY_OPENTHOS_VERSION,getOpenthosVersion());

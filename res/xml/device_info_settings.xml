@@ -173,10 +173,12 @@
             android:summary="@string/openthos_version_default"/>
 
         <!--browser version-->
+        <!--
         <Preference android:key="browser_version"
             style="?android:preferenceInformationStyle"
             android:title="@string/browser_title"
             android:summary="@string/browser_version_default"/>
+        -->
 
         <!-- CPU info -->
         <Preference android:key="cpu_info"
