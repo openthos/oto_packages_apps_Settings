@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.UserInfo;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -494,8 +495,9 @@ public class WirelessSettings extends SettingsPreferenceFragment
 
                 final UserManager um = (UserManager) context.getSystemService(Context.USER_SERVICE);
                 final int myUserId = UserHandle.myUserId();
+                final UserInfo userInfo = um.getUserInfo(myUserId);
                 final boolean isSecondaryUser = myUserId != UserHandle.USER_OWNER;
-                final boolean isRestrictedUser = um.getUserInfo(myUserId).isRestricted();
+                final boolean isRestrictedUser = userInfo != null && userInfo.isRestricted();
                 final boolean isWimaxEnabled = !isSecondaryUser
                         && context.getResources().getBoolean(
                         com.android.internal.R.bool.config_wimaxEnabled);

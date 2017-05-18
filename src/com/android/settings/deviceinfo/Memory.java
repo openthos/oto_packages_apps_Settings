@@ -448,11 +448,13 @@ public class Memory extends SettingsPreferenceFragment implements Indexable {
 
                 data = new SearchIndexableRaw(context);
                 final StorageVolume[] storageVolumes = StorageManager.from(context).getVolumeList();
-                for (StorageVolume volume : storageVolumes) {
-                    if (!volume.isEmulated()) {
-                        data.title = volume.getDescription(context);
-                        data.screenTitle = context.getString(R.string.storage_settings);
-                        result.add(data);
+                if (storageVolumes != null) {
+                    for (StorageVolume volume : storageVolumes) {
+                        if (!volume.isEmulated()) {
+                            data.title = volume.getDescription(context);
+                            data.screenTitle = context.getString(R.string.storage_settings);
+                            result.add(data);
+                        }
                     }
                 }
 
