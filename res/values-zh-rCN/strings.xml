@@ -2487,8 +2487,8 @@
     <string name="notification_app_settings_button" msgid="6685640230371477485">"通知设置"</string>
     <string name="device_feedback" msgid="3238056036766293294">"发送有关此设备的反馈"</string>
     <string name="restr_pin_enter_admin_pin" msgid="2451187374960131018">"输入管理员PIN码"</string>
-    <string name="switch_on_text" msgid="1124106706920572386">"开启"</string>
-    <string name="switch_off_text" msgid="1139356348100829659">"关闭"</string>
+    <string name="switch_on_text" msgid="1124106706920572386">已开启</string>
+    <string name="switch_off_text" msgid="1139356348100829659">已关闭</string>
     <string name="screen_pinning_title" msgid="2292573232264116542">"屏幕固定"</string>
     <string name="screen_pinning_description" msgid="1137904524037468263">"开启这项设置后，您可以使用固定屏幕功能让设备一直显示当前屏幕，直到取消固定为止。\n\n要使用固定屏幕功能，请执行以下操作：\n\n1. 确保固定屏幕功能已开启。\n\n2. 打开您要固定的屏幕。\n\n3. 触摸“概览”。\n\n4. 向上滑动，然后触摸图钉图标。"</string>
     <string name="screen_pinning_unlock_pattern" msgid="8282268570060313339">"取消固定屏幕前要求绘制解锁图案"</string>
