@@ -19,6 +19,8 @@ package com.android.settings.wifi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.net.wifi.WifiConfiguration;
 import android.net.ConnectivityManager;
@@ -63,6 +65,7 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
     private TextView mEthernetState;
     private EthernetDialog mEthDialog = null;
     private ConnectivityManager mCM;
+    private NetworkChangedReceiver mNetworkChangedReceiver;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -115,6 +118,10 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
         if (intent.getBooleanExtra(EXTRA_SHOW_WIFI_REQUIRED_INFO, false)) {
             view.findViewById(R.id.wifi_required_info).setVisibility(View.VISIBLE);
         }
+
+        mNetworkChangedReceiver = new NetworkChangedReceiver();
+        getActivity().registerReceiver(mNetworkChangedReceiver,
+                           new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         return view;
     }
@@ -206,6 +213,12 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
         return mEmptyFooter;
     }
 
+    @Override
+    public void onDestroyView() {
+        getActivity().unregisterReceiver(mNetworkChangedReceiver);
+        super.onDestroyView();
+    }
+
     protected void updateFooter() {
         final boolean isEmpty = mAdapter.isEmpty();
         if (isEmpty != mListLastEmpty) {
@@ -218,6 +231,16 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
                 list.addFooterView(mAddOtherNetworkItem, null, true);
             }
             mListLastEmpty = isEmpty;
+        }
+    }
+
+    private class NetworkChangedReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                mEthernetState.setText(getText(isEthernet(mCM) ?
+                            R.string.network_is_available : R.string.network_is_not_available));
+            }
         }
     }
 }
