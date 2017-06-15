@@ -72,7 +72,7 @@
                 <ListView
                     android:id="@android:id/list"
                     android:layout_width="match_parent"
-                    android:layout_height="152dp"
+                    android:layout_height="148dp"
                     android:cacheColorHint="@android:color/transparent"
                     android:clipToPadding="false"
                     android:drawSelectorOnTop="false"
@@ -101,6 +101,7 @@
                     android:gravity ="center_vertical"
                     android:text="@string/ethernet_info_title" />
                 <RelativeLayout
+                    android:id="@+id/ethernet_item"
                     android:layout_width="match_parent"
                     android:layout_height="56dp">
                     <ImageView

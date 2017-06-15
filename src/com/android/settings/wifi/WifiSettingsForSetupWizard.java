@@ -36,6 +36,7 @@ import android.widget.AbsListView.LayoutParams;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.RelativeLayout;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.net.EthernetManager;
@@ -63,6 +64,7 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
     private boolean mListLastEmpty = false;
     private WifiManager mWifiManager;
     private TextView mEthernetState;
+    private RelativeLayout mEthernetItem;
     private EthernetDialog mEthDialog = null;
     private ConnectivityManager mCM;
     private NetworkChangedReceiver mNetworkChangedReceiver;
@@ -75,6 +77,7 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
 
         final ListView list = (ListView) view.findViewById(android.R.id.list);
         final View title = view.findViewById(R.id.title);
+        mEthernetItem = (RelativeLayout) view.findViewById(R.id.ethernet_item);
         mEthernetState = (TextView) view.findViewById(R.id.ethernet_info);
         mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         if (title == null) {
@@ -95,7 +98,7 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
             mEthernetState.setText(getText(R.string.network_is_not_available));
         }
 
-        mEthernetState.setOnClickListener(new OnClickListener() {
+        mEthernetItem.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mEthDialog != null)
