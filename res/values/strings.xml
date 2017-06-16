@@ -6160,6 +6160,7 @@
     <string name="eth_toggle_summary_on">Turn on Ethernet</string>
     <string name="eth_settings_error">Failed to set: Please enter the valid characters 0~255</string>
     <string name="eth_settings_empty">can\'t be empty</string>
+    <string name="eth_settings_prefixlength_error">Failed to set: Please enter the valid network prefixlength</string>
     <!-- Label for the Network prefix of the network [CHAR LIMIT=25]-->
     <string name="eth_network_prefix_length">Network prefix length</string>
     <!--

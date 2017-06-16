@@ -301,7 +301,8 @@ public class EthernetDialog extends AlertDialog implements DialogInterface.OnCli
                 mStaticIpConfiguration = new StaticIpConfiguration();
                 int result = validateIpConfigFields(mStaticIpConfiguration);
                 if (result != 0) {
-                    Toast.makeText(mContext, " error id is " + result, Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, R.string.eth_settings_prefixlength_error
+                                                          , Toast.LENGTH_LONG).show();
                     return ;
                 } else {
                     mEthManager.setConfiguration( new IpConfiguration(mIpAssignment, ProxySettings.NONE,
