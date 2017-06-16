@@ -2585,7 +2585,7 @@
     <string name="eth_mask">子网掩码</string>
     <string name="eth_toggle_summary_off">关闭以太网</string>
     <string name="eth_toggle_summary_on">打开以太网</string>
-    <string name="eth_settings_error">请设置正确的IP/DNS/网关地址</strig>
+    <string name="eth_settings_error">请设置正确的IP、DNS、网关地址</string>
     <string name="eth_settings_empty">网络前缀长度不能为空</string>
     <string name="eth_settings_prefixlength_error">请设置有效的网络前缀长度</string>
     <!-- Label for the Network prefix of the network [CHAR LIMIT=25]-->
