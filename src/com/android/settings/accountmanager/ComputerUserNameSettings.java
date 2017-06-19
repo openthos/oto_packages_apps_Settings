@@ -36,6 +36,7 @@ import android.widget.Switch;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.text.TextUtils;
+import android.provider.Settings;
 
 import com.android.settings.R;
 import com.android.settings.SettingsActivity;
@@ -53,7 +54,7 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
 
     private static final String KEY_COMPUTER_USERNAME = "computer_username";
     private static final String KEY_SCREEN_PASSWORD = "screen_password";
-    private static final String RO_PROPERTY_USER = "ro.build.user";
+    //private static final String RO_PROPERTY_USER = "ro.build.user";
 
     private Preference mComputerUserNamePref;
     private Preference mScreenPasswordPref;
@@ -74,7 +75,9 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
         mScreenPasswordPref = findPreference(KEY_SCREEN_PASSWORD);
         mScreenPasswordPref.setOnPreferenceClickListener(this);
 
-        userName = ChangeBuildPropTools.getPropertyValue(RO_PROPERTY_USER);
+        //userName = ChangeBuildPropTools.getPropertyValue(RO_PROPERTY_USER);
+        userName = Settings.System.getString(getActivity().getContentResolver(),
+                                                   Settings.System.SYS_PROPERTY_USER);
         mLockPatternUtils = new LockPatternUtils(getActivity());
         mComputerUserNamePref.setSummary(userName);
     }
@@ -119,10 +122,12 @@ public class ComputerUserNameSettings extends SettingsPreferenceFragment
             public void onClick(final DialogInterface dialog, final int which) {
                 String newUserName = editTextPref.getText().toString().trim();
                 //grant permission
-                ChangeBuildPropTools.exec("chmod -R 777  /system/build.prop");
+                /*ChangeBuildPropTools.exec("chmod -R 777  /system/build.prop");
                 ChangeBuildPropTools.setPropertyName(
                                ChangeBuildPropTools.getPropertyName(RO_PROPERTY_USER,newUserName));
-                ChangeBuildPropTools.exec("chmod -R 644  /system/build.prop");
+                ChangeBuildPropTools.exec("chmod -R 644  /system/build.prop");*/
+                Settings.System.putString(getActivity().getContentResolver(),
+                                          Settings.System.SYS_PROPERTY_USER, newUserName);
                 updateComputerUserName(newUserName);
             }
         });

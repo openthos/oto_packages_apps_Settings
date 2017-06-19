@@ -50,8 +50,8 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
     private static final String KEY_OPENTHOS_ID_EMAIL = "openthos_id_email";
     private static final String KEY_COMPUTER_USERNAME = "computer_username";
     private static final String KEY_COMPUTER_NAME = "computer_name";
-    private static final String RO_PROPERTY_HOST = "ro.build.host";
-    private static final String RO_PROPERTY_USER = "ro.build.user";
+    //private static final String RO_PROPERTY_HOST = "ro.build.host";
+    //private static final String RO_PROPERTY_USER = "ro.build.user";
     private PreferenceScreen mOpenthosID;
     private PreferenceScreen mComputerUserName;
     private PreferenceScreen mComputerName;
@@ -77,7 +77,9 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         mComputerName = (PreferenceScreen) findPreference(KEY_COMPUTER_NAME);
         mComputerName.setPersistent(true);
 
-        defaultComputerName = ChangeBuildPropTools.getPropertyValue(RO_PROPERTY_HOST);
+        //defaultComputerName = ChangeBuildPropTools.getPropertyValue(RO_PROPERTY_HOST);
+        defaultComputerName = Settings.System.getString(getActivity().getContentResolver(),
+                                                          Settings.System.SYS_PROPERTY_HOST);
         mComputerName.setSummary(defaultComputerName);
 
         mComputerName.setOnPreferenceClickListener(this);
@@ -162,10 +164,12 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
             public void onClick(final DialogInterface dialog, final int which) {
                 String newComputerName = editTextPref.getText().toString();
                 //grant permission
-                ChangeBuildPropTools.exec("chmod -R 777  /system/build.prop");
+                /*ChangeBuildPropTools.exec("chmod -R 777  /system/build.prop");
                 ChangeBuildPropTools.setPropertyName(
                            ChangeBuildPropTools.getPropertyName(RO_PROPERTY_HOST,newComputerName));
-                ChangeBuildPropTools.exec("chmod -R 644  /system/build.prop");
+                ChangeBuildPropTools.exec("chmod -R 644  /system/build.prop");*/
+                Settings.System.putString(getActivity().getContentResolver(),
+                                          Settings.System.SYS_PROPERTY_HOST, newComputerName);
                 updateComputerName(newComputerName);
             }
         });
