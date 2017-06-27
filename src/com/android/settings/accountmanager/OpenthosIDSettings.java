@@ -301,6 +301,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                         Uri uriDelete =
                             Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
                         mResolver.delete(uriDelete,null,null);
+                        updateID(getText(R.string.email_address_summary).toString());
                         dialog.dismiss();
                     }
                 });

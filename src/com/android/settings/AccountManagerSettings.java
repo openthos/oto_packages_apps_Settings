@@ -61,8 +61,6 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
 
     private PreferenceGroup mAccountManagerSettings;
 
-    private ContentResolver mResolver;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,22 +102,25 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
             intentComputer.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT_TITLE_RESID,
                     R.string.computer_username_settings_title);
             mComputerUserName.setIntent(intentComputer);
-
-            mResolver = getActivity().getContentResolver();
-            Uri uriQuery = Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
-            Cursor cursor = mResolver.query(uriQuery, null, null, null, null);
-            if (cursor != null) {
-                while(cursor.moveToNext()) {
-                    String id = cursor.getString(cursor.getColumnIndex("openthosID"));
-                    mOpenthosID.setSummary(id);
-               }
-            }
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        ContentResolver resolver = getActivity().getContentResolver();
+        Uri uriQuery = Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
+        Cursor cursor = resolver.query(uriQuery, null, null, null, null);
+        if (cursor != null) {
+            while(cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndex("openthosID"));
+                mOpenthosID.setSummary(id);
+                cursor.close();
+                return;
+            }
+            mOpenthosID.setSummary(getText(R.string.email_address_summary).toString());
+            cursor.close();
+        }
     }
 
     @Override
