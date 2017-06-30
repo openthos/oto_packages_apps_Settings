@@ -769,12 +769,16 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
     //get the openthos version
     private String getOpenthosVersion() {
         String path = "/system/version";
-        String openthosVersion = null;
         if (new File(path).exists()) {
-            String[] data = getFileDes(path).split("\n");
-            return openthosVersion = data[0].split(":")[1] + "(" + data[1].split(":")[1] + ")";
+            try {
+                //date eg: {"version:2.0.1", "data:170630"};
+                String[] data = getFileDes(path).split("\n");
+                return data[0].split(":")[1] + " (build " + data[1].split(":")[1] + ")";
+            } catch (ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
         }
-        return openthosVersion;
+        return "";
     }
 
     private String getFileDes(String path) {

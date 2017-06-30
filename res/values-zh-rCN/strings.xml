@@ -2666,7 +2666,6 @@
            Date: 21 july 2016
            About settings names and other strings.
     -->
-    <string name="openthos_version_title">Openthos 1.0-RC1</string>
     <string name="openthos_version_default">未知</string>
     <string name="browser_title">浏览器版本</string>
     <string name="browser_version_default">未知</string>
