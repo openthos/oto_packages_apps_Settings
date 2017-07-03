@@ -575,7 +575,7 @@ public class SecuritySettings extends SettingsPreferenceFragment
 
         if (mShowPassword != null) {
             mShowPassword.setChecked(Settings.System.getInt(getContentResolver(),
-                    Settings.System.TEXT_SHOW_PASSWORD, 0) != 0);
+                    Settings.System.TEXT_SHOW_PASSWORD, 1) != 0);
         }
 
         if (mResetCredentials != null) {
