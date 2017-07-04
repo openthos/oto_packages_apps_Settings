@@ -106,7 +106,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private SwitchPreference mLiftToWakePreference;
     private SwitchPreference mDozePreference;
     private SwitchPreference mAutoBrightnessPreference;
-    private Preference mResolutionSetting;
+    //private Preference mResolutionSetting;
     private Preference mBrightPref;
     private AlertDialog mDialog = null;
     private IWindowManager mWm;
@@ -130,8 +130,8 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         mWm = IWindowManager.Stub.asInterface(ServiceManager.checkService(
                 Context.WINDOW_SERVICE));
 
-        mResolutionSetting = findPreference(KEY_RESOLUTION_SETTING);
-        mResolutionSetting.setOnPreferenceClickListener(this);
+        //mResolutionSetting = findPreference(KEY_RESOLUTION_SETTING);
+        //mResolutionSetting.setOnPreferenceClickListener(this);
 
 /*        mScreenTimeoutPreference = (ListPreference) findPreference(KEY_SCREEN_TIMEOUT);
         final long currentTimeout = Settings.System.getLong(resolver, SCREEN_OFF_TIMEOUT,
@@ -431,9 +431,9 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             } else {
                 mFontSizePref.click();
             }
-        } else if (preference == mResolutionSetting) {
+        /*} else if (preference == mResolutionSetting) {
             showResolutionSettingDialog();
-            return true;
+            return true;*/
         } else if (preference.getKey().equals(KEY_BRIGHTNESS)) {
             Intent intent = new Intent(Intent.ACTION_SHOW_BRIGHTNESS_DIALOG);
             getActivity().sendBroadcast(intent);
