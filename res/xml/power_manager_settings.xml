@@ -33,11 +33,11 @@
         android:fragment="com.android.settings.ScreenTimeoutSettings"/>
 
     <!--lock screen time setting -->
-    <PreferenceScreen
+    <!-- <PreferenceScreen
         android:key="screen_lock_time"
         android:title="@string/screen_lock_time_title"
         android:summary="@string/screen_lock_time_summary"
-        android:fragment="com.android.settings.ScreenLockTimeSettings"/>
+        android:fragment="com.android.settings.ScreenLockTimeSettings"/> -->
 
     <!--battery info -->
     <PreferenceScreen

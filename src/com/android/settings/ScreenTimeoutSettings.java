@@ -74,6 +74,9 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
                                                android.provider.Settings.System.SCREEN_OFF_TIMEOUT,
                                                mTimes[index]);
                     }
+                    Settings.System.putLong(getContentResolver(),
+                                      android.provider.Settings.System.SCREEN_OFF_TIMEOUT_CHARGING,
+                                      mTimes[index]);
                     SharedPreferences.Editor editor = mSharedPreferences.edit();
                     editor.putInt(BATTERY_CHARGING, index);
                     editor.commit();
@@ -94,6 +97,9 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
                                                android.provider.Settings.System.SCREEN_OFF_TIMEOUT,
                                                mTimes[index]);
                     }
+                    Settings.System.putLong(getContentResolver(),
+                                      android.provider.Settings.System.SCREEN_OFF_TIMEOUT_UNCHARGE,
+                                      mTimes[index]);
                     SharedPreferences.Editor editor = mSharedPreferences.edit();
                     editor.putInt(BATTERY_NO_CHARGING, index);
                     editor.commit();
