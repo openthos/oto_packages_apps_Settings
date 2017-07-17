@@ -773,7 +773,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
             try {
                 //date eg: {"version:2.0.1", "data:170630"};
                 String[] data = getFileDes(path).split("\n");
-                return data[0].split(":")[1] + " (build " + data[1].split(":")[1] + ")";
+                return data[0].split(":")[1];
             } catch (ArrayIndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
