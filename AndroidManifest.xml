@@ -1118,7 +1118,7 @@
 
         <activity android:name="DeviceAdminAdd"
                 android:label="@string/device_admin_add_title"
-                android:theme="@style/Theme.SubSettingsDialogWhenLarge"
+                android:theme="@style/Theme.DeviceAdminAddStyle"
                 android:clearTaskOnLaunch="true">
             <intent-filter>
                 <action android:name="android.app.action.ADD_DEVICE_ADMIN" />
