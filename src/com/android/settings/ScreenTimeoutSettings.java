@@ -59,9 +59,9 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
          * Init default choose item.
          */
         mCharging.setSummary(mStrArrayTimes[chargeIndex]);
-        mCharging.setValue(String.valueOf( mTimes[chargeIndex]));
+        mCharging.setValueIndex(chargeIndex);
         mNotCharging.setSummary(mStrArrayTimes[noChargeIndex]);
-        mNotCharging.setValue(String.valueOf( mTimes[noChargeIndex]));
+        mNotCharging.setValueIndex(noChargeIndex);
 
         mCharging.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override

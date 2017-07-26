@@ -75,7 +75,7 @@ public class ChooseLockGeneric extends SettingsActivity {
         private static final int MIN_PASSWORD_LENGTH = 4;
         private static final String KEY_UNLOCK_BACKUP_INFO = "unlock_backup_info";
         private static final String KEY_UNLOCK_SET_OFF = "unlock_set_off";
-        private static final String KEY_UNLOCK_SET_NONE = "unlock_set_none";
+        //private static final String KEY_UNLOCK_SET_NONE = "unlock_set_none";
         private static final String KEY_UNLOCK_SET_BIOMETRIC_WEAK = "unlock_set_biometric_weak";
         private static final String KEY_UNLOCK_SET_PIN = "unlock_set_pin";
         private static final String KEY_UNLOCK_SET_PASSWORD = "unlock_set_password";
@@ -329,8 +329,8 @@ public class ChooseLockGeneric extends SettingsActivity {
                     if (KEY_UNLOCK_SET_OFF.equals(key)) {
                         enabled = quality <= DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED;
                         visible = singleUser; // don't show when there's more than 1 user
-                    } else if (KEY_UNLOCK_SET_NONE.equals(key)) {
-                        enabled = quality <= DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED;
+                    //} else if (KEY_UNLOCK_SET_NONE.equals(key)) {
+                    //    enabled = quality <= DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED;
                     } else if (KEY_UNLOCK_SET_BIOMETRIC_WEAK.equals(key)) {
                         enabled = quality <= DevicePolicyManager.PASSWORD_QUALITY_BIOMETRIC_WEAK ||
                                 allowBiometric.value;
@@ -513,8 +513,8 @@ public class ChooseLockGeneric extends SettingsActivity {
         }
 
         private boolean isUnlockMethodSecure(String unlockMethod) {
-            return !(KEY_UNLOCK_SET_OFF.equals(unlockMethod) ||
-                    KEY_UNLOCK_SET_NONE.equals(unlockMethod));
+            return !(KEY_UNLOCK_SET_OFF.equals(unlockMethod));
+                    //KEY_UNLOCK_SET_NONE.equals(unlockMethod));
         }
 
         private boolean setUnlockMethod(String unlockMethod) {
@@ -523,9 +523,9 @@ public class ChooseLockGeneric extends SettingsActivity {
             if (KEY_UNLOCK_SET_OFF.equals(unlockMethod)) {
                 updateUnlockMethodAndFinish(
                         DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED, true /* disabled */ );
-            } else if (KEY_UNLOCK_SET_NONE.equals(unlockMethod)) {
-                updateUnlockMethodAndFinish(
-                        DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED, false /* disabled */ );
+            //} else if (KEY_UNLOCK_SET_NONE.equals(unlockMethod)) {
+            //    updateUnlockMethodAndFinish(
+            //            DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED, false /* disabled */ );
             } else if (KEY_UNLOCK_SET_BIOMETRIC_WEAK.equals(unlockMethod)) {
                 maybeEnableEncryption(
                         DevicePolicyManager.PASSWORD_QUALITY_BIOMETRIC_WEAK, false);
