@@ -80,4 +80,5 @@
     <color name="wifi_divider">#ffe0e0e0</color>
     <color name="sim_noitification">@*android:color/material_deep_teal_500</color>
 
+    <color name="seek_bar_thumb">#808080</color>
 </resources>
