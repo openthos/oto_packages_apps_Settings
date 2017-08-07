@@ -89,10 +89,7 @@ public class WifiSettingsForSetupWizard extends WifiSettings {
                 Context.CONNECTIVITY_SERVICE);
         mEthDialog = new EthernetDialog(getActivity(),(EthernetManager)
                                         getSystemService(Context.ETHERNET_SERVICE),mCM);
-        Intent intentEthnet = new Intent();
-        intentEthnet.setAction(Intent.STATUS_BAR_WIFI_ICON);
         if (isEthernet(mCM)) {
-            getActivity().sendBroadcast(intentEthnet);
             mEthernetState.setText(getText(R.string.network_is_available));
         } else {
             mEthernetState.setText(getText(R.string.network_is_not_available));
