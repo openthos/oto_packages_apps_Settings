@@ -17,8 +17,8 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
     private ListPreference  mNotCharging;
 
     public static final int SECOND_VALUE = 1000;
-    public static final int A_YEAR_TIME = 3600 * 1000 * 24 * 365;
-    public static final int DEFAULT_VALUE_INDEX = 4;
+    public static final int DEFAULT_VALUE_INDEX_CHARGING = 4;
+    public static final int DEFAULT_VALUE_INDEX_NO_CHARGING = 2;
 
     public static final String CONFIG_FILE_NAME = "charge";
     public static final String BATTERY_CHARGING = "battery charging";
@@ -28,10 +28,10 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
 
     public static final String mStrArrayTimes[] = {"15 seconds", "1 minutes", "5 minutes",
                                                 "10 minutes", "30 minutes", "1 hours", " never"};
-    // Use a year time replace 'never sleep'.
-    public static final long mTimes[] = {15 * SECOND_VALUE, 60 * SECOND_VALUE, 300 * SECOND_VALUE,
+    // Use Integer.MAX_VALUE time replace 'never sleep'.
+    public static final int mTimes[] = {15 * SECOND_VALUE, 60 * SECOND_VALUE, 300 * SECOND_VALUE,
                                          600 * SECOND_VALUE, 1800 * SECOND_VALUE,
-                                         3600 * SECOND_VALUE, A_YEAR_TIME};
+                                         3600 * SECOND_VALUE, Integer.MAX_VALUE};
     public SharedPreferences mSharedPreferences;
 
     @Override
@@ -44,14 +44,16 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
         mCharging = (ListPreference)findPreference(AUTO_SLEEP_CHARGING_KEY);
         mNotCharging = (ListPreference)findPreference(AUTO_SLEEP_NO_CHARGING_KEY);
 
-        int chargeIndex = mSharedPreferences.getInt(BATTERY_CHARGING, DEFAULT_VALUE_INDEX);
-        int noChargeIndex = mSharedPreferences.getInt(BATTERY_NO_CHARGING, DEFAULT_VALUE_INDEX);
+        int chargeIndex = mSharedPreferences.getInt(
+                            BATTERY_CHARGING, DEFAULT_VALUE_INDEX_CHARGING);
+        int noChargeIndex = mSharedPreferences.getInt(
+                            BATTERY_NO_CHARGING, DEFAULT_VALUE_INDEX_NO_CHARGING);
         if (isCharging()) {
-            Settings.System.putLong(getContentResolver(),
+            Settings.System.putInt(getContentResolver(),
                                    android.provider.Settings.System.SCREEN_OFF_TIMEOUT,
                                    mTimes[chargeIndex]);
         } else {
-            Settings.System.putLong(getContentResolver(),
+            Settings.System.putInt(getContentResolver(),
                                    android.provider.Settings.System.SCREEN_OFF_TIMEOUT,
                                    mTimes[noChargeIndex]);
         }
@@ -70,11 +72,11 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
                     ListPreference listPreference = (ListPreference)preference;
                     int index = listPreference.findIndexOfValue((String)newValue);
                     if (isCharging()) {
-                        Settings.System.putLong(getContentResolver(),
+                        Settings.System.putInt(getContentResolver(),
                                                android.provider.Settings.System.SCREEN_OFF_TIMEOUT,
                                                mTimes[index]);
                     }
-                    Settings.System.putLong(getContentResolver(),
+                    Settings.System.putInt(getContentResolver(),
                                       android.provider.Settings.System.SCREEN_OFF_TIMEOUT_CHARGING,
                                       mTimes[index]);
                     SharedPreferences.Editor editor = mSharedPreferences.edit();
@@ -93,11 +95,11 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
                     ListPreference listPreference = (ListPreference)preference;
                     int index = listPreference.findIndexOfValue((String)newValue);
                     if (!isCharging()) {
-                        Settings.System.putLong(getContentResolver(),
+                        Settings.System.putInt(getContentResolver(),
                                                android.provider.Settings.System.SCREEN_OFF_TIMEOUT,
                                                mTimes[index]);
                     }
-                    Settings.System.putLong(getContentResolver(),
+                    Settings.System.putInt(getContentResolver(),
                                       android.provider.Settings.System.SCREEN_OFF_TIMEOUT_UNCHARGE,
                                       mTimes[index]);
                     SharedPreferences.Editor editor = mSharedPreferences.edit();
