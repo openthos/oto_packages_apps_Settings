@@ -1153,6 +1153,7 @@
     <string name="system_update_settings_list_item_summary" msgid="3853057315907710747"></string>
     <string name="firmware_version" msgid="4801135784886859972">"Версія Android"</string>
     <string name="security_patch" msgid="8438384045870296634">"Узровень патчу бяспекі Android"</string>
+    <string name="device_manufacturer" msgid="3516742885166545865">"Вытворца"</string>
     <string name="model_info" msgid="1952009518045740889">"Мадэль"</string>
     <string name="hardware_info" msgid="2605080746512527805">"Мадэль і апаратнае забеспячэнне"</string>
     <string name="hardware_revision" msgid="8893547686367095527">"Версія апаратнага забеспячэння"</string>

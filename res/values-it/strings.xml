@@ -1126,6 +1126,7 @@
     <string name="system_update_settings_list_item_summary" msgid="3853057315907710747"></string>
     <string name="firmware_version" msgid="4801135784886859972">"Versione di Android"</string>
     <string name="security_patch" msgid="8438384045870296634">"Livello patch di sicurezza Android"</string>
+    <string name="device_manufacturer" msgid="3516742885166545865">"Produttore"</string>
     <string name="model_info" msgid="1952009518045740889">"Modello"</string>
     <string name="hardware_info" msgid="2605080746512527805">"Modello e hardware"</string>
     <string name="hardware_revision" msgid="8893547686367095527">"Versione hardware"</string>
