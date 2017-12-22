@@ -288,6 +288,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
         //Do not show device manufacturer
         getPreferenceScreen().removePreference(findPreference(KEY_DEVICE_MANUFACTURER));
 
+        getPreferenceScreen().removePreference(findPreference(KEY_SYSTEM_UPGRADE));
         /*
          * Settings is a generic app and should not contain any device-specific
          * info.

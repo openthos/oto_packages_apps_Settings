@@ -125,6 +125,8 @@ public final class Utils {
     private static final String META_DATA_PREFERENCE_SUMMARY = "com.android.settings.summary";
 
     private static final String SETTINGS_PACKAGE_NAME = "com.android.settings";
+    private static final String SETTINGS_LICENSE_ACTIVITY_NAME =
+                                "com.android.settings.SettingsLicenseActivity";
 
     private static final int SECONDS_PER_MINUTE = 60;
     private static final int SECONDS_PER_HOUR = 60 * 60;
@@ -172,6 +174,11 @@ public final class Utils {
                     if ((flags & UPDATE_PREFERENCE_FLAG_SET_TITLE_TO_MATCHING_ACTIVITY) != 0) {
                         // Set the preference title to the activity's label
                         preference.setTitle(resolveInfo.loadLabel(pm));
+                        if (resolveInfo.activityInfo.packageName.equals(SETTINGS_PACKAGE_NAME)
+                                && resolveInfo.activityInfo.name
+                                                    .equals(SETTINGS_LICENSE_ACTIVITY_NAME)) {
+                            preference.setSummary(R.string.license_attributions_values);
+                        }
                     }
 
                     return true;
