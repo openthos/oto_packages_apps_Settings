@@ -2729,7 +2729,7 @@
     <string name="wallpaper_attributions_values">All the pictures are collected by the Internet for public copyright , Please refer to https://creativecommons.org</string>
 
     <!--About phone settings screen,setting option name to see license attributions values -->
-    <string name="license_attributions_values">Copyright(c) 2016--2018 Tsinghua-Tongfang CSA Research Center (www.openthos.org) . OPENTHOS is based on Android \nOpen Source Project , Android-x86 Project and other open source project development , The original file follows its original open source license , the OPENTHOS self-authoring section follows the Apache 2.0 Open Source License.\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nPlease refer to the relevant documents with copyright notice for details.</string>
+    <string name="license_attributions_values">Copyright(c) 2016--2018 Tsinghua-Tongfang CSA Research Center (www.openthos.org) . OPENTHOS is based on Android Open Source Project , Android-x86 Project and other open source project development , The original file follows its original open source license , the OPENTHOS self-authoring section follows the Apache 2.0 Open Source License.\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nPlease refer to the relevant documents with copyright notice for details.</string>
     <!-- Title for actual Settings license activity. --> <skip />
     <!-- About phone settings, Legal information setting option name and title of dialog box holding license info -->
     <string name="settings_license_activity_title">Open source licenses</string>
