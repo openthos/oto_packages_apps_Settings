@@ -774,12 +774,31 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
             try {
                 //date eg: {"version:2.0.1", "data:170630"};
                 String[] data = getFileDes(path).split("\n");
-                return data[0].split(":")[1];
+                return (checkBate() ?
+                        getString(R.string.develop_version) : getString(R.string.release_version))
+                        + data[0].split(":")[1];
             } catch (ArrayIndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
         }
         return "";
+    }
+
+    private boolean checkBate() {
+        try {
+            Process pro = Runtime.getRuntime().exec(
+                    new String[]{"su", "-c", "HOME=/system/gnupg/home gpg --list-keys"});
+            BufferedReader in = new BufferedReader(new InputStreamReader(pro.getInputStream()));
+            String line = "";
+            while ((line = in.readLine()) != null) {
+                if (line.contains("Openthos Test")) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private String getFileDes(String path) {

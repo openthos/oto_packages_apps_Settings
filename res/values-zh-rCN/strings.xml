@@ -2762,4 +2762,6 @@
     <string name="hot_ctrl_close">Alt+F4</string>
     <string name="hot_ctrl_switch">Tab</string>
     <string name="hot_ctrl_selection">Up Down Left Right</string>
+    <string name="release_version">正式版:</string>
+    <string name="develop_version">开发版:</string>
 </resources>

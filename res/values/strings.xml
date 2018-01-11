@@ -6323,4 +6323,6 @@
     <string name="resolution_setting_summary">settings resolution</string>
     <string name="str_resolution_setting_one">1920x1080(16:9)</string>
     <string name="str_resolution_setting_two">1366x768(16:9)</string>
+    <string name="release_version">Release Version:</string>
+    <string name="develop_version">Develop Version:</string>
 </resources>
