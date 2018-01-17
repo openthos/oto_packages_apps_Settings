@@ -223,6 +223,16 @@
             android:icon="@drawable/ic_settings_run_mode"
             />
 
+        <!-- AppOpsXposed -->
+        <dashboard-tile
+                android:id="@+id/app_ops"
+                android:title="@string/appops_settings"
+                android:icon="@drawable/ic_settings_appops">
+                <intent android:action="android.settings.APP_OPS_SETTINGS"
+                    android:targetPackage="at.jclehner.appopsxposed"
+                    android:targetClass="at.jclehner.appopsxposed.AppOpsActivity" />
+        </dashboard-tile>
+
     </dashboard-category>
 
     <!-- PERSONAL -->
