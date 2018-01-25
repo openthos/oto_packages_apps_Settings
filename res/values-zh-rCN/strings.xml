@@ -2626,11 +2626,6 @@
     <string name="run_mode_phone">手机模式</string>
     <string name="run_mode_desktop">桌面模式</string>
     <!--
-       Date: 17 January 2018
-       AppOpsXposed settings names and other strings.
-    -->
-    <string name="appops_settings">权限管理</string>
-    <!--
        Date: 19 july 2016
        LockScreen settings names and other strings.
     -->

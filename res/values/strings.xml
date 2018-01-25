@@ -6200,11 +6200,6 @@
     <string name="run_mode_phone">PHONE</string>
     <string name="run_mode_desktop">DESKTOP</string>
     <!--
-       Date: 17 January 2018
-       AppOpsXposed settings names and other strings.
-    -->
-    <string name="appops_settings">AppOpsXposed</string>
-    <!--
        Date: 19 july 2016
        LockScreen settings names and other strings.
     -->
