@@ -32,12 +32,17 @@ import android.view.textservice.SpellCheckerInfo;
 import android.view.textservice.SpellCheckerSubtype;
 import android.view.textservice.TextServicesManager;
 import android.widget.Switch;
+import android.content.ComponentName;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.os.RemoteException;
 
 import com.android.settings.R;
 import com.android.settings.SettingsActivity;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.widget.SwitchBar;
 import com.android.settings.widget.SwitchBar.OnSwitchChangeListener;
+import com.openthos.seafile.ISeafileService;
 import android.content.SharedPreferences;
 
 import android.database.Cursor;
@@ -124,13 +129,29 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
 
     private String mRegisterID;
 
+    private ISeafileService mISeafileService;
+    private SeafileServiceConnection mSeafileServiceConnection;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Log.i("fragmentWhich","--------------openthosID");
+        mSeafileServiceConnection = new SeafileServiceConnection();
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName("com.openthos.seafile",
+                    "com.openthos.seafile.SeafileService"));
+        getActivity().bindService(intent, mSeafileServiceConnection, Context.BIND_AUTO_CREATE);
+
         addPreferencesFromResource(R.xml.openthos_id_prefs);
         mOpenthosIDPref = findPreference(KEY_OPENTHOS_ID);
         mOpenthosIDPref.setOnPreferenceClickListener(this);
+
+        mBindPref = findPreference(KEY_BIND);
+        mBindPref.setOnPreferenceClickListener(this);
+        mUnbundPref = findPreference(KEY_UNBUND);
+        mUnbundPref.setOnPreferenceClickListener(this);
+        mBindPref.setEnabled(true);
+        mUnbundPref.setEnabled(false);
 
         mResolver = getActivity().getContentResolver();
         Uri uriQuery = Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
@@ -139,13 +160,10 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
             while(cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndex("openthosID"));
                 mOpenthosIDPref.setSummary(id);
+                mBindPref.setEnabled(false);
+                mUnbundPref.setEnabled(true);
             }
         }
-
-        mBindPref = findPreference(KEY_BIND);
-        mBindPref.setOnPreferenceClickListener(this);
-        mUnbundPref = findPreference(KEY_UNBUND);
-        mUnbundPref.setOnPreferenceClickListener(this);
 
         mHandler = new Handler() {
 
@@ -210,6 +228,13 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                         registSeafile();
                         break;
                     case MSG_REGIST_SEAFILE_OK:
+                        try {
+                            mISeafileService.updateAccount();
+                            mBindPref.setEnabled(false);
+                            mUnbundPref.setEnabled(true);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
                         break;
                     default:
                         Toast.makeText(getActivity(),
@@ -303,6 +328,13 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                         mResolver.delete(uriDelete,null,null);
                         updateID(getText(R.string.email_address_summary).toString());
                         dialog.dismiss();
+                        try {
+                            mISeafileService.stopAccount();
+                            mBindPref.setEnabled(true);
+                            mUnbundPref.setEnabled(false);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             builder_unbund.setNegativeButton(R.string.account_no,
@@ -465,5 +497,14 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
 
     private void updateID(String ID) {
         mOpenthosIDPref.setSummary(ID);
+    }
+
+    private class SeafileServiceConnection implements ServiceConnection {
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mISeafileService = ISeafileService.Stub.asInterface(service);
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
+        }
     }
 }
