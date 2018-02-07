@@ -1307,8 +1307,8 @@ public class SettingsActivity extends Activity
                     removeTile = true;
                 } else if (id == R.id.firewall_settings) {
                     removeTile = true;
-                } else if (id == R.id.cloud_service) {
-                    removeTile = true;
+                //} else if (id == R.id.cloud_service) {
+                //    removeTile = true;
                 } else if (id == R.id.run_mode_settings) {
                     removeTile = true;
                 } else if (id == R.id.proxy_settings) {
