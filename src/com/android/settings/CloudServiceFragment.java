@@ -3,8 +3,13 @@ package com.android.settings;
 import android.app.Fragment;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +38,7 @@ import android.content.pm.PackageInfo;
 import android.content.Intent;
 import java.util.List;
 import java.util.ArrayList;
+import com.openthos.seafile.ISeafileService;
 
 public class CloudServiceFragment extends Fragment implements OnClickListener {
     private Switch mSwitchWallpaper;
@@ -80,6 +86,9 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
     private static final String APPSTORE_PATH = "data/data/com.openthos.appstore/";
 
     private File mCloudFolder;
+    private ISeafileService mISeafileService;
+    private SeafileServiceConnection mSeafileServiceConnection;
+
     private static final String TAG = "CloudServiceFragment";
     private static final String ROOT_COMMOND = "chmod -R 777 ";
     private static final int BUF_SIZE = 1024;
@@ -89,6 +98,11 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                              Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         View mRootView = inflater.inflate(R.layout.fragment_cloud_service, container, false);
+        mSeafileServiceConnection = new SeafileServiceConnection();
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName("com.openthos.seafile",
+                    "com.openthos.seafile.SeafileService"));
+        getActivity().bindService(intent, mSeafileServiceConnection, Context.BIND_AUTO_CREATE);
         initView(mRootView);
 
         mCloudFolder = new File(getActivity().getResources()
@@ -116,11 +130,7 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cloud_import:
-                if (mCloudFolder.exists()) {
-                    importAllFiles();
-                    Toast.makeText(getActivity(),getActivity().getResources().
-                         getString(R.string.import_reboot_info_warn),Toast.LENGTH_SHORT).show();
-                }
+                importAllFiles();
                 break;
             case R.id.cloud_export:
                 showExportConfirmDialog();
@@ -151,215 +161,39 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
     }
 
     private void importAllFiles() {
-        if (mSwitchWallpaper.isChecked()) {
-            importWallpaperFiles();
+        try {
+            mISeafileService.restoreSettings(mSwitchWallpaper.isChecked(),
+                    mSwitchWifi.isChecked(),
+                    mSwitchEmail.isChecked(),
+                    mSwitchAppdata.isChecked(),
+                    mSwitchStartupmenu.isChecked(),
+                    mSwitchBrowser.isChecked(),
+                    mSwitchAppstore.isChecked());
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
-        if (mSwitchEmail.isChecked()) {
-            importEmailFiles();
-        }
-        if (mSwitchStartupmenu.isChecked()) {
-            importStatusBarFiles();
-        }
-        if (mSwitchWifi.isChecked()) {
-            importWifiFiles();
-        }
-        if (mSwitchBrowser.isChecked()) {
-            importBrowserFiles();
-        }
-        if (mSwitchAppstore.isChecked()) {
-            getActivity().sendBroadcast(
-                          new Intent(Intent.ACTION_APPSTORE_SEAFILE));
-        }
-    }
-
-    private void importWallpaperFiles() {
-        if (mSwitchWallpaper.isChecked()) {
-            try {
-                WallpaperManager.getInstance(getActivity()).setStream(
-                                      new FileInputStream(IMAGE_WALLPAPER_SEAFILE_PATH));
-            } catch (IOException exception) {
-                try {
-                    WallpaperManager.getInstance(getActivity()).setResource(
-                                      com.android.internal.R.drawable.default_wallpaper);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void importEmailFiles() {
-        File emailFiles = new File(EMAIL_SEAFILE_PATH);
-        if (emailFiles.exists()){
-            File emailNewDevicePrefs = new File(PREFS_PATH);
-            if (emailNewDevicePrefs.exists()) {
-                ChangeBuildPropTools.exec(ROOT_COMMOND + PREFS_PATH);
-                FileUtils.deleteGeneralFile(PREFS_PATH);
-            }
-            ChangeBuildPropTools.exec(ROOT_COMMOND + EMAIL_FILE_PATH);
-            ChangeBuildPropTools.exec(ROOT_COMMOND + PREFS_SEAFILE_PATH);
-            if (FileUtils.copyGeneralFile(PREFS_SEAFILE_PATH, EMAIL_FILE_PATH)) {
-                if (DEBUG) Log.i(TAG,"seafile email sync to new device sucessful!");
-            } else {
-                if (DEBUG) Log.i(TAG,"seafile email sync to new device fail!");
-            }
-        }
-    }
-
-    private void importStatusBarFiles() {
-        File statusbarDbFiles = new File(STATUSBAR_DB_SEAFILE_PATH);
-        if (statusbarDbFiles.exists()) {
-            SQLiteDatabase statusbarDb = SQLiteDatabase.openDatabase(
-                          STATUSBAR_DB_SEAFILE_PATH, null, SQLiteDatabase.OPEN_READWRITE);
-            Cursor cursor = statusbarDb.rawQuery("select * from status_bar_tb", null);
-            if (cursor != null) {
-                List<PackageInfo> pkgInfos = getActivity()
-                                        .getPackageManager().getInstalledPackages(0);
-                ArrayList<String> pkgNameLists = new ArrayList();
-                while(cursor.moveToNext()) {
-                    String pkgName = cursor.getString(cursor.getColumnIndex("pkgname"));
-                    for (PackageInfo pkgInfo : pkgInfos) {
-                        if (pkgInfo.packageName.equals(pkgName)) {
-                            pkgNameLists.add(pkgName);
-                        }
-                    }
-                }
-                Intent intent = new Intent(Intent.STATUS_BAR_SEAFILE);
-                intent.putStringArrayListExtra("pkgname", pkgNameLists);
-                getActivity().sendBroadcast(intent);
-            }
-        }
-    }
-
-    private void importWifiFiles() {
-        ChangeBuildPropTools.exec(ROOT_COMMOND + WIFI_INFO_SEAFILE_CONTENT);
-        ChangeBuildPropTools.exec(ROOT_COMMOND + WIFI_INFO_FILE_PATH);
-        ChangeBuildPropTools.exec("cp -f " + WIFI_INFO_SEAFILE_CONTENT + " " + WIFI_INFO_FILE_PATH);
-    }
-
-    private void importBrowserFiles() {
-        ChangeBuildPropTools.exec(ROOT_COMMOND + BROWSER_INFO_FILE_PATH);
-        ChangeBuildPropTools.exec(ROOT_COMMOND + BROWSER_INFO_SEAFILE_CONTENT);
-        ChangeBuildPropTools.exec("cp -rf " + BROWSER_INFO_SEAFILE_CONTENT +" "
-                                  + BROWSER_INFO_FILE_PATH);
     }
 
     private void exportAllFiles() {
-        if (!mCloudFolder.exists()) {
-            mCloudFolder.mkdirs();
-        }
-        if (mSwitchWallpaper.isChecked()) {
-            File wallpaperSeafile = new File(WALLPAPER_SEAFILE_PATH);
-            if (!wallpaperSeafile.exists()) {
-                wallpaperSeafile.mkdirs();
-            }
-            exportWallpaperFiles();
-        }
-        if (mSwitchStartupmenu.isChecked()) {
-            File startupMenuFile = new File (STARTUPMENU_SEAFILE_PATH);
-            if (startupMenuFile.exists()) {
-                FileUtils.deleteGeneralFile(STARTUPMENU_SEAFILE_PATH);
-            }
-            startupMenuFile.mkdirs();
-            exportStartupmenuFiles();
-        }
-        if (mSwitchEmail.isChecked()) {
-            File emailFile = new File (EMAIL_SEAFILE_PATH);
-            if (emailFile.exists()) {
-                FileUtils.deleteGeneralFile(EMAIL_SEAFILE_PATH);
-            }
-            emailFile.mkdirs();
-            exportEmailFiles();
-        }
-        if (mSwitchWifi.isChecked()) {
-            File wifiInfoSeafile = new File(WIFI_INFO_SEAFILE_PATH);
-            if (!wifiInfoSeafile.exists()) {
-                wifiInfoSeafile.mkdirs();
-            }
-            exportWifiFiles();
-        }
-        if (mSwitchBrowser.isChecked()) {
-            File browserInfoSeafile = new File(BROWSER_INFO_SEAFILE_PATH);
-            if (!browserInfoSeafile.exists()) {
-                browserInfoSeafile.mkdirs();
-            }
-            exportBrowserFiles();
-        }
-        if (mSwitchAppstore.isChecked()) {
-            File appstoreDirSeafile = new File(APPSTORE_SEAFILE_PATH);
-            if (!appstoreDirSeafile.exists()) {
-                appstoreDirSeafile.mkdirs();
-            }
-            File appstoreSeafile = new File(APPSTORE_PKGNAME_SEAFILE_PATH);
-            if (!appstoreSeafile.exists()) {
-                try {
-                    appstoreSeafile.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            exportAppstoreFiles();
-        }
-    }
-
-    private void exportWallpaperFiles() {
-        ChangeBuildPropTools.exec(ROOT_COMMOND + WALLPAPER_PATH);
-        ChangeBuildPropTools.exec(ROOT_COMMOND + WALLPAPER_SEAFILE_PATH);
-        ChangeBuildPropTools.exec("cp -f " + WALLPAPER_PATH + " " + WALLPAPER_SEAFILE_PATH);
-    }
-
-    private void exportStartupmenuFiles() {
-        File statusbarDb = new File(STATUSBAR_DB_PATH);
-        if (statusbarDb.exists()) {
-            ChangeBuildPropTools.exec(ROOT_COMMOND + STATUSBAR_DB_PATH);
-            if (FileUtils.copyGeneralFile(STATUSBAR_DB_PATH, STARTUPMENU_SEAFILE_PATH)) {
-                if (DEBUG) Log.i(TAG,"statusbar sync to seafile sucessful!");
-            } else {
-                if (DEBUG) Log.i(TAG,"statusbar sync to seafile fail!");
-            }
-        }
-    }
-
-    private void exportEmailFiles() {
-        File emailSharedPrefs = new File(PREFS_PATH);
-        if (emailSharedPrefs.exists()) {
-            ChangeBuildPropTools.exec(ROOT_COMMOND + PREFS_PATH);
-            ChangeBuildPropTools.exec(ROOT_COMMOND + EMAIL_SEAFILE_PATH);
-            if (FileUtils.copyGeneralFile(PREFS_PATH, EMAIL_SEAFILE_PATH)) {
-                if (DEBUG) Log.i(TAG,"email sync to seafile sucessful!");
-            } else {
-                if (DEBUG) Log.i(TAG,"email sync to seafile fail!");
-            }
-        }
-    }
-
-    private void exportWifiFiles() {
-        ChangeBuildPropTools.exec(ROOT_COMMOND + WIFI_INFO_FILE_CONTENT);
-        ChangeBuildPropTools.exec(ROOT_COMMOND + WIFI_INFO_SEAFILE_PATH);
-        ChangeBuildPropTools.exec("cp -f " + WIFI_INFO_FILE_CONTENT + " " + WIFI_INFO_SEAFILE_PATH);
-    }
-
-    private void exportBrowserFiles() {
-        ChangeBuildPropTools.exec(ROOT_COMMOND + BROWSER_INFO_FILE_CONTENT);
-        ChangeBuildPropTools.exec(ROOT_COMMOND + BROWSER_INFO_SEAFILE_PATH);
-        ChangeBuildPropTools.exec("cp -rf "+BROWSER_INFO_FILE_CONTENT + " "
-                                   + BROWSER_INFO_SEAFILE_PATH);
-    }
-
-    private void exportAppstoreFiles() {
-        List<PackageInfo> pkgInfos = getActivity()
-                               .getPackageManager().getInstalledPackages(0);
         try {
-            BufferedWriter appWriter = new BufferedWriter(
-                                       new FileWriter(APPSTORE_PKGNAME_SEAFILE_PATH));
-            for (PackageInfo pkgInfo : pkgInfos) {
-                appWriter.write(pkgInfo.packageName);
-                appWriter.newLine();
-                appWriter.flush();
-            }
-            appWriter.close();
-        } catch (IOException e) {
+            mISeafileService.saveSettings(mSwitchWallpaper.isChecked(),
+                    mSwitchWifi.isChecked(),
+                    mSwitchEmail.isChecked(),
+                    mSwitchAppdata.isChecked(),
+                    mSwitchStartupmenu.isChecked(),
+                    mSwitchBrowser.isChecked(),
+                    mSwitchAppstore.isChecked());
+        } catch (RemoteException e) {
             e.printStackTrace();
+        }
+    }
+
+    private class SeafileServiceConnection implements ServiceConnection {
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mISeafileService = ISeafileService.Stub.asInterface(service);
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
         }
     }
 }
