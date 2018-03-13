@@ -6323,6 +6323,11 @@
     <string name="resolution_setting_summary">settings resolution</string>
     <string name="str_resolution_setting_one">1920x1080(16:9)</string>
     <string name="str_resolution_setting_two">1366x768(16:9)</string>
+    <string name="dpi_low">LDPI(120)</string>
+    <string name="dpi_medium">MDPI(160)</string>
+    <string name="dpi_high">HDPI(240)</string>
+    <string name="tips_dpi">Tips</string>
+    <string name="warning_dialog_message">This will change screen clarity, which generally will cause SurfaceFlinger refresh, but may disable some currently running apps. Adjust?</string>
     <string name="release_version">Release Version:</string>
     <string name="develop_version">Develop Version:</string>
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="dpi_low"
+        android:title="@string/dpi_low" />
+    
+    <CheckBoxPreference
+        android:key="dpi_medium"
+        android:title="@string/dpi_medium" />
+    
+    <CheckBoxPreference
+        android:key="dpi_high"
+        android:title="@string/dpi_high" />
+</PreferenceScreen>

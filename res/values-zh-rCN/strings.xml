@@ -2764,4 +2764,9 @@
     <string name="hot_ctrl_selection">Up Down Left Right</string>
     <string name="release_version">正式版:</string>
     <string name="develop_version">开发版:</string>
+    <string name="tips_dpi">提示</string>
+    <string name="dpi_low">低分辨率(120)</string>
+    <string name="dpi_medium">中分辨率(160)</string>
+    <string name="dpi_high">高分辨率(240)</string>
+    <string name="warning_dialog_message">手动改变分辨率会改变屏幕清晰度，会引起SurfaceFlinger刷新，部分应用可能会关闭。是否更改？</string>
 </resources>
