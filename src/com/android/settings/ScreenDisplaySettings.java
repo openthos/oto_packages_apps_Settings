@@ -7,11 +7,11 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
-import android.app.AlertDialog;
 
 public class ScreenDisplaySettings extends SettingsPreferenceFragment
                             implements Preference.OnPreferenceChangeListener {
     private static final String SYSTEM_DPI = "system_dpi";
+    private static final String DPI_INIT_CONFIG = "sys.sf.lcd_density.recommend";
     private static final String DPI_LOW = "dpi_low";
     private static final String DPI_MEDIUM = "dpi_medium";
     private static final String DPI_HIGH = "dpi_high";
@@ -19,9 +19,8 @@ public class ScreenDisplaySettings extends SettingsPreferenceFragment
     private static final int NUM_DPI_MEDIUM = 160;
     private static final int NUM_DPI_HIGH = 240;
     private CheckBoxPreference mLDpi;
-    private CheckBoxPreference mMDpi;
     private CheckBoxPreference mHDpi;
-    private boolean mIsChange = false;
+    private CheckBoxPreference mMDpi;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,8 +33,13 @@ public class ScreenDisplaySettings extends SettingsPreferenceFragment
         mLDpi = (CheckBoxPreference) findPreference(DPI_LOW);
         mMDpi = (CheckBoxPreference) findPreference(DPI_MEDIUM);
         mHDpi = (CheckBoxPreference) findPreference(DPI_HIGH);
+        if (getActivity().getWallpaperDesiredMinimumHeight() <= 768
+                    && getActivity().getWallpaperDesiredMinimumWidth() <= 1366) {
+            mHDpi.setEnabled(false);
+        }
 
-        int dpi = Settings.System.getInt(getActivity().getContentResolver(), SYSTEM_DPI, NUM_DPI_MEDIUM);
+        int dpi = Settings.System.getInt(
+                getActivity().getContentResolver(), SYSTEM_DPI, NUM_DPI_MEDIUM);
         switch (dpi) {
             case NUM_DPI_LOW:
                 mLDpi.setChecked(true);
@@ -57,58 +61,29 @@ public class ScreenDisplaySettings extends SettingsPreferenceFragment
     public boolean onPreferenceChange(Preference preference, Object o) {
         switch (preference.getKey()) {
             case DPI_LOW:
-                showWarningDialog(NUM_DPI_LOW);
+                mLDpi.setChecked(true);
+                mMDpi.setChecked(false);
+                mHDpi.setChecked(false);
+                Settings.System.putInt(getActivity().getContentResolver(), SYSTEM_DPI, NUM_DPI_LOW);
+                SystemProperties.set(DPI_INIT_CONFIG, String.valueOf(NUM_DPI_LOW));
                 break;
             case DPI_MEDIUM:
-                showWarningDialog(NUM_DPI_MEDIUM);
+                mMDpi.setChecked(true);
+                mHDpi.setChecked(false);
+                mLDpi.setChecked(false);
+                Settings.System.putInt(
+                        getActivity().getContentResolver(), SYSTEM_DPI, NUM_DPI_MEDIUM);
+                SystemProperties.set(DPI_INIT_CONFIG, String.valueOf(NUM_DPI_MEDIUM));
                 break;
             case DPI_HIGH:
-                showWarningDialog(NUM_DPI_HIGH);
+                mHDpi.setChecked(true);
+                mLDpi.setChecked(false);
+                mMDpi.setChecked(false);
+                Settings.System.putInt(
+                        getActivity().getContentResolver(), SYSTEM_DPI, NUM_DPI_HIGH);
+                SystemProperties.set(DPI_INIT_CONFIG, String.valueOf(NUM_DPI_HIGH));
                 break;
         }
         return false;
-    }
-
-    private boolean showWarningDialog(final int dpi) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.tips_dpi);
-        builder.setMessage(R.string.warning_dialog_message);
-        builder.setPositiveButton(android.R.string.ok,
-            new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    switch (dpi) {
-                        case NUM_DPI_LOW:
-                            mLDpi.setChecked(true);
-                            mMDpi.setChecked(false);
-                            mHDpi.setChecked(false);
-                            break;
-                        case NUM_DPI_MEDIUM:
-                            mMDpi.setChecked(true);
-                            mHDpi.setChecked(false);
-                            mLDpi.setChecked(false);
-                            break;
-                        case NUM_DPI_HIGH:
-                            mHDpi.setChecked(true);
-                            mLDpi.setChecked(false);
-                            mMDpi.setChecked(false);
-                            break;
-                    }
-                    Settings.System.putInt(getActivity().getContentResolver(), SYSTEM_DPI, dpi);
-                    SystemProperties.set("sys.sf.lcd_density.recommend", String.valueOf(dpi));
-                    mIsChange = true;
-                }
-        });
-
-        builder.setNegativeButton(android.R.string.cancel,
-            new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                    mIsChange = false;
-                }
-        });
-        builder.create().show();
-        return mIsChange;
     }
 }
