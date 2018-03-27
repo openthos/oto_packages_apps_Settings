@@ -24,6 +24,9 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Binder;
+import android.os.IBinder;
+import android.os.Parcel;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceScreen;
@@ -122,15 +125,14 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
     private static String CODE_WRONG_PASSWORD = "1001";
     private static String CODE_SUCCESS = "1000";
     private String mCookie = "";
-    public static final int MSG_GET_CSRF = 0x1001;
-    public static final int MSG_GET_CSRF_OK = 0x1002;
-    public static final int MSG_REGIST_SEAFILE = 0x1003;
     public static final int MSG_REGIST_SEAFILE_OK = 0x1004;
+    public static final int MSG_REGIST_SEAFILE_FAILED = 0x1005;
 
     private String mRegisterID;
 
     private ISeafileService mISeafileService;
     private SeafileServiceConnection mSeafileServiceConnection;
+    private IBinder mSeafileBinder = new SeafileBinder();
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -185,7 +187,12 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                                         getText(R.string.toast_openthos_password_wrong),
                                         Toast.LENGTH_SHORT).show();
                             } else {
-                                mHandler.sendEmptyMessage(MSG_GET_CSRF);
+                                try {
+                                    mISeafileService.setBinder(mSeafileBinder);
+                                    mISeafileService.regiestAccount(openthosID, password);
+                                } catch (RemoteException e) {
+                                    e.printStackTrace();
+                                }
                                 Uri uriInsert =
                                     Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
                                 ContentValues values = new ContentValues();
@@ -217,24 +224,19 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                             }
                         }
                         break;
-                    case MSG_GET_CSRF:
-                        getCsrf();
-                        break;
-                    case MSG_GET_CSRF_OK:
-                        mCookie = (String) msg.obj;
-                        mHandler.sendEmptyMessage(MSG_REGIST_SEAFILE);
-                        break;
-                    case MSG_REGIST_SEAFILE:
-                        registSeafile();
-                        break;
                     case MSG_REGIST_SEAFILE_OK:
                         try {
-                            mISeafileService.updateAccount();
+                            mISeafileService.unsetBinder(mSeafileBinder);
                             mBindPref.setEnabled(false);
                             mUnbundPref.setEnabled(true);
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
+                        break;
+                    case MSG_REGIST_SEAFILE_FAILED:
+                        Toast.makeText(getActivity(),
+                                getText(R.string.toast_openthos_password_wrong),
+                                Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         Toast.makeText(getActivity(),
@@ -477,24 +479,6 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
     private static int convertSubtypeIndexToDialogItemId(final int index) { return index + 1; }
     private static int convertDialogItemIdToSubtypeIndex(final int item) { return item - 1; }
 
-    private void getCsrf() {
-        RequestThread thread = new RequestThread(mHandler,
-           "https://dev.openthos.org/accounts/register/", null, RequestThread.RequestType.GET);
-        thread.start();
-    }
-
-    private void registSeafile() {
-        List<NameValuePair> list = new ArrayList<>();
-        list.add(new BasicNameValuePair("csrfmiddlewaretoken", mCookie.split("=")[1].trim()));
-        list.add(new BasicNameValuePair("email", openthosID));
-        list.add(new BasicNameValuePair("password1", password));
-        list.add(new BasicNameValuePair("password2", password));
-        RequestThread thread = new RequestThread(mHandler,
-               "https://dev.openthos.org/accounts/register/", list, RequestThread.RequestType.POST,
-                mCookie);
-        thread.start();
-    }
-
     private void updateID(String ID) {
         mOpenthosIDPref.setSummary(ID);
     }
@@ -505,6 +489,24 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
         }
 
         public void onServiceDisconnected(ComponentName name) {
+        }
+    }
+
+    private class SeafileBinder extends Binder {
+
+        @Override
+        protected boolean onTransact(
+                int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == mISeafileService.getCodeRegiestSuccess()) {
+                mHandler.sendEmptyMessage(MSG_REGIST_SEAFILE_OK);
+                reply.writeNoException();
+                return true;
+            } else if (code == mISeafileService.getCodeRegiestFailed()) {
+                mHandler.sendEmptyMessage(MSG_REGIST_SEAFILE_FAILED);
+                reply.writeNoException();
+                return true;
+            }
+            return super.onTransact(code, data, reply, flags);
         }
     }
 }
