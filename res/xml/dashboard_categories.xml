@@ -317,11 +317,9 @@
         <dashboard-tile
                 android:id="@+id/print_settings"
                 android:title="@string/print_settings"
-                android:icon="@drawable/ic_settings_print">
-                <intent android:action="android.content.Intent.ACTION_VIEW"
-                    android:targetPackage="com.github.openthos.printer.localprint"
-                    android:targetClass="com.github.openthos.printer.localprint.ui.ManagementActivity" />
-        </dashboard-tile>
+                android:fragment="com.android.settings.print/PrintSettingsFragment"
+                android:icon="@drawable/ic_settings_print"
+                />
 
         <!-- Superuser -->
         <dashboard-tile
