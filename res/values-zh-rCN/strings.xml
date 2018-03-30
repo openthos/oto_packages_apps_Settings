@@ -1724,6 +1724,10 @@
     <string name="runningservicedetails_stop_dlg_title" msgid="4253292537154337233">"要停止系统服务吗？"</string>
     <string name="runningservicedetails_stop_dlg_text" product="tablet" msgid="3371302398335665793">"如果停止此服务，您平板电脑上的某些功能也将随之停止工作，并在您将平板电脑关机然后再重新打开后才能使用。"</string>
     <string name="runningservicedetails_stop_dlg_text" product="default" msgid="3920243762189484756">"如果停止此服务，您手机上的某些功能也将随之停止工作，并在您将手机关机然后再重新打开后才能使用。"</string>
+    <string name="android_x86_options_title">"安卓X86设置"</string>
+    <string name="android_x86_dashboard_summary">兼容模式、统计</string>
+    <string name="nativebridge_toggle_title">"兼容模式"</string>
+    <string name="nativebridge_toggle_summary">"可兼容於使用 arm 庫的应用"</string>
     <string name="language_input_gesture_title" msgid="8749227808244881255">"语言、输入法和手势"</string>
     <string name="language_input_gesture_summary_on_with_assist" msgid="7219895055450633449"></string>
     <string name="language_input_gesture_summary_on_non_assist" msgid="756147879200943161"></string>

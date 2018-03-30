@@ -4040,6 +4040,12 @@
         features of your phone may stop working correctly until you power it off
         and then on again.</string>
 
+    <!-- Android-x86 settings -->
+    <string name="android_x86_options_title">Android-x86 options</string>
+    <string name="android_x86_dashboard_summary">Native bridge, statistics</string>
+    <string name="nativebridge_toggle_title">Enable native bridge</string>
+    <string name="nativebridge_toggle_summary">To support apps with arm native libraries</string>
+
     <!-- Languages Settings --> <skip />
     <!-- Title of Language, input & gestures setting on main settings screen. -->
     <string name="language_input_gesture_title">Languages, input &amp; gestures</string>
