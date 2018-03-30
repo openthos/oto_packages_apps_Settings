@@ -2649,6 +2649,8 @@
     <string name="cloud_browser">浏览器</string>
     <string name="cloud_appstore">应用商店</string>
     <string name="cloud_file">文档</string>
+    <string name="cloud_browser_import">选择还原浏览器</string>
+    <string name="cloud_browser_export">选择备份浏览器</string>
     <string name="import_reboot_info_warn">导入完成后，要想所有的功能生效，需重启系统。</string>
     <string name="export_confirm_dialog_info">是否确定将当前设备相关信息同步到你的账户云服务上？</string>
     <string name="cloud_service_dialog_confirm">确定</string>
@@ -2769,4 +2771,6 @@
     <string name="dpi_medium">中分辨率(160)</string>
     <string name="dpi_high">高分辨率(240)</string>
     <string name="warning_dialog_message">手动改变分辨率会改变屏幕清晰度，会引起SurfaceFlinger刷新，部分应用可能会关闭。是否更改？</string>
+    <string name="warning_browser_import">提示：当前浏览器为待恢复列表。</string>
+    <string name="warning_browser_export">提示：当前浏览器为待备份列表。</string>
 </resources>

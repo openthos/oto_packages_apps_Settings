@@ -81,4 +81,5 @@
     <color name="sim_noitification">@*android:color/material_deep_teal_500</color>
 
     <color name="seek_bar_thumb">#808080</color>
+    <color name="text_bg_color">#C3CAD4</color>
 </resources>

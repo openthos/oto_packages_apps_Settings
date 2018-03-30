@@ -7,6 +7,12 @@ import android.content.Context;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.ServiceConnection;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -15,6 +21,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.Toast;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -40,7 +52,7 @@ import java.util.List;
 import java.util.ArrayList;
 import com.openthos.seafile.ISeafileService;
 
-public class CloudServiceFragment extends Fragment implements OnClickListener {
+public class CloudServiceFragment extends Fragment {
     private Switch mSwitchWallpaper;
     private Switch mSwitchWifi;
     private Switch mSwitchEmail;
@@ -52,38 +64,22 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
     private Button mButtonImport;
     private Button mButtonExport;
 
-    private static final String WALLPAPER_PATH = "data/system/users/0/wallpaper";
-    private static final String WALLPAPER_SEAFILE_PATH =
-                                        "data/sea/data/sdcard/cloudFolder/wallpaper";
-    private static final String IMAGE_WALLPAPER_SEAFILE_PATH =
-                                        WALLPAPER_SEAFILE_PATH + "/wallpaper";
-    private static final String EMAIL_FILE_PATH = "data/data/com.android.email";
-    private static final String EMAIL_SEAFILE_PATH = "data/sea/data/sdcard/cloudFolder/email";
-    private static final String PREFS_PATH = EMAIL_FILE_PATH + "/shared_prefs";
-    private static final String PREFS_SEAFILE_PATH = EMAIL_SEAFILE_PATH + "/shared_prefs";
-    private static final String STATUSBAR_DB_PATH =
-                         "data/data/com.android.systemui/databases/Status_bar_database.db";
-    private static final String STARTUPMENU_SEAFILE_PATH =
-                         "data/sea/data/sdcard/cloudFolder/startupmenu";
-    private static final String STATUSBAR_DB_SEAFILE_PATH =
-                         STARTUPMENU_SEAFILE_PATH + "/Status_bar_database.db";
-    private static final String WIFI_INFO_FILE_PATH = "data/misc/wifi";
-    private static final String WIFI_INFO_FILE_CONTENT = "data/misc/wifi/wpa_supplicant.conf";
-    private static final String WIFI_INFO_SEAFILE_PATH = "data/sea/data/sdcard/cloudFolder/wifi";
-    private static final String WIFI_INFO_SEAFILE_CONTENT =
-                                        "data/sea/data/sdcard/cloudFolder/wifi/wpa_supplicant.conf";
-    private static final String BROWSER_INFO_FILE_PATH = "data/data/org.mozilla.fennec_root/files";
-    private static final String BROWSER_INFO_FILE_CONTENT =
-                                                 "data/data/org.mozilla.fennec_root/files/mozilla";
-    private static final String BROWSER_INFO_SEAFILE_PATH =
-                                                 "data/sea/data/sdcard/cloudFolder/browser";
-    private static final String BROWSER_INFO_SEAFILE_CONTENT =
-                                                "data/sea/data/sdcard/cloudFolder/browser/mozilla";
-    private static final String APPSTORE_SEAFILE_PATH =
-                                        "data/sea/data/sdcard/cloudFolder/appstore";
-    private static final String APPSTORE_PKGNAME_SEAFILE_PATH =
-                                        APPSTORE_SEAFILE_PATH + "/appPkgNames.txt";
-    private static final String APPSTORE_PATH = "data/data/com.openthos.appstore/";
+    private TextView mBrowserImport;
+    private TextView mBrowserExport;
+    private ListView mListView;
+
+    private List<ResolveInfo> mExportBrowsers;
+    private List<ResolveInfo> mImportBrowsers;
+    private PackageManager mPackageManager;
+    private ResolveAdapter mAdapter;
+    private List<String> mSyncBrowsers;
+    private boolean mIsImport = false;
+
+    private ClickListener mClickListener;
+    private CheckedChangeListener mCheckedChangeListener;
+
+    private static final String SEAFILE_PATH = "/data/sea/data/";
+    private static final String SEAFILE_PATH_BROWSER = "/UserConfig/browser/";
 
     private File mCloudFolder;
     private ISeafileService mISeafileService;
@@ -104,6 +100,7 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                     "com.openthos.seafile.SeafileService"));
         getActivity().bindService(intent, mSeafileServiceConnection, Context.BIND_AUTO_CREATE);
         initView(mRootView);
+        initData();
 
         mCloudFolder = new File(getActivity().getResources()
                                              .getString(R.string.cloudfolder_path));
@@ -118,23 +115,59 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         mSwitchAppstore = (Switch) v.findViewById(R.id.switch_appstore);
         mSwitchBrowser = (Switch) v.findViewById(R.id.switch_browser);
         mSwitchStartupmenu = (Switch) v.findViewById(R.id.switch_startmenu);
+        mBrowserImport = (TextView) v.findViewById(R.id.tv_browser_import);
+        mBrowserExport = (TextView) v.findViewById(R.id.tv_browser_export);
+        mListView = (ListView) v.findViewById(R.id.lv_browser);
 
+        if (mSwitchBrowser.isChecked()) {
+            mBrowserImport.setEnabled(true);
+            mBrowserExport.setEnabled(true);
+        } else {
+            mBrowserImport.setEnabled(false);
+            mBrowserExport.setEnabled(false);
+        }
         mButtonImport = (Button) v.findViewById(R.id.cloud_import);
         mButtonExport = (Button) v.findViewById(R.id.cloud_export);
-        mButtonImport.setOnClickListener(this);
-        mButtonExport.setOnClickListener(this);
+
+        mClickListener = new ClickListener();
+        mCheckedChangeListener = new CheckedChangeListener();
+        mButtonImport.setOnClickListener(mClickListener);
+        mButtonExport.setOnClickListener(mClickListener);
+        mBrowserImport.setOnClickListener(mClickListener);
+        mBrowserExport.setOnClickListener(mClickListener);
+        mSwitchBrowser.setOnCheckedChangeListener(mCheckedChangeListener);
 
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.cloud_import:
-                importAllFiles();
-                break;
-            case R.id.cloud_export:
-                showExportConfirmDialog();
-                break;
+    private void initData() {
+        mSyncBrowsers = new ArrayList();
+        mImportBrowsers = new ArrayList();
+        mExportBrowsers = new ArrayList();
+        mAdapter = new ResolveAdapter();
+        mListView.setAdapter(mAdapter);
+        mPackageManager = getActivity().getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        Uri uri = Uri.parse("https://");
+        intent.setData(uri);
+        List<ResolveInfo> list = mPackageManager.queryIntentActivities(
+                intent, PackageManager.GET_INTENT_FILTERS);
+        mExportBrowsers = list;
+
+        setListViewHeight();
+    }
+
+    private void setListViewHeight() {
+        ViewGroup.LayoutParams params = mListView.getLayoutParams();
+        if (mAdapter.getCount() > 0) {
+            View item = mAdapter.getView(0, null, mListView);
+            item.measure(0, 0);
+            params.height = item.getMeasuredHeight() * mAdapter.getCount() +
+                    mListView.getDividerHeight() * (mAdapter.getCount() - 1);
+            mListView.setLayoutParams(params);
+        } else {
+            params.height = 0;
+            mListView.setLayoutParams(params);
         }
     }
 
@@ -168,6 +201,7 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                     mSwitchAppdata.isChecked(),
                     mSwitchStartupmenu.isChecked(),
                     mSwitchBrowser.isChecked(),
+                    mSyncBrowsers,
                     mSwitchAppstore.isChecked());
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -182,6 +216,7 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
                     mSwitchAppdata.isChecked(),
                     mSwitchStartupmenu.isChecked(),
                     mSwitchBrowser.isChecked(),
+                    mSyncBrowsers,
                     mSwitchAppstore.isChecked());
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -194,6 +229,165 @@ public class CloudServiceFragment extends Fragment implements OnClickListener {
         }
 
         public void onServiceDisconnected(ComponentName name) {
+        }
+    }
+
+    private class ResolveAdapter extends BaseAdapter {
+        private List<ResolveInfo> mBrowsersList = new ArrayList();
+
+        @Override
+        public int getCount() {
+            if (mIsImport) {
+                return mImportBrowsers.size();
+            } else {
+                return mExportBrowsers.size();
+            }
+        }
+
+        @Override
+        public Object getItem(int i) {
+            if (mIsImport) {
+                return mImportBrowsers.get(i);
+            } else {
+                return mExportBrowsers.get(i);
+            }
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            ViewHolder holder;
+            View convertView = view;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getActivity()).
+                        inflate(R.layout.list_item, viewGroup, false);
+                holder = new ViewHolder(convertView);
+                convertView.setTag(holder);
+            }
+            if (mIsImport) {
+                mBrowsersList = mImportBrowsers;
+            } else {
+                mBrowsersList = mExportBrowsers;
+            }
+            holder = (ViewHolder) convertView.getTag();
+            holder.text.setText(mBrowsersList.get(i).loadLabel(mPackageManager));
+            holder.image.setImageDrawable(mBrowsersList.get(i).loadIcon(mPackageManager));
+            holder.check.setTag(mBrowsersList.get(i).activityInfo.packageName);
+            holder.check.setOnCheckedChangeListener(mCheckedChangeListener);
+            try {
+                if ((mPackageManager.getPackageInfo(mBrowsersList.get(i).activityInfo.packageName, 0).
+                        applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0) {
+                    holder.check.setChecked(true);
+                    holder.check.setClickable(false);
+                    mSyncBrowsers.add(mBrowsersList.get(i).activityInfo.packageName);
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            return convertView;
+        }
+    }
+
+    private class ViewHolder {
+        public TextView text;
+        public ImageView image;
+        public CheckBox check;
+
+        public ViewHolder(View view) {
+            text = (TextView) view.findViewById(R.id.tv_list_item);
+            image = (ImageView) view.findViewById(R.id.iv_list_item);
+            check = (CheckBox) view.findViewById(R.id.cb_list_item);
+        }
+    }
+
+    private class ClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.cloud_import:
+                    if (mSwitchBrowser.isChecked() && !mIsImport) {
+                        Toast.makeText(getActivity(),
+                                R.string.warning_browser_export, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    importAllFiles();
+                    break;
+                case R.id.cloud_export:
+                    if (mSwitchBrowser.isChecked() && mIsImport) {
+                        Toast.makeText(getActivity(),
+                                R.string.warning_browser_import, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    showExportConfirmDialog();
+                    break;
+                case R.id.tv_browser_import:
+                    try {
+                        mImportBrowsers.clear();
+                        File file = new File(SEAFILE_PATH +
+                                mISeafileService.getUserName() + SEAFILE_PATH_BROWSER);
+                        if (file.exists()) {
+                            File[] syncBrowsers = file.listFiles();
+                            for (int i = 0; i < mExportBrowsers.size(); i++) {
+                                for (int j = 0; j < syncBrowsers.length; j++) {
+                                    if (mExportBrowsers.get(i).activityInfo.packageName.equals(
+                                            syncBrowsers[j].getName().replace(".tar.gz", ""))) {
+                                        mImportBrowsers.add(mExportBrowsers.get(i));
+                                    }
+                                }
+                            }
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    mIsImport = true;
+                    mSyncBrowsers.clear();
+                    mListView.setVisibility(View.VISIBLE);
+                    mAdapter.notifyDataSetChanged();
+                    setListViewHeight();
+                    mBrowserImport.setBackgroundResource(R.color.text_bg_color);
+                    mBrowserExport.setBackgroundResource(R.color.circle_avatar_frame_pressed_color);
+                    break;
+                case R.id.tv_browser_export:
+                    mIsImport = false;
+                    mSyncBrowsers.clear();
+                    mListView.setVisibility(View.VISIBLE);
+                    mAdapter.notifyDataSetChanged();
+                    setListViewHeight();
+                    mBrowserExport.setBackgroundResource(R.color.text_bg_color);
+                    mBrowserImport.setBackgroundResource(R.color.circle_avatar_frame_pressed_color);
+                    break;
+            }
+        }
+    }
+
+    private class CheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            switch (buttonView.getId()) {
+                case R.id.switch_browser:
+                    if (isChecked) {
+                        mBrowserImport.setEnabled(true);
+                        mBrowserExport.setEnabled(true);
+                    } else {
+                        mBrowserImport.setEnabled(false);
+                        mBrowserExport.setEnabled(false);
+                        mListView.setVisibility(View.GONE);
+                    }
+                    break;
+                case R.id.cb_list_item:
+                    if (isChecked) {
+                        mSyncBrowsers.add((String) buttonView.getTag());
+                    } else {
+                        mSyncBrowsers.remove((String) buttonView.getTag());
+                    }
+                    break;
+            }
         }
     }
 }

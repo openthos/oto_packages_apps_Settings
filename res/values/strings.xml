@@ -6221,6 +6221,8 @@
     <string name="cloud_browser">Browser</string>
     <string name="cloud_appstore">App Store</string>
     <string name="cloud_file">File</string>
+    <string name="cloud_browser_import">Choose Import Browsers</string>
+    <string name="cloud_browser_export">Choose Export Browsers</string>
     <string name="cloudfolder_path">data/sea/data/sdcard/cloudFolder/</string>
     <string name="import_reboot_info_warn">If you want all import files full available,you need reboot the device.</string>
     <string name="export_confirm_dialog_info">Are you sure to sync current device related files to cloud?</string>
@@ -6330,4 +6332,6 @@
     <string name="warning_dialog_message">This will change screen clarity, which generally will cause SurfaceFlinger refresh, but may disable some currently running apps. Adjust?</string>
     <string name="release_version">Release Version:</string>
     <string name="develop_version">Develop Version:</string>
+    <string name="warning_browser_import">Warning: Current browsers are imported list.</string>
+    <string name="warning_browser_export">Warning: Current browsers are exported list.</string>
 </resources>
