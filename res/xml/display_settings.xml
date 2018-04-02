@@ -77,8 +77,6 @@
         <PreferenceScreen
                 android:key="resolution_setting"
                 android:title="@string/resolution_setting_title"
-                android:summary="@string/resolution_setting_summary"
-                android:fragment="com.android.settings.ScreenDisplaySettings"/>
-
+                android:summary="@string/resolution_setting_summary" />
 
 </PreferenceScreen>

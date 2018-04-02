@@ -535,4 +535,14 @@
     <item msgid="4608643045752965568">"粉红色"</item>
     <item msgid="6131821495505931173">"红色"</item>
   </string-array>
+  <string-array name="resolution_entries">
+    <item>笔记本 1366x768/ 1280x720 屏幕</item>
+    <item>笔记本 1920x1080 屏幕</item>
+    <item>笔记本 2560x1440或以上屏幕</item>
+    <item>台式机 1920x1080 显示器</item>
+    <item>台式机 2560x1440 显示器</item>
+    <item>台式机 4K（3840x2160）显示器</item>
+    <item>全高清电视或投影机</item>
+    <item>4K超高清电视或投影机</item>
+  </string-array>
 </resources>

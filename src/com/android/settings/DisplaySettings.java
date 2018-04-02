@@ -66,6 +66,7 @@ import android.os.Parcel;
 import android.os.IBinder;
 import android.os.ServiceManager;
 import android.os.SystemClock;
+import android.graphics.Color;
 
 import java.lang.Integer;
 import java.util.ArrayList;
@@ -88,6 +89,8 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_AUTO_ROTATE = "auto_rotate";
     private static final String KEY_RESOLUTION_SETTING = "resolution_setting";
     private static final String KEY_WIFI_DISPLAY = "wifi_display";
+    private static final String SYSTEM_DPI = "system_dpi";
+    private static final String DPI_INFO_IN_CONFIG = "sys.sf.lcd_density.recommend";
     private static final int DLG_GLOBAL_CHANGE_WARNING = 1;
     private static final int SUBSTRING_LENGTH = 4;
     private static final int RESOLUTION_ONE_X = 1920;
@@ -96,6 +99,17 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final int RESOLUTION_TWO_Y = 768;
     private static final int SET_RESOLUTION = 19; // in ISurfaceComposer.h:BnSurfaceComposer
     private static final int RESIZE_SLEEP = 1000;
+    private static final int LAPTOP_1366 = 0;
+    private static final int LAPTOP_1920 = 1;
+    private static final int LAPTOP_2560 = 2;
+    private static final int DESKTOP_1920 = 3;
+    private static final int DESKTOP_2560 = 4;
+    private static final int DESKTOP_3840 = 5;
+    private static final int FHD_TV = 6;
+    private static final int UHD_TV = 7;
+    private static final int NUM_DPI_LOW = 120;
+    private static final int NUM_DPI_MEDIUM = 160;
+    private static final int NUM_DPI_HIGH = 240;
 
     private WarnedListPreference mFontSizePref;
 
@@ -106,10 +120,11 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private SwitchPreference mLiftToWakePreference;
     private SwitchPreference mDozePreference;
     private SwitchPreference mAutoBrightnessPreference;
-    //private Preference mResolutionSetting;
+    private Preference mResolutionSetting;
     private Preference mBrightPref;
     private AlertDialog mDialog = null;
     private IWindowManager mWm;
+    private String[] mResolutionArray;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,8 +145,12 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         mWm = IWindowManager.Stub.asInterface(ServiceManager.checkService(
                 Context.WINDOW_SERVICE));
 
-        //mResolutionSetting = findPreference(KEY_RESOLUTION_SETTING);
-        //mResolutionSetting.setOnPreferenceClickListener(this);
+        mResolutionSetting = findPreference(KEY_RESOLUTION_SETTING);
+        mResolutionSetting.setOnPreferenceClickListener(this);
+        int initIndex = Settings.System.getInt(
+                getActivity().getContentResolver(), SYSTEM_DPI, LAPTOP_1920);
+        mResolutionArray = getActivity().getResources().getStringArray(R.array.resolution_entries);
+        mResolutionSetting.setSummary(mResolutionArray[initIndex]);
 
 /*        mScreenTimeoutPreference = (ListPreference) findPreference(KEY_SCREEN_TIMEOUT);
         final long currentTimeout = Settings.System.getLong(resolver, SCREEN_OFF_TIMEOUT,
@@ -431,9 +450,9 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             } else {
                 mFontSizePref.click();
             }
-        /*} else if (preference == mResolutionSetting) {
+        } else if (preference == mResolutionSetting) {
             showResolutionSettingDialog();
-            return true;*/
+            return true;
         } else if (preference.getKey().equals(KEY_BRIGHTNESS)) {
             Intent intent = new Intent(Intent.ACTION_SHOW_BRIGHTNESS_DIALOG);
             getActivity().sendBroadcast(intent);
@@ -485,105 +504,130 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             mDialog.dismiss();
         }
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        final View resolutionSettingDialog = layoutInflater
+        final View resolutionDialog = layoutInflater
                     .inflate(R.layout.resolution_setting_dialog, null);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.resolution_setting_title);
-        builder.setView(resolutionSettingDialog);
+        builder.setView(resolutionDialog);
         builder.setCancelable(true);
 
-        RadioGroup rg = (RadioGroup) resolutionSettingDialog.findViewById(
-                                                                 R.id.resolution_setting_group);
-        final RadioButton rbOne = (RadioButton) resolutionSettingDialog.findViewById(
-                                                                 R.id.resolution_setting_one);
-        final RadioButton rbTwo = (RadioButton) resolutionSettingDialog.findViewById(
-                                                                 R.id.resolution_setting_two);
-        int maxSize;
-        int currentSize;
-        String maxResolution = SystemProperties.get("persist.sys.max.display.size");
-        String currentResolution = SystemProperties.get("persist.sys.display.size");
+        RadioGroup rg = (RadioGroup) resolutionDialog.findViewById(R.id.resolution_setting_group);
+        final RadioButton l1366 = (RadioButton) resolutionDialog.findViewById(R.id.tv_laptop_1366);
+        final RadioButton l1920 = (RadioButton) resolutionDialog.findViewById(R.id.tv_laptop_1920);
+        final RadioButton l2560 = (RadioButton) resolutionDialog.findViewById(R.id.tv_laptop_2560);
+        final RadioButton d1920 = (RadioButton) resolutionDialog.findViewById(R.id.tv_desktop_1920);
+        final RadioButton d2560 = (RadioButton) resolutionDialog.findViewById(R.id.tv_desktop_2560);
+        final RadioButton d3840 = (RadioButton) resolutionDialog.findViewById(R.id.tv_desktop_3840);
+        final RadioButton FHD = (RadioButton) resolutionDialog.findViewById(R.id.tv_fhd);
+        final RadioButton UHD = (RadioButton) resolutionDialog.findViewById(R.id.tv_uhd);
 
-        if ("".equals(maxResolution)) {
-            maxSize = 1920;
-        } else {
-            maxSize = Integer.parseInt(maxResolution.substring(0,SUBSTRING_LENGTH));
+        int index = Settings.System.getInt(
+                getActivity().getContentResolver(), SYSTEM_DPI, LAPTOP_1920);
+        if (getActivity().getWallpaperDesiredMinimumHeight() <= 768
+                         && getActivity().getWallpaperDesiredMinimumWidth() <= 1366) {
+            l2560.setEnabled(false);
+            d2560.setEnabled(false);
+            d3840.setEnabled(false);
+            FHD.setEnabled(false);
+            UHD.setEnabled(false);
+            l2560.setTextColor(Color.GRAY);
+            d2560.setTextColor(Color.GRAY);
+            d3840.setTextColor(Color.GRAY);
+            FHD.setTextColor(Color.GRAY);
+            UHD.setTextColor(Color.GRAY);
         }
 
-        if ("".equals(currentResolution)) {
-            currentSize = maxSize;
-        } else {
-            currentSize = Integer.parseInt(maxResolution.substring(0,SUBSTRING_LENGTH));
-        }
-
-        if (maxSize < RESOLUTION_ONE_X && maxSize > RESOLUTION_TWO_X) {
-            rbOne.setVisibility(View.GONE);
-        } else if (maxSize < RESOLUTION_TWO_X){
-            rbOne.setVisibility(View.GONE);
-            rbTwo.setVisibility(View.GONE);
-            Toast.makeText(getActivity(),
-                    "your device current max resolution is not support 1366x768 and 1920x1080",
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            if (currentSize == RESOLUTION_ONE_X) {
-                rbOne.setChecked(true);
-            } else if (currentSize == RESOLUTION_TWO_X) {
-                rbTwo.setChecked(true);
-            } else {
-                rbOne.setChecked(false);
-                rbTwo.setChecked(false);
-            }
+        switch (index) {
+            case LAPTOP_1366:
+                l1366.setChecked(true);
+                break;
+            case LAPTOP_1920:
+                l1920.setChecked(true);
+                break;
+            case LAPTOP_2560:
+                l2560.setChecked(true);
+                break;
+            case DESKTOP_1920:
+                d1920.setChecked(true);
+                break;
+            case DESKTOP_2560:
+                d2560.setChecked(true);
+                break;
+            case DESKTOP_3840:
+                d3840.setChecked(true);
+                break;
+            case FHD_TV:
+                FHD.setChecked(true);
+                break;
+            case UHD_TV:
+                UHD.setChecked(true);
+                break;
         }
 
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == rbOne.getId()) {
-                    rbOne.setChecked(true);
-                } else if (checkedId == rbTwo.getId()) {
-                    rbTwo.setChecked(true);
+                switch (checkedId) {
+                    case R.id.tv_laptop_1366:
+                        Settings.System.putInt(getActivity()
+                                        .getContentResolver(), SYSTEM_DPI, LAPTOP_1366);
+                        SystemProperties.set(DPI_INFO_IN_CONFIG, String.valueOf(NUM_DPI_LOW));
+                        mResolutionSetting.setSummary(mResolutionArray[LAPTOP_1366]);
+                        break;
+                    case R.id.tv_laptop_1920:
+                        Settings.System.putInt(getActivity().
+                                        getContentResolver(), SYSTEM_DPI, LAPTOP_1920);
+                        SystemProperties.set(DPI_INFO_IN_CONFIG, String.valueOf(NUM_DPI_MEDIUM));
+                        mResolutionSetting.setSummary(mResolutionArray[LAPTOP_1920]);
+                        break;
+                    case R.id.tv_laptop_2560:
+                        Settings.System.putInt(getActivity().
+                                        getContentResolver(), SYSTEM_DPI, LAPTOP_2560);
+                        SystemProperties.set(DPI_INFO_IN_CONFIG, String.valueOf(NUM_DPI_HIGH));
+                        mResolutionSetting.setSummary(mResolutionArray[LAPTOP_2560]);
+                        break;
+                    case R.id.tv_desktop_1920:
+                        Settings.System.putInt(getActivity().
+                                        getContentResolver(), SYSTEM_DPI, DESKTOP_1920);
+                        SystemProperties.set(DPI_INFO_IN_CONFIG, String.valueOf(NUM_DPI_MEDIUM));
+                        mResolutionSetting.setSummary(mResolutionArray[DESKTOP_1920]);
+                        break;
+                    case R.id.tv_desktop_2560:
+                        Settings.System.putInt(getActivity().
+                                        getContentResolver(), SYSTEM_DPI, DESKTOP_2560);
+                        SystemProperties.set(DPI_INFO_IN_CONFIG, String.valueOf(NUM_DPI_HIGH));
+                        mResolutionSetting.setSummary(mResolutionArray[DESKTOP_2560]);
+                        break;
+                    case R.id.tv_desktop_3840:
+                        Settings.System.putInt(getActivity().
+                                        getContentResolver(), SYSTEM_DPI, DESKTOP_3840);
+                        SystemProperties.set(DPI_INFO_IN_CONFIG, String.valueOf(NUM_DPI_HIGH));
+                        mResolutionSetting.setSummary(mResolutionArray[DESKTOP_3840]);
+                        break;
+                    case R.id.tv_fhd:
+                        Settings.System.putInt(getActivity().
+                                        getContentResolver(), SYSTEM_DPI, FHD_TV);
+                        SystemProperties.set(DPI_INFO_IN_CONFIG, String.valueOf(NUM_DPI_HIGH));
+                        mResolutionSetting.setSummary(mResolutionArray[FHD_TV]);
+                        break;
+                    case R.id.tv_uhd:
+                        Settings.System.putInt(getActivity().
+                                        getContentResolver(), SYSTEM_DPI, UHD_TV);
+                        SystemProperties.set(DPI_INFO_IN_CONFIG, String.valueOf(NUM_DPI_HIGH));
+                        mResolutionSetting.setSummary(mResolutionArray[UHD_TV]);
+                        break;
                 }
+                mDialog.dismiss();
             }
         });
 
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                if (rbOne.isChecked()) {
-                    //SystemProperties.set("persist.sys.display.size","1920x1080@60");
-                    //updateResolution(RESOLUTION_ONE_X,RESOLUTION_ONE_Y);
-                } else if(rbTwo.isChecked()) {
-                    //SystemProperties.set("persist.sys.display.size","1360x768@60");
-                    //updateResolution(RESOLUTION_TWO_X,RESOLUTION_TWO_Y);
-                }
-            }
-        });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
+                dialog.dismiss();
             }
         });
         mDialog = builder.create();
         mDialog.show();
     }
-
-    private void updateResolution(final int width,final int height){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mWm.setForcedDisplaySize(Display.DEFAULT_DISPLAY, width, height);
-                    IBinder surfaceFlinger = ServiceManager.getService("SurfaceFlinger");
-                    SystemClock.sleep(RESIZE_SLEEP);
-                    if (surfaceFlinger != null) {
-                        Parcel data = Parcel.obtain();
-                        data.writeInterfaceToken("android.ui.ISurfaceComposer");
-                        surfaceFlinger.transact(SET_RESOLUTION , data, null, 0);
-                        data.recycle();
-                    }
-                } catch(RemoteException e) {
-                }
-            }
-        }).start();
-    }
-
 }

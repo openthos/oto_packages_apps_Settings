@@ -1260,4 +1260,15 @@
         <item>Pink</item>
         <item>Red</item>
     </string-array>
+
+    <string-array name="resolution_entries">
+        <item>Laptop 1366x768/1280x720 Screen</item>
+        <item>Laptop 1920x1080 Screen</item>
+        <item>Laptop 2560x1440 or above Screen</item>
+        <item>Desktop 1920x1080 Display</item>
+        <item>Desktop 2560x1440 Display</item>
+        <item>Desktop 4K(3840x2160) Display</item>
+        <item>FHDTV or Projector</item>
+        <item>UHDTV or Projector</item>
+    </string-array>
 </resources>

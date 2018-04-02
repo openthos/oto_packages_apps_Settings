@@ -6321,15 +6321,16 @@
        Date: 17 Aug 2016
        Resolution settings names and other strings.
     -->
-    <string name="resolution_setting_title">Resolution</string>
+    <string name="resolution_setting_title">Display Scaling</string>
     <string name="resolution_setting_summary">settings resolution</string>
-    <string name="str_resolution_setting_one">1920x1080(16:9)</string>
-    <string name="str_resolution_setting_two">1366x768(16:9)</string>
-    <string name="dpi_low">LDPI(120)</string>
-    <string name="dpi_medium">MDPI(160)</string>
-    <string name="dpi_high">HDPI(240)</string>
-    <string name="tips_dpi">Tips</string>
-    <string name="warning_dialog_message">This will change screen clarity, which generally will cause SurfaceFlinger refresh, but may disable some currently running apps. Adjust?</string>
+    <string name="laptop_1366">Laptop 1366x768/1280x720 Screen</string>
+    <string name="laptop_1920">Laptop 1920x1080 Screen</string>
+    <string name="laptop_2560">Laptop 2560x1440 or above Screen</string>
+    <string name="desktop_1920">Desktop 1920x1080 Display</string>
+    <string name="desktop_2560">Desktop 2560x1440 Display</string>
+    <string name="desktop_3840">Desktop 4K(3840x2160) Display</string>
+    <string name="fhd_tv">FHDTV or Projector</string>
+    <string name="uhd_tv">UHDTV or Projector</string>
     <string name="release_version">Release Version:</string>
     <string name="develop_version">Develop Version:</string>
     <string name="warning_browser_import">Warning: Current browsers are imported list.</string>

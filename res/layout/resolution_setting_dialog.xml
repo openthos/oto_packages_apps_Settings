@@ -20,8 +20,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/info_layout"
-    android:orientation="vertical"
-    android:padding="10sp">
+    android:orientation="vertical">
     <RadioGroup
         android:id="@+id/resolution_setting_group"
         android:layout_width="wrap_content"
@@ -29,16 +28,36 @@
         android:orientation="vertical"
         >
         <RadioButton
-            android:id="@+id/resolution_setting_one"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/str_resolution_setting_one"
-            />
+            android:id="@+id/tv_laptop_1366"
+            android:text="@string/laptop_1366"
+            style="@style/common_display_style" />
         <RadioButton
-            android:id="@+id/resolution_setting_two"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/str_resolution_setting_two"
-            />
+            android:id="@+id/tv_laptop_1920"
+            android:text="@string/laptop_1920"
+            style="@style/common_display_style" />
+        <RadioButton
+            android:id="@+id/tv_laptop_2560"
+            android:text="@string/laptop_2560"
+            style="@style/common_display_style" />
+        <RadioButton
+            android:id="@+id/tv_desktop_1920"
+            android:text="@string/desktop_1920"
+            style="@style/common_display_style" />
+        <RadioButton
+            android:id="@+id/tv_desktop_2560"
+            android:text="@string/desktop_2560"
+            style="@style/common_display_style" />
+        <RadioButton
+            android:id="@+id/tv_desktop_3840"
+            android:text="@string/desktop_3840"
+            style="@style/common_display_style" />
+        <RadioButton
+            android:id="@+id/tv_fhd"
+            android:text="@string/fhd_tv"
+            style="@style/common_display_style" />
+        <RadioButton
+            android:id="@+id/tv_uhd"
+            android:text="@string/uhd_tv"
+            style="@style/common_display_style" />
     </RadioGroup>
 </LinearLayout>

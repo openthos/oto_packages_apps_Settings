@@ -2740,8 +2740,16 @@
        Resolution settings names and other strings.
     -->
 
-    <string name="resolution_setting_title">屏幕分辨率</string>
+    <string name="resolution_setting_title">显示缩放</string>
     <string name="resolution_setting_summary">设置屏幕分辨率</string>
+    <string name="laptop_1366">笔记本 1366x768/ 1280x720 屏幕</string>
+    <string name="laptop_1920">笔记本 1920x1080 屏幕</string>
+    <string name="laptop_2560">笔记本 2560x1440或以上屏幕</string>
+    <string name="desktop_1920">台式机 1920x1080 显示器</string>
+    <string name="desktop_2560">台式机 2560x1440 显示器</string>
+    <string name="desktop_3840">台式机 4K（3840x2160）显示器</string>
+    <string name="fhd_tv">全高清电视或投影机</string>
+    <string name="uhd_tv">4K超高清电视或投影机</string>
    <!-- Hot Key -->
     <string name="hot_key_title">热键</string>
     <string name="hot_copy">复制</string>
@@ -2766,11 +2774,6 @@
     <string name="hot_ctrl_selection">Up Down Left Right</string>
     <string name="release_version">正式版:</string>
     <string name="develop_version">开发版:</string>
-    <string name="tips_dpi">提示</string>
-    <string name="dpi_low">低分辨率(120)</string>
-    <string name="dpi_medium">中分辨率(160)</string>
-    <string name="dpi_high">高分辨率(240)</string>
-    <string name="warning_dialog_message">手动改变分辨率会改变屏幕清晰度，会引起SurfaceFlinger刷新，部分应用可能会关闭。是否更改？</string>
     <string name="warning_browser_import">提示：当前浏览器为待恢复列表。</string>
     <string name="warning_browser_export">提示：当前浏览器为待备份列表。</string>
 </resources>
