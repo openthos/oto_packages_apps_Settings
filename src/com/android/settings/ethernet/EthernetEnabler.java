@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * developed by hclydao@gmail.com
- */
 package com.android.settings.ethernet;
 
 import android.content.ContentResolver;
@@ -45,8 +41,6 @@ import android.widget.Switch;
 import android.util.Slog;
 import android.net.EthernetManager;
 import android.provider.Settings;
-import android.net.NetworkInfo;
-import android.net.ConnectivityManager;
 
 public class EthernetEnabler implements SwitchBar.OnSwitchChangeListener {
     private final String TAG = "EthernetEnabler";
@@ -55,17 +49,14 @@ public class EthernetEnabler implements SwitchBar.OnSwitchChangeListener {
     private boolean mListeningToOnSwitchChange = false;
     private EthernetDialog mEthDialog = null;
     private EthernetManager mEthManager;
-    private View view;
     public void setConfigDialog(EthernetDialog Dialog) {
         mEthDialog = Dialog;
     }
 
-    public EthernetEnabler(Context context, SwitchBar switchBar,EthernetManager ethernetManager,
-                           View view) {
+    public EthernetEnabler(Context context, SwitchBar switchBar, EthernetManager ethernetManager) {
         mContext = context;
         mSwitchBar = switchBar;
         mEthManager = ethernetManager;
-        this.view = view;
         setupSwitchBar();
     }
 
@@ -90,26 +81,14 @@ public class EthernetEnabler implements SwitchBar.OnSwitchChangeListener {
             mListeningToOnSwitchChange = true;
         }
         mSwitchBar.show();
-        //set the switchbar default turn on
-        mSwitchBar.setChecked(true);
-        //int enable = Settings.Global.getInt(mContext.getContentResolver(),
-        //                             Settings.Global.ETHERNET_ON,0);//add by hclydao
-        ConnectivityManager conManager = (ConnectivityManager)mContext.
-                                     getSystemService(Context.CONNECTIVITY_SERVICE);
-        mSwitchBar.setChecked(isEthernet(conManager));
-        /*
-        if(enable == EthernetManager.ETH_STATE_ENABLED) {
+        int enable = Settings.Global.getInt(
+               mContext.getContentResolver(), Settings.Global.ETHERNET_ON,
+               EthernetManager.ETH_STATE_ENABLED);
+        if (enable == EthernetManager.ETH_STATE_ENABLED) {
             mSwitchBar.setChecked(true);
         } else {
             mSwitchBar.setChecked(false);
         }
-        */
-    }
-
-    public static boolean isEthernet(ConnectivityManager cm) {
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        return networkInfo != null
-                && networkInfo.getRealType() == ConnectivityManager.TYPE_ETHERNET;
     }
 
     public void teardownSwitchBar() {
@@ -122,19 +101,14 @@ public class EthernetEnabler implements SwitchBar.OnSwitchChangeListener {
 
     @Override
     public void onSwitchChanged(Switch switchView, boolean isChecked) {
-        if(isChecked) {
-            //if(mEthDialog != null)
-                //mEthDialog.show();
-            view.setVisibility(View.VISIBLE);
-        } else if(mEthManager != null) {
-            view.setVisibility(View.INVISIBLE);
+        if (mEthManager != null) {
             mEthManager.stop();
         }
 
         Settings.Global.putInt(mContext.getContentResolver(), Settings.Global.ETHERNET_ON,
-            isChecked ? EthernetManager.ETH_STATE_ENABLED : EthernetManager.ETH_STATE_DISABLED);
+                isChecked ? EthernetManager.ETH_STATE_ENABLED : EthernetManager.ETH_STATE_DISABLED);
 
-        if(isChecked && (mEthManager != null)) {
+        if (isChecked && (mEthManager != null)) {
             mEthManager.start();
         }
     }

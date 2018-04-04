@@ -49,8 +49,7 @@ import android.net.EthernetManager;
 import android.provider.Settings;
 
 public class EthernetDialog extends AlertDialog implements DialogInterface.OnClickListener,
-        DialogInterface.OnShowListener,
-        DialogInterface.OnDismissListener{
+        DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
     private final String TAG = "EthConfDialog";
     private static final boolean localLOGV = false;
 
@@ -98,12 +97,13 @@ public class EthernetDialog extends AlertDialog implements DialogInterface.OnCli
     }
 
     public void UpdateInfo() {
-        int enable = Settings.Global.getInt(mContext.getContentResolver(),Settings.Global.ETHERNET_ON,0);//add by hclydao
-        if(enable == EthernetManager.ETH_STATE_ENABLED) {
-        //if(mEthManager.isAvailable()) {
+        int enable = Settings.Global.getInt(
+                mContext.getContentResolver(), Settings.Global.ETHERNET_ON,
+                EthernetManager.ETH_STATE_DISABLED);
+        if (enable == EthernetManager.ETH_STATE_ENABLED) {
             IpConfiguration ipinfo = mEthManager.getConfiguration();
-            if(ipinfo != null) {
-                if(ipinfo.ipAssignment == IpAssignment.DHCP) {
+            if (ipinfo != null) {
+                if (ipinfo.ipAssignment == IpAssignment.DHCP) {
                     mConTypeDhcp.setChecked(true);
                     mIpaddr.setEnabled(false);
                     mDns.setEnabled(false);
@@ -114,9 +114,9 @@ public class EthernetDialog extends AlertDialog implements DialogInterface.OnCli
                     mGw.setText("");
                     mprefix.setText("");
                     mIpaddr.setText("");
-                    if(mCM != null) {
-                        LinkProperties lp  = mCM.getLinkProperties(ConnectivityManager.TYPE_ETHERNET);
-                        if(lp != null) {
+                    if (mCM != null) {
+                        LinkProperties lp = mCM.getLinkProperties(ConnectivityManager.TYPE_ETHERNET);
+                        if (lp != null) {
                             mIpaddr.setText(formatIpAddresses(lp));
                         }
                     }
@@ -131,7 +131,8 @@ public class EthernetDialog extends AlertDialog implements DialogInterface.OnCli
                     if (staticConfig != null) {
                         if (staticConfig.ipAddress != null) {
                             mIpaddr.setText(staticConfig.ipAddress.getAddress().getHostAddress());
-                            mprefix.setText(Integer.toString(staticConfig.ipAddress.getNetworkPrefixLength()));
+                            mprefix.setText(Integer.toString(
+                                        staticConfig.ipAddress.getNetworkPrefixLength()));
                         }
                         if (staticConfig.gateway != null) {
                             mGw.setText(staticConfig.gateway.getHostAddress());
@@ -153,14 +154,14 @@ public class EthernetDialog extends AlertDialog implements DialogInterface.OnCli
         mConTypeManual = (RadioButton) mView.findViewById(R.id.manual_radio);
         mIpaddr = (EditText)mView.findViewById(R.id.ipaddr_edit);
         mprefix = (EditText)mView.findViewById(R.id.prefix_edit);
-       // mMask = (EditText)mView.findViewById(R.id.netmask_edit);
+        // mMask = (EditText)mView.findViewById(R.id.netmask_edit);
         mDns = (EditText)mView.findViewById(R.id.eth_dns_edit);
         mGw = (EditText)mView.findViewById(R.id.eth_gw_edit);
 
         mConTypeDhcp.setChecked(true);
         mConTypeManual.setChecked(false);
         mIpaddr.setEnabled(false);
-       // mMask.setEnabled(false);
+        // mMask.setEnabled(false);
         mprefix.setEnabled(false);
         mDns.setEnabled(false);
         mGw.setEnabled(false);
@@ -286,27 +287,25 @@ public class EthernetDialog extends AlertDialog implements DialogInterface.OnCli
                                 null, null));
         } else {
             Slog.i(TAG,"mode static ip");
-            if(isIpAddress(mIpaddr.getText().toString())
-                && isIpAddress(mGw.getText().toString())
-                && isIpAddress(mDns.getText().toString())) {
-
-                if(TextUtils.isEmpty(mIpaddr.getText().toString())
-                    || TextUtils.isEmpty(mprefix.getText().toString())
-                    || TextUtils.isEmpty(mGw.getText().toString())
-                    || TextUtils.isEmpty(mDns.getText().toString())) {
+            if (isIpAddress(mIpaddr.getText().toString())
+                        && isIpAddress(mGw.getText().toString())
+                        && isIpAddress(mDns.getText().toString())) {
+                if (TextUtils.isEmpty(mIpaddr.getText().toString())
+                            || TextUtils.isEmpty(mprefix.getText().toString())
+                            || TextUtils.isEmpty(mGw.getText().toString())
+                            || TextUtils.isEmpty(mDns.getText().toString())) {
                     Toast.makeText(mContext, R.string.eth_settings_empty, Toast.LENGTH_LONG).show();
-                    return ;
+                    return;
                 }
 
                 mStaticIpConfiguration = new StaticIpConfiguration();
                 int result = validateIpConfigFields(mStaticIpConfiguration);
                 if (result != 0) {
-                    Toast.makeText(mContext, R.string.eth_settings_prefixlength_error
-                                                          , Toast.LENGTH_LONG).show();
-                    return ;
+                    Toast.makeText(mContext, " error id is " + result, Toast.LENGTH_LONG).show();
+                    return;
                 } else {
-                    mEthManager.setConfiguration( new IpConfiguration(mIpAssignment, ProxySettings.NONE,
-                                        mStaticIpConfiguration, null));
+                    mEthManager.setConfiguration(new IpConfiguration(
+                            mIpAssignment, ProxySettings.NONE, mStaticIpConfiguration, null));
                 }
             } else {
                 Toast.makeText(mContext, R.string.eth_settings_error, Toast.LENGTH_LONG).show();
@@ -352,5 +351,4 @@ public class EthernetDialog extends AlertDialog implements DialogInterface.OnCli
             default:
         }
     }
-
 }
