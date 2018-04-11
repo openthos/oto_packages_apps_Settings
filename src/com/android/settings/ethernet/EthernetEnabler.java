@@ -101,8 +101,8 @@ public class EthernetEnabler implements SwitchBar.OnSwitchChangeListener {
 
     @Override
     public void onSwitchChanged(Switch switchView, boolean isChecked) {
-        if (mEthManager != null) {
-            mEthManager.stop();
+        if (mEthManager != null && !isChecked) {
+            mEthManager.setEthernetState(false);
         }
 
         Settings.Global.putInt(mContext.getContentResolver(), Settings.Global.ETHERNET_ON,
@@ -110,6 +110,7 @@ public class EthernetEnabler implements SwitchBar.OnSwitchChangeListener {
 
         if (isChecked && (mEthManager != null)) {
             mEthManager.start();
+            mEthManager.setEthernetState(true);
         }
     }
 }
