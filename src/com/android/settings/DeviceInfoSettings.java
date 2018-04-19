@@ -132,8 +132,8 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements
     private static final String KEY_CPU_INFO = "cpu_info";
     private static final String KEY_MEMORY_INFO = "memory_info";
     private static final String KEY_HARD_DISK_INFO = "hard_disk_info";
-    private static final String OTO_OTA_PACKAGE_NAME = "com.openthos.ota";
-    private static final String OTO_OTA_CLASS_NAME = "com.openthos.ota.MainActivity";
+    private static final String OTO_OTA_PACKAGE_NAME = "org.openthos.ota";
+    private static final String OTO_OTA_CLASS_NAME = "org.openthos.ota.MainActivity";
     static final int TAPS_TO_BE_A_DEVELOPER = 7;
     static final int SUMMARY_LIMIT_NUMBER = 100;
     long[] mHits = new long[3];

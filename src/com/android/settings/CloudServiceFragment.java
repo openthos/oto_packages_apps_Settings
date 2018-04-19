@@ -50,7 +50,7 @@ import android.content.pm.PackageInfo;
 import android.content.Intent;
 import java.util.List;
 import java.util.ArrayList;
-import com.openthos.seafile.ISeafileService;
+import org.openthos.seafile.ISeafileService;
 
 public class CloudServiceFragment extends Fragment {
     private Switch mSwitchWallpaper;
@@ -96,8 +96,8 @@ public class CloudServiceFragment extends Fragment {
         View mRootView = inflater.inflate(R.layout.fragment_cloud_service, container, false);
         mSeafileServiceConnection = new SeafileServiceConnection();
         Intent intent = new Intent();
-        intent.setComponent(new ComponentName("com.openthos.seafile",
-                    "com.openthos.seafile.SeafileService"));
+        intent.setComponent(new ComponentName("org.openthos.seafile",
+                    "org.openthos.seafile.SeafileService"));
         getActivity().bindService(intent, mSeafileServiceConnection, Context.BIND_AUTO_CREATE);
         initView(mRootView);
         initData();

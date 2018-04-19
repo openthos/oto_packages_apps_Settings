@@ -45,7 +45,7 @@ import com.android.settings.SettingsActivity;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.widget.SwitchBar;
 import com.android.settings.widget.SwitchBar.OnSwitchChangeListener;
-import com.openthos.seafile.ISeafileService;
+import org.openthos.seafile.ISeafileService;
 import android.content.SharedPreferences;
 
 import android.database.Cursor;
@@ -140,8 +140,8 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
         Log.i("fragmentWhich","--------------openthosID");
         mSeafileServiceConnection = new SeafileServiceConnection();
         Intent intent = new Intent();
-        intent.setComponent(new ComponentName("com.openthos.seafile",
-                    "com.openthos.seafile.SeafileService"));
+        intent.setComponent(new ComponentName("org.openthos.seafile",
+                    "org.openthos.seafile.SeafileService"));
         getActivity().bindService(intent, mSeafileServiceConnection, Context.BIND_AUTO_CREATE);
 
         addPreferencesFromResource(R.xml.openthos_id_prefs);
