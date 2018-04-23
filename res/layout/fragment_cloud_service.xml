@@ -64,33 +64,6 @@
             android:background="#E3E3E3" />
 
         <LinearLayout
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/sync_email" />
-
-            <Switch
-                android:id="@+id/switch_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textOff="off"
-                android:textOn="on" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="#E3E3E3" />
-
-        <LinearLayout
             android:id="@+id/appdata_cloud"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

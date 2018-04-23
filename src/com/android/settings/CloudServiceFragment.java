@@ -55,7 +55,6 @@ import org.openthos.seafile.ISeafileService;
 public class CloudServiceFragment extends Fragment {
     private Switch mSwitchWallpaper;
     private Switch mSwitchWifi;
-    private Switch mSwitchEmail;
     private Switch mSwitchAppdata;
     private Switch mSwitchAppstore;
     private Switch mSwitchBrowser;
@@ -89,6 +88,7 @@ public class CloudServiceFragment extends Fragment {
     private static final String ROOT_COMMOND = "chmod -R 777 ";
     private static final int BUF_SIZE = 1024;
     private boolean DEBUG = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -110,7 +110,6 @@ public class CloudServiceFragment extends Fragment {
     private void initView(View v) {
         mSwitchWallpaper = (Switch) v.findViewById(R.id.switch_wallpaper);
         mSwitchWifi = (Switch) v.findViewById(R.id.switch_wifi);
-        mSwitchEmail = (Switch) v.findViewById(R.id.switch_email);
         mSwitchAppdata = (Switch) v.findViewById(R.id.switch_appdata);
         mSwitchAppstore = (Switch) v.findViewById(R.id.switch_appstore);
         mSwitchBrowser = (Switch) v.findViewById(R.id.switch_browser);
@@ -197,7 +196,6 @@ public class CloudServiceFragment extends Fragment {
         try {
             mISeafileService.restoreSettings(mSwitchWallpaper.isChecked(),
                     mSwitchWifi.isChecked(),
-                    mSwitchEmail.isChecked(),
                     mSwitchAppdata.isChecked(),
                     mSwitchStartupmenu.isChecked(),
                     mSwitchBrowser.isChecked(),
@@ -212,7 +210,6 @@ public class CloudServiceFragment extends Fragment {
         try {
             mISeafileService.saveSettings(mSwitchWallpaper.isChecked(),
                     mSwitchWifi.isChecked(),
-                    mSwitchEmail.isChecked(),
                     mSwitchAppdata.isChecked(),
                     mSwitchStartupmenu.isChecked(),
                     mSwitchBrowser.isChecked(),
