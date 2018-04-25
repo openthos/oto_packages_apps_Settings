@@ -6223,6 +6223,8 @@
     <string name="cloud_file">File</string>
     <string name="cloud_browser_import">Choose Import Browsers</string>
     <string name="cloud_browser_export">Choose Export Browsers</string>
+    <string name="cloud_appdata_import">Choose Import Apps</string>
+    <string name="cloud_appdata_export">Choose Export Apps</string>
     <string name="cloudfolder_path">data/sea/data/sdcard/cloudFolder/</string>
     <string name="import_reboot_info_warn">If you want all import files full available,you need reboot the device.</string>
     <string name="export_confirm_dialog_info">Are you sure to sync current device related files to cloud?</string>
@@ -6335,4 +6337,7 @@
     <string name="develop_version">Develop Version:</string>
     <string name="warning_browser_import">Warning: Current browsers are imported list.</string>
     <string name="warning_browser_export">Warning: Current browsers are exported list.</string>
+
+    <item type="id" name="tag_list"></item>
+    <item type="id" name="tag_package"></item>
 </resources>

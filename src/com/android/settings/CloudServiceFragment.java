@@ -65,20 +65,24 @@ public class CloudServiceFragment extends Fragment {
 
     private TextView mBrowserImport;
     private TextView mBrowserExport;
-    private ListView mListView;
+    private TextView mAppdataImport;
+    private TextView mAppdataExport;
+    private ListView mListViewBrowser;
+    private ListView mListViewAppdata;
 
-    private List<ResolveInfo> mExportBrowsers;
-    private List<ResolveInfo> mImportBrowsers;
+    private List<ResolveInfo> mExportBrowsers = new ArrayList();
+    private List<ResolveInfo> mImportBrowsers = new ArrayList();
+    private List<ResolveInfo> mExportAppdata = new ArrayList();
+    private List<ResolveInfo> mImportAppdata = new ArrayList();
+    private List<String> mSyncBrowsers = new ArrayList();
+    private List<String> mSyncAppdata = new ArrayList();
+    private ResolveAdapter mBrowsersAdapter;
+    private ResolveAdapter mAppdataAdapter;
     private PackageManager mPackageManager;
-    private ResolveAdapter mAdapter;
-    private List<String> mSyncBrowsers;
-    private boolean mIsImport = false;
+    private int mTag = -1;
 
     private ClickListener mClickListener;
     private CheckedChangeListener mCheckedChangeListener;
-
-    private static final String SEAFILE_PATH = "/data/sea/data/";
-    private static final String SEAFILE_PATH_BROWSER = "/UserConfig/browser/";
 
     private File mCloudFolder;
     private ISeafileService mISeafileService;
@@ -116,7 +120,12 @@ public class CloudServiceFragment extends Fragment {
         mSwitchStartupmenu = (Switch) v.findViewById(R.id.switch_startmenu);
         mBrowserImport = (TextView) v.findViewById(R.id.tv_browser_import);
         mBrowserExport = (TextView) v.findViewById(R.id.tv_browser_export);
-        mListView = (ListView) v.findViewById(R.id.lv_browser);
+        mListViewBrowser = (ListView) v.findViewById(R.id.lv_browser);
+        mAppdataImport = (TextView) v.findViewById(R.id.tv_appdata_import);
+        mAppdataExport = (TextView) v.findViewById(R.id.tv_appdata_export);
+        mListViewAppdata = (ListView) v.findViewById(R.id.lv_appdata);
+        mButtonImport = (Button) v.findViewById(R.id.cloud_import);
+        mButtonExport = (Button) v.findViewById(R.id.cloud_export);
 
         if (mSwitchBrowser.isChecked()) {
             mBrowserImport.setEnabled(true);
@@ -125,8 +134,14 @@ public class CloudServiceFragment extends Fragment {
             mBrowserImport.setEnabled(false);
             mBrowserExport.setEnabled(false);
         }
-        mButtonImport = (Button) v.findViewById(R.id.cloud_import);
-        mButtonExport = (Button) v.findViewById(R.id.cloud_export);
+
+        if (mSwitchAppdata.isChecked()) {
+            mAppdataImport.setEnabled(true);
+            mAppdataExport.setEnabled(true);
+        } else {
+            mAppdataImport.setEnabled(false);
+            mAppdataExport.setEnabled(false);
+        }
 
         mClickListener = new ClickListener();
         mCheckedChangeListener = new CheckedChangeListener();
@@ -135,38 +150,30 @@ public class CloudServiceFragment extends Fragment {
         mBrowserImport.setOnClickListener(mClickListener);
         mBrowserExport.setOnClickListener(mClickListener);
         mSwitchBrowser.setOnCheckedChangeListener(mCheckedChangeListener);
-
+        mAppdataImport.setOnClickListener(mClickListener);
+        mAppdataExport.setOnClickListener(mClickListener);
+        mSwitchAppdata.setOnCheckedChangeListener(mCheckedChangeListener);
     }
 
     private void initData() {
-        mSyncBrowsers = new ArrayList();
-        mImportBrowsers = new ArrayList();
-        mExportBrowsers = new ArrayList();
-        mAdapter = new ResolveAdapter();
-        mListView.setAdapter(mAdapter);
         mPackageManager = getActivity().getPackageManager();
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-        Uri uri = Uri.parse("https://");
-        intent.setData(uri);
-        List<ResolveInfo> list = mPackageManager.queryIntentActivities(
-                intent, PackageManager.GET_INTENT_FILTERS);
-        mExportBrowsers = list;
-
-        setListViewHeight();
+        mBrowsersAdapter = new ResolveAdapter();
+        mListViewBrowser.setAdapter(mBrowsersAdapter);
+        mAppdataAdapter = new ResolveAdapter();
+        mListViewAppdata.setAdapter(mAppdataAdapter);
     }
 
-    private void setListViewHeight() {
-        ViewGroup.LayoutParams params = mListView.getLayoutParams();
-        if (mAdapter.getCount() > 0) {
-            View item = mAdapter.getView(0, null, mListView);
+    private void setListViewHeight(ListView listView, ResolveAdapter adapter) {
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        if (adapter.getCount() > 0) {
+            View item = adapter.getView(0, null, listView);
             item.measure(0, 0);
-            params.height = item.getMeasuredHeight() * mAdapter.getCount() +
-                    mListView.getDividerHeight() * (mAdapter.getCount() - 1);
-            mListView.setLayoutParams(params);
+            params.height = item.getMeasuredHeight() * adapter.getCount() +
+                    listView.getDividerHeight() * (adapter.getCount() - 1);
+            listView.setLayoutParams(params);
         } else {
             params.height = 0;
-            mListView.setLayoutParams(params);
+            listView.setLayoutParams(params);
         }
     }
 
@@ -197,6 +204,7 @@ public class CloudServiceFragment extends Fragment {
             mISeafileService.restoreSettings(mSwitchWallpaper.isChecked(),
                     mSwitchWifi.isChecked(),
                     mSwitchAppdata.isChecked(),
+                    mSyncAppdata,
                     mSwitchStartupmenu.isChecked(),
                     mSwitchBrowser.isChecked(),
                     mSyncBrowsers,
@@ -211,6 +219,7 @@ public class CloudServiceFragment extends Fragment {
             mISeafileService.saveSettings(mSwitchWallpaper.isChecked(),
                     mSwitchWifi.isChecked(),
                     mSwitchAppdata.isChecked(),
+                    mSyncAppdata,
                     mSwitchStartupmenu.isChecked(),
                     mSwitchBrowser.isChecked(),
                     mSyncBrowsers,
@@ -230,24 +239,22 @@ public class CloudServiceFragment extends Fragment {
     }
 
     private class ResolveAdapter extends BaseAdapter {
-        private List<ResolveInfo> mBrowsersList = new ArrayList();
+        private List<ResolveInfo> allList = new ArrayList();
+        private List<String> syncList = new ArrayList();
+
+        private void setList(List<ResolveInfo> allList, List<String> syncList) {
+            this.allList = allList;
+            this.syncList = syncList;
+        }
 
         @Override
         public int getCount() {
-            if (mIsImport) {
-                return mImportBrowsers.size();
-            } else {
-                return mExportBrowsers.size();
-            }
+            return allList.size();
         }
 
         @Override
         public Object getItem(int i) {
-            if (mIsImport) {
-                return mImportBrowsers.get(i);
-            } else {
-                return mExportBrowsers.get(i);
-            }
+            return allList.get(i);
         }
 
         @Override
@@ -265,22 +272,17 @@ public class CloudServiceFragment extends Fragment {
                 holder = new ViewHolder(convertView);
                 convertView.setTag(holder);
             }
-            if (mIsImport) {
-                mBrowsersList = mImportBrowsers;
-            } else {
-                mBrowsersList = mExportBrowsers;
-            }
             holder = (ViewHolder) convertView.getTag();
-            holder.text.setText(mBrowsersList.get(i).loadLabel(mPackageManager));
-            holder.image.setImageDrawable(mBrowsersList.get(i).loadIcon(mPackageManager));
-            holder.check.setTag(mBrowsersList.get(i).activityInfo.packageName);
-            holder.check.setOnCheckedChangeListener(mCheckedChangeListener);
+            holder.text.setText(allList.get(i).loadLabel(mPackageManager));
+            holder.image.setImageDrawable(allList.get(i).loadIcon(mPackageManager));
+            holder.check.setTag(R.id.tag_list, syncList);
+            holder.check.setTag(R.id.tag_package, allList.get(i).activityInfo.packageName);
             try {
-                if ((mPackageManager.getPackageInfo(mBrowsersList.get(i).activityInfo.packageName, 0).
+                if ((mPackageManager.getPackageInfo(allList.get(i).activityInfo.packageName, 0).
                         applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0) {
                     holder.check.setChecked(true);
                     holder.check.setClickable(false);
-                    mSyncBrowsers.add(mBrowsersList.get(i).activityInfo.packageName);
+                    syncList.add(allList.get(i).activityInfo.packageName);
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
@@ -305,60 +307,71 @@ public class CloudServiceFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.cloud_import:
-                    if (mSwitchBrowser.isChecked() && !mIsImport) {
-                        Toast.makeText(getActivity(),
-                                R.string.warning_browser_export, Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    importAllFiles();
-                    break;
-                case R.id.cloud_export:
-                    if (mSwitchBrowser.isChecked() && mIsImport) {
-                        Toast.makeText(getActivity(),
-                                R.string.warning_browser_import, Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    showExportConfirmDialog();
-                    break;
-                case R.id.tv_browser_import:
-                    try {
-                        mImportBrowsers.clear();
-                        File file = new File(SEAFILE_PATH +
-                                mISeafileService.getUserName() + SEAFILE_PATH_BROWSER);
-                        if (file.exists()) {
-                            File[] syncBrowsers = file.listFiles();
-                            for (int i = 0; i < mExportBrowsers.size(); i++) {
-                                for (int j = 0; j < syncBrowsers.length; j++) {
-                                    if (mExportBrowsers.get(i).activityInfo.packageName.equals(
-                                            syncBrowsers[j].getName().replace(".tar.gz", ""))) {
-                                        mImportBrowsers.add(mExportBrowsers.get(i));
-                                    }
-                                }
-                            }
+            try {
+                switch (view.getId()) {
+                    case R.id.cloud_import:
+                        if ((mSwitchBrowser.isChecked()
+                                && mTag == mISeafileService.getTagBrowserExport())
+                            || (mSwitchAppdata.isChecked()
+                                && mTag == mISeafileService.getTagBrowserExport())) {
+                            Toast.makeText(getActivity(),
+                                    R.string.warning_browser_export, Toast.LENGTH_LONG).show();
+                            return;
                         }
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
-                    mIsImport = true;
-                    mSyncBrowsers.clear();
-                    mListView.setVisibility(View.VISIBLE);
-                    mAdapter.notifyDataSetChanged();
-                    setListViewHeight();
-                    mBrowserImport.setBackgroundResource(R.color.text_bg_color);
-                    mBrowserExport.setBackgroundResource(R.color.circle_avatar_frame_pressed_color);
-                    break;
-                case R.id.tv_browser_export:
-                    mIsImport = false;
-                    mSyncBrowsers.clear();
-                    mListView.setVisibility(View.VISIBLE);
-                    mAdapter.notifyDataSetChanged();
-                    setListViewHeight();
-                    mBrowserExport.setBackgroundResource(R.color.text_bg_color);
-                    mBrowserImport.setBackgroundResource(R.color.circle_avatar_frame_pressed_color);
-                    break;
+                        importAllFiles();
+                        break;
+                    case R.id.cloud_export:
+                        if ((mSwitchBrowser.isChecked()
+                                && mTag == mISeafileService.getTagBrowserImport())
+                            || (mSwitchAppdata.isChecked()
+                                && mTag == mISeafileService.getTagAppdataImport())) {
+                            Toast.makeText(getActivity(),
+                                    R.string.warning_browser_import, Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        showExportConfirmDialog();
+                        break;
+                    case R.id.tv_browser_import:
+                        operateClick(mImportBrowsers, mISeafileService.getTagBrowserImport(),
+                                    mBrowsersAdapter, mSyncBrowsers, mListViewBrowser,
+                                    mBrowserImport, mBrowserExport);
+                        break;
+                    case R.id.tv_browser_export:
+                        operateClick(mExportBrowsers, mISeafileService.getTagBrowserExport(),
+                                    mBrowsersAdapter, mSyncBrowsers, mListViewBrowser,
+                                    mBrowserExport, mBrowserImport);
+                        break;
+                    case R.id.tv_appdata_import:
+                        operateClick(mImportAppdata, mISeafileService.getTagAppdataImport(),
+                                    mAppdataAdapter, mSyncAppdata, mListViewAppdata,
+                                    mAppdataImport, mAppdataExport);
+                        break;
+                    case R.id.tv_appdata_export:
+                        operateClick(mExportAppdata, mISeafileService.getTagAppdataExport(),
+                                    mAppdataAdapter, mSyncAppdata, mListViewAppdata,
+                                    mAppdataExport, mAppdataImport);
+                        break;
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
+        }
+    }
+
+    private void operateClick(List<ResolveInfo> appList, int tag, ResolveAdapter adapter,
+            List<String> syncList, ListView listView, TextView light, TextView dark) {
+        try {
+            appList = mISeafileService.getAppsInfo(tag);
+            adapter.setList(appList, syncList);
+            adapter.notifyDataSetChanged();
+            setListViewHeight(listView, adapter);
+            listView.setVisibility(View.VISIBLE);
+            syncList.clear();
+            mTag = tag;
+            light.setBackgroundResource(R.color.text_bg_color);
+            dark.setBackgroundResource(R.color.circle_avatar_frame_pressed_color);
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 
@@ -367,21 +380,35 @@ public class CloudServiceFragment extends Fragment {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             switch (buttonView.getId()) {
+                case R.id.switch_appdata:
+                    if (isChecked) {
+                        mAppdataExport.performClick();
+                        mAppdataImport.setEnabled(true);
+                        mAppdataExport.setEnabled(true);
+                    } else {
+                        mAppdataImport.setEnabled(false);
+                        mAppdataExport.setEnabled(false);
+                        mListViewAppdata.setVisibility(View.GONE);
+                    }
+                    break;
                 case R.id.switch_browser:
                     if (isChecked) {
+                        mBrowserExport.performClick();
                         mBrowserImport.setEnabled(true);
                         mBrowserExport.setEnabled(true);
                     } else {
                         mBrowserImport.setEnabled(false);
                         mBrowserExport.setEnabled(false);
-                        mListView.setVisibility(View.GONE);
+                        mListViewBrowser.setVisibility(View.GONE);
                     }
                     break;
                 case R.id.cb_list_item:
                     if (isChecked) {
-                        mSyncBrowsers.add((String) buttonView.getTag());
+                        ((List<String>) buttonView.getTag(R.id.tag_list)).
+                                add((String) buttonView.getTag(R.id.tag_package));
                     } else {
-                        mSyncBrowsers.remove((String) buttonView.getTag());
+                        ((List<String>) buttonView.getTag(R.id.tag_list)).
+                                remove((String) buttonView.getTag(R.id.tag_package));
                     }
                     break;
             }

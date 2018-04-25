@@ -73,8 +73,26 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
+                android:layout_weight="5"
                 android:text="@string/cloud_appdata" />
+
+            <TextView
+                android:id="@+id/tv_appdata_import"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/cloud_appdata_import" />
+
+            <TextView
+                android:id="@+id/tv_appdata_export"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/cloud_appdata_export" />
 
             <Switch
                 android:id="@+id/switch_appdata"
@@ -83,6 +101,22 @@
                 android:layout_gravity="center_vertical"
                 android:textOff="off"
                 android:textOn="on" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cloud_appdata_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ListView
+                android:id="@+id/lv_appdata"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"/>
         </LinearLayout>
 
         <LinearLayout
