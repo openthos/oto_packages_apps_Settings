@@ -187,12 +187,6 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                                         getText(R.string.toast_openthos_password_wrong),
                                         Toast.LENGTH_SHORT).show();
                             } else {
-                                try {
-                                    mISeafileService.setBinder(mSeafileBinder);
-                                    mISeafileService.regiestAccount(openthosID, password);
-                                } catch (RemoteException e) {
-                                    e.printStackTrace();
-                                }
                                 Uri uriInsert =
                                     Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
                                 ContentValues values = new ContentValues();
@@ -200,6 +194,12 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                                 values.put("password", password);
                                 mResolver.insert(uriInsert, values);
                                 updateID(openthosID);
+                                try {
+                                    mISeafileService.setBinder(mSeafileBinder);
+                                    mISeafileService.regiestAccount(openthosID, password);
+                                } catch (RemoteException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         } else if (action.equals("regist")) {
                             //register
