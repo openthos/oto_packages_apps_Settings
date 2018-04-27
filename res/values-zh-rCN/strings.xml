@@ -2778,4 +2778,5 @@
     <string name="develop_version">开发版:</string>
     <string name="warning_browser_import">提示：当前浏览器为待恢复列表。</string>
     <string name="warning_browser_export">提示：当前浏览器为待备份列表。</string>
+    <string name="warn_restore_startupmenu">警告！恢复这项将关闭所有应用并进行软重启，请事先保存工作再进行恢复！</string>
 </resources>

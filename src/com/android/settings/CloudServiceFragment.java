@@ -153,6 +153,7 @@ public class CloudServiceFragment extends Fragment {
         mAppdataImport.setOnClickListener(mClickListener);
         mAppdataExport.setOnClickListener(mClickListener);
         mSwitchAppdata.setOnCheckedChangeListener(mCheckedChangeListener);
+        mSwitchStartupmenu.setOnCheckedChangeListener(mCheckedChangeListener);
     }
 
     private void initData() {
@@ -380,6 +381,14 @@ public class CloudServiceFragment extends Fragment {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             switch (buttonView.getId()) {
+                case R.id.switch_startmenu:
+                    if (isChecked) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage(getString(R.string.warn_restore_startupmenu));
+                        builder.setPositiveButton(R.string.okay, null);
+                        builder.create().show();
+                    }
+                    break;
                 case R.id.switch_appdata:
                     if (isChecked) {
                         mAppdataExport.performClick();
