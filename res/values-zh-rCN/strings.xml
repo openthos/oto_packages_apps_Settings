@@ -2553,6 +2553,8 @@
     <string name="account_yes">是</string>
     <string name="account_no">否</string>
     <string name="account_user_id">OpenthosID</string>
+    <string name="account_email">邮箱</string>
+    <string name="account_user_password">密码</string>
     <string name="account_password">  密 码  </string>
     <string name="account_dialog_cancel">取消</string>
     <string name="account_dialog_ok">确定</string>
@@ -2564,6 +2566,10 @@
     <string name="toast_register_fail">注册失败（邮箱格式错误或邮箱被占用）</string>
     <string name="toast_register_successful">注册成功,已发送邮件到你邮箱</string>
     <string name="toast_register_sendmail">已发送邮件到你邮箱,请激活并绑定账号</string>
+    <string name="toast_registe_successful">注册成功!</string>
+    <string name="toast_registe_failed">注册失败!</string>
+    <string name="toast_bind_successful">绑定成功!</string>
+    <string name="toast_bind_failed">绑定失败!</string>
     <!--
       Date: 29 june 2016
       Ethernet settings names and other strings.

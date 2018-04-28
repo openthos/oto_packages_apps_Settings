@@ -6119,6 +6119,7 @@
     <string name="new_password">new password</string>
     <string name="again_new_password">try again   </string>
     <string name="account_user_id">OpenthosID</string>
+    <string name="account_email">Email</string>
     <string name="account_user_password">password  </string>
     <string name="account_bind">bind OpenthosID</string>
     <string name="account_unbund">unbund OpenthosID</string>
@@ -6126,7 +6127,6 @@
     <string name="account_user_register">register</string>
     <string name="account_yes">yes</string>
     <string name="account_no">no</string>
-    <string name="account_user_id">OpenthosID</string>
     <string name="account_dialog_cancel">cancel</string>
     <string name="account_dialog_ok">ok</string>
     <string name="toast_openthos_password_wrong">passowrd is wrong</string>
@@ -6136,6 +6136,10 @@
     <string name="toast_register_fail">register fail(Mailbox is occupied or mailbox format is wrong)</string>
     <string name="toast_register_sendmail">send mail to your mailbox, please activate mail and bind your ID</string>
     <string name="toast_register_successful">register successfully, send mail to your mailbox</string>
+    <string name="toast_registe_successful">Registe successfully!</string>
+    <string name="toast_registe_failed">Registe failed!</string>
+    <string name="toast_bind_successful">Bind successfully!</string>
+    <string name="toast_bind_failed">Bind failed!</string>
     <!--
         Date: 29 june 2016
         Ethernet settings names and other strings.

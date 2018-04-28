@@ -127,8 +127,12 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
     private String mCookie = "";
     public static final int MSG_REGIST_SEAFILE_OK = 0x1004;
     public static final int MSG_REGIST_SEAFILE_FAILED = 0x1005;
+    public static final int MSG_LOGIN_SEAFILE_OK = 0x1006;
+    public static final int MSG_LOGIN_SEAFILE_FAILED = 0x1007;
+    public static final int MSG_REGIST_SEAFILE = 0x1008;
+    public static final int MSG_LOGIN_SEAFILE = 0x1009;
 
-    private String mRegisterID;
+    private String mRegisterID, mRegisterEmail, mRegisterPass, mRegisterPassConfirm;
 
     private ISeafileService mISeafileService;
     private SeafileServiceConnection mSeafileServiceConnection;
@@ -224,18 +228,56 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                             }
                         }
                         break;
+                    case MSG_REGIST_SEAFILE:
+                         try {
+                             mISeafileService.setBinder(mSeafileBinder);
+                             mISeafileService.regiestAccount(
+                                     mRegisterID, mRegisterEmail, mRegisterPass);
+                         } catch (RemoteException e) {
+                             e.printStackTrace();
+                         }
+                        break;
+                    case MSG_LOGIN_SEAFILE:
+                         try {
+                             mISeafileService.setBinder(mSeafileBinder);
+                             mISeafileService.loginAccount(openthosID, password);
+                         } catch (RemoteException e) {
+                             e.printStackTrace();
+                         }
+                        break;
                     case MSG_REGIST_SEAFILE_OK:
-                        try {
-                            mISeafileService.unsetBinder(mSeafileBinder);
-                            mBindPref.setEnabled(false);
-                            mUnbundPref.setEnabled(true);
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
+                        Toast.makeText(getActivity(),
+                                getText(R.string.toast_registe_successful),
+                                Toast.LENGTH_SHORT).show();
                         break;
                     case MSG_REGIST_SEAFILE_FAILED:
                         Toast.makeText(getActivity(),
-                                getText(R.string.toast_openthos_password_wrong),
+                                getText(R.string.toast_registe_failed),
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case MSG_LOGIN_SEAFILE_OK:
+                        Toast.makeText(getActivity(),
+                                getText(R.string.toast_bind_successful),
+                                Toast.LENGTH_SHORT).show();
+                        Uri uriInsert =
+                            Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
+                        ContentValues values = new ContentValues();
+                        values.put("openthosID", openthosID);
+                        values.put("password", password);
+                        mResolver.insert(uriInsert, values);
+                        updateID(openthosID);
+                        //try {
+                        //    mISeafileService.unsetBinder(mSeafileBinder);
+                        //    mSeafileBinder = null;
+                        //    mBindPref.setEnabled(false);
+                        //    mUnbundPref.setEnabled(true);
+                        //} catch (RemoteException e) {
+                        //    e.printStackTrace();
+                        //}
+                        break;
+                    case MSG_LOGIN_SEAFILE_FAILED:
+                        Toast.makeText(getActivity(),
+                                getText(R.string.toast_bind_failed),
                                 Toast.LENGTH_SHORT).show();
                         break;
                     default:
@@ -260,12 +302,31 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
     }
 
     @Override
+    public void onDestroy() {
+        try {
+            mISeafileService.unsetBinder(mSeafileBinder);
+            mBindPref.setEnabled(false);
+            mUnbundPref.setEnabled(true);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
+    }
+
+
+    @Override
     public boolean onPreferenceClick(final Preference pref) {
         if (pref == mOpenthosIDPref) {
             View viewRegister = LayoutInflater.from(getActivity())
                                                     .inflate(R.layout.dialog_register, null);
             final EditText openthosIDRegister = (EditText) viewRegister
                                                   .findViewById(R.id.dialog_openthosId);
+            final EditText openthosEmailRegister = (EditText) viewRegister
+                                                  .findViewById(R.id.dialog_openthos_email);
+            final EditText openthosPassRegister = (EditText) viewRegister
+                                                  .findViewById(R.id.dialog_openthos_pass);
+            final EditText openthosPassConfirm = (EditText) viewRegister
+                                                  .findViewById(R.id.dialog_openthos_pass_confirm);
             AlertDialog.Builder builder_register = new AlertDialog.Builder(getActivity());
             builder_register.setTitle(R.string.account_dialog_register);
             builder_register.setView(viewRegister);
@@ -274,12 +335,11 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO Auto-generated method stub
-                        mRegisterID = openthosIDRegister.getText().toString().trim();
-                        params.put("name", mRegisterID);
-                        params.put("mail", mRegisterID);
-                        params.put("form_id", "user_register_form");
-                        params.put("form_build_id",
-                                   "form-WkUSPmAzO4z-HBjYe03NyRvjNsx44ZDrMGJ8nYAJWfU");
+                        //params.put("name", mRegisterID);
+                        //params.put("mail", mRegisterID);
+                        //params.put("form_id", "user_register_form");
+                        //params.put("form_build_id",
+                        //           "form-WkUSPmAzO4z-HBjYe03NyRvjNsx44ZDrMGJ8nYAJWfU");
                         ConnectivityManager mCM = (ConnectivityManager)getSystemService(
                                                       Context.CONNECTIVITY_SERVICE);
                         NetworkInfo networkINfo = mCM.getActiveNetworkInfo();
@@ -288,8 +348,13 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                                            getText(R.string.toast_network_not_connect),
                                            Toast.LENGTH_SHORT).show();
                         }
-                        submitRegisterPostData(params, encode);
-                            dialog.dismiss();
+                        //submitRegisterPostData(params, encode);
+                        mRegisterID = openthosIDRegister.getText().toString().trim();
+                        mRegisterEmail = openthosEmailRegister.getText().toString().trim();
+                        mRegisterPass = openthosPassRegister.getText().toString().trim();
+                        mRegisterPassConfirm = openthosPassConfirm.getText().toString().trim();
+                        mHandler.sendEmptyMessage(MSG_REGIST_SEAFILE);
+                        dialog.dismiss();
                     }
                 });
             builder_register.setNegativeButton(R.string.account_dialog_cancel, null);
@@ -309,9 +374,10 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                         // TODO Auto-generated method stub
                         openthosID = userID_bind.getText().toString().trim();
                         password = userPassword_bind.getText().toString().trim();
-                        params.put("username", openthosID);
-                        params.put("password", password);
-                        submitPostData(params, encode);
+                        mHandler.sendEmptyMessage(MSG_LOGIN_SEAFILE);
+                        //params.put("username", openthosID);
+                        //params.put("password", password);
+                        //submitPostData(params, encode);
                         dialog.dismiss();
                     }
                 });
@@ -503,6 +569,15 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                 return true;
             } else if (code == mISeafileService.getCodeRegiestFailed()) {
                 mHandler.sendEmptyMessage(MSG_REGIST_SEAFILE_FAILED);
+                reply.writeNoException();
+                return true;
+            }
+            if (code == mISeafileService.getCodeLoginSuccess()) {
+                mHandler.sendEmptyMessage(MSG_LOGIN_SEAFILE_OK);
+                reply.writeNoException();
+                return true;
+            } else if (code == mISeafileService.getCodeLoginFailed()) {
+                mHandler.sendEmptyMessage(MSG_LOGIN_SEAFILE_FAILED);
                 reply.writeNoException();
                 return true;
             }
