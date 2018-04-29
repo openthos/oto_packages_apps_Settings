@@ -160,27 +160,6 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
         mBindPref.setEnabled(true);
         mUnbundPref.setEnabled(false);
 
-        mResolver = getActivity().getContentResolver();
-        //Uri uriQuery = Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
-        //Cursor cursor = mResolver.query(uriQuery, null, null, null, null);
-        //if (cursor != null) {
-        //    while(cursor.moveToNext()) {
-        //        String id = cursor.getString(cursor.getColumnIndex("openthosID"));
-        //        mOpenthosIDPref.setSummary(id);
-        //        mBindPref.setEnabled(false);
-        //        mUnbundPref.setEnabled(true);
-        //    }
-        //}
-        try {
-        String id = mISeafileService.getUserName();
-            if (TextUtils.isEmpty(id)) {
-                mOpenthosIDPref.setSummary(id);
-                mBindPref.setEnabled(false);
-                mUnbundPref.setEnabled(true);
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
         mHandler = new Handler() {
 
             @Override
@@ -201,19 +180,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                                         getText(R.string.toast_openthos_password_wrong),
                                         Toast.LENGTH_SHORT).show();
                             } else {
-                                Uri uriInsert =
-                                    Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
-                                ContentValues values = new ContentValues();
-                                values.put("openthosID", openthosID);
-                                values.put("password", password);
-                                mResolver.insert(uriInsert, values);
                                 updateID(openthosID);
-                                try {
-                                    mISeafileService.setBinder(mSeafileBinder);
-                                    //mISeafileService.regiestAccount(openthosID, password);
-                                } catch (RemoteException e) {
-                                    e.printStackTrace();
-                                }
                             }
                         } else if (action.equals("regist")) {
                             //register
@@ -556,6 +523,16 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
     private class SeafileServiceConnection implements ServiceConnection {
         public void onServiceConnected(ComponentName name, IBinder service) {
             mISeafileService = ISeafileService.Stub.asInterface(service);
+            try {
+                String id = mISeafileService.getUserName();
+                if (TextUtils.isEmpty(id)) {
+                    mOpenthosIDPref.setSummary(id);
+                    mBindPref.setEnabled(false);
+                    mUnbundPref.setEnabled(true);
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
         public void onServiceDisconnected(ComponentName name) {
