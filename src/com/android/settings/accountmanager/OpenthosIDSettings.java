@@ -200,7 +200,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                                 updateID(openthosID);
                                 try {
                                     mISeafileService.setBinder(mSeafileBinder);
-                                    mISeafileService.regiestAccount(openthosID, password);
+                                    //mISeafileService.regiestAccount(openthosID, password);
                                 } catch (RemoteException e) {
                                     e.printStackTrace();
                                 }
