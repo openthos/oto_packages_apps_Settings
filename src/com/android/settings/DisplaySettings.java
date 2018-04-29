@@ -149,6 +149,10 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         mResolutionSetting.setOnPreferenceClickListener(this);
         int initIndex = Settings.System.getInt(
                 getActivity().getContentResolver(), SYSTEM_DPI, LAPTOP_1920);
+        if (getActivity().getWallpaperDesiredMinimumHeight() <= 768
+                         && getActivity().getWallpaperDesiredMinimumWidth() <= 1366) {
+            initIndex = LAPTOP_1366;
+        }
         mResolutionArray = getActivity().getResources().getStringArray(R.array.resolution_entries);
         mResolutionSetting.setSummary(mResolutionArray[initIndex]);
 
@@ -535,6 +539,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             d3840.setTextColor(Color.GRAY);
             FHD.setTextColor(Color.GRAY);
             UHD.setTextColor(Color.GRAY);
+            index = LAPTOP_1366;
         }
 
         switch (index) {
