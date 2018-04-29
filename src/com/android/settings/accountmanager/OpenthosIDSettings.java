@@ -61,6 +61,7 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.app.Activity;
+import android.text.TextUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
@@ -160,17 +161,26 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
         mUnbundPref.setEnabled(false);
 
         mResolver = getActivity().getContentResolver();
-        Uri uriQuery = Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
-        Cursor cursor = mResolver.query(uriQuery, null, null, null, null);
-        if (cursor != null) {
-            while(cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex("openthosID"));
+        //Uri uriQuery = Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
+        //Cursor cursor = mResolver.query(uriQuery, null, null, null, null);
+        //if (cursor != null) {
+        //    while(cursor.moveToNext()) {
+        //        String id = cursor.getString(cursor.getColumnIndex("openthosID"));
+        //        mOpenthosIDPref.setSummary(id);
+        //        mBindPref.setEnabled(false);
+        //        mUnbundPref.setEnabled(true);
+        //    }
+        //}
+        try {
+        String id = mISeafileService.getUserName();
+            if (TextUtils.isEmpty(id)) {
                 mOpenthosIDPref.setSummary(id);
                 mBindPref.setEnabled(false);
                 mUnbundPref.setEnabled(true);
             }
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
-
         mHandler = new Handler() {
 
             @Override
@@ -259,12 +269,6 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                         Toast.makeText(getActivity(),
                                 getText(R.string.toast_bind_successful),
                                 Toast.LENGTH_SHORT).show();
-                        Uri uriInsert =
-                            Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
-                        ContentValues values = new ContentValues();
-                        values.put("openthosID", openthosID);
-                        values.put("password", password);
-                        mResolver.insert(uriInsert, values);
                         updateID(openthosID);
                         //try {
                         //    mISeafileService.unsetBinder(mSeafileBinder);
