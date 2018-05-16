@@ -32,10 +32,17 @@ import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.EditText;
+import android.content.Context;
+import android.content.ComponentName;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.text.TextUtils;
 
 import com.android.settings.accountmanager.OpenthosIDSettings;
 import com.android.settings.accountmanager.ComputerUserNameSettings;
 import com.android.otosoft.tools.ChangeBuildPropTools;
+import org.openthos.seafile.ISeafileService;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -60,6 +67,9 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
     private String computerName;
 
     private PreferenceGroup mAccountManagerSettings;
+
+    private ISeafileService mISeafileService;
+    private SeafileServiceConnection mSeafileServiceConnection;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,18 +118,28 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
     @Override
     public void onResume() {
         super.onResume();
-        ContentResolver resolver = getActivity().getContentResolver();
-        Uri uriQuery = Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
-        Cursor cursor = resolver.query(uriQuery, null, null, null, null);
-        if (cursor != null) {
-            while(cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex("openthosID"));
-                mOpenthosID.setSummary(id);
-                cursor.close();
-                return;
+        mOpenthosID.setSummary(getText(R.string.email_address_summary).toString());
+        mSeafileServiceConnection = new SeafileServiceConnection();
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName("org.openthos.seafile",
+                    "org.openthos.seafile.SeafileService"));
+        getActivity().bindService(intent, mSeafileServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private class SeafileServiceConnection implements ServiceConnection {
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mISeafileService = ISeafileService.Stub.asInterface(service);
+            try {
+                String id = mISeafileService.getUserName();
+                if (!TextUtils.isEmpty(id)) {
+                    mOpenthosID.setSummary(id);
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
-            mOpenthosID.setSummary(getText(R.string.email_address_summary).toString());
-            cursor.close();
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
         }
     }
 

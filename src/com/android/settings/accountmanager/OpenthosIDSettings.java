@@ -109,8 +109,6 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
     private AlertDialog mDialog = null;
     private TextServicesManager mTsm;
 
-    private ContentResolver mResolver;
-
     private Preference mBindPref;
     private Preference mUnbundPref;
     private static final String KEY_BIND = "openthos_bind";
@@ -180,7 +178,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                                         getText(R.string.toast_openthos_password_wrong),
                                         Toast.LENGTH_SHORT).show();
                             } else {
-                                updateID(openthosID);
+                                updateID(openthosID + "@openthos.org");
                             }
                         } else if (action.equals("regist")) {
                             //register
@@ -201,7 +199,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                                     (NotificationManager) getSystemService(
                                                               Context.NOTIFICATION_SERVICE);
                                 mNotificationManager.notify(0, mBuilder.build());
-                                updateID(openthosID);
+                                updateID(openthosID + "@openthos.org");
                             }
                         }
                         break;
@@ -236,7 +234,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                         Toast.makeText(getActivity(),
                                 getText(R.string.toast_bind_successful),
                                 Toast.LENGTH_SHORT).show();
-                        updateID(openthosID);
+                        updateID(openthosID + "@openthos.org");
                         //try {
                         //    mISeafileService.unsetBinder(mSeafileBinder);
                         //    mSeafileBinder = null;
@@ -364,7 +362,6 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                             // TODO Auto-generated method stub
                         Uri uriDelete =
                             Uri.parse("content://com.otosoft.tools.myprovider/openthosID");
-                        mResolver.delete(uriDelete,null,null);
                         updateID(getText(R.string.email_address_summary).toString());
                         dialog.dismiss();
                         try {
@@ -525,7 +522,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
             mISeafileService = ISeafileService.Stub.asInterface(service);
             try {
                 String id = mISeafileService.getUserName();
-                if (TextUtils.isEmpty(id)) {
+                if (!TextUtils.isEmpty(id)) {
                     mOpenthosIDPref.setSummary(id);
                     mBindPref.setEnabled(false);
                     mUnbundPref.setEnabled(true);
