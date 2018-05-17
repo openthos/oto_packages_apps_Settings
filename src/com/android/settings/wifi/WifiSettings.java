@@ -495,39 +495,39 @@ public class WifiSettings extends RestrictedSettingsFragment
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo info) {
-        if (info instanceof AdapterContextMenuInfo) {
-            Preference preference = (Preference) getListView().getItemAtPosition(
-                    ((AdapterContextMenuInfo) info).position);
+        //if (info instanceof AdapterContextMenuInfo) {
+        //    Preference preference = (Preference) getListView().getItemAtPosition(
+        //            ((AdapterContextMenuInfo) info).position);
 
-            if (preference instanceof AccessPoint) {
-                mSelectedAccessPoint = (AccessPoint) preference;
-                menu.setHeaderTitle(mSelectedAccessPoint.ssid);
-                if (mSelectedAccessPoint.getLevel() != -1) {
-                    if (mSelectedAccessPoint.getState() == null) {
-                        menu.add(Menu.NONE, MENU_ID_CONNECT, 0, R.string.wifi_menu_connect);
-                    }
-                }
+        //    if (preference instanceof AccessPoint) {
+        //        mSelectedAccessPoint = (AccessPoint) preference;
+        //        menu.setHeaderTitle(mSelectedAccessPoint.ssid);
+        //        if (mSelectedAccessPoint.getLevel() != -1) {
+        //            if (mSelectedAccessPoint.getState() == null) {
+        //                menu.add(Menu.NONE, MENU_ID_CONNECT, 0, R.string.wifi_menu_connect);
+        //            }
+        //        }
 
-                if (ActivityManager.getCurrentUser() == UserHandle.USER_OWNER &&
-                        (mSelectedAccessPoint.networkId != INVALID_NETWORK_ID ||
-                        (mSelectedAccessPoint.getNetworkInfo() != null &&
-                        mSelectedAccessPoint.getNetworkInfo().getState() != State.DISCONNECTED))) {
-                    // Allow forgetting a network if the current user is the owner and either the
-                    // network is saved or ephemerally connected. (In the latter case, "forget"
-                    // blacklists the network so it won't be used again, ephemerally).
-                    menu.add(Menu.NONE, MENU_ID_FORGET, 0, R.string.wifi_menu_forget);
-                }
-                if (mSelectedAccessPoint.networkId != INVALID_NETWORK_ID) {
-                    menu.add(Menu.NONE, MENU_ID_MODIFY, 0, R.string.wifi_menu_modify);
-                    NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
-                    if (nfcAdapter != null && nfcAdapter.isEnabled() &&
-                            mSelectedAccessPoint.security != AccessPoint.SECURITY_NONE) {
-                        // Only allow writing of NFC tags for password-protected networks.
-                        menu.add(Menu.NONE, MENU_ID_WRITE_NFC, 0, R.string.wifi_menu_write_to_nfc);
-                    }
-                }
-            }
-        }
+        //        if (ActivityManager.getCurrentUser() == UserHandle.USER_OWNER &&
+        //                (mSelectedAccessPoint.networkId != INVALID_NETWORK_ID ||
+        //                (mSelectedAccessPoint.getNetworkInfo() != null &&
+        //                mSelectedAccessPoint.getNetworkInfo().getState() != State.DISCONNECTED))) {
+        //            // Allow forgetting a network if the current user is the owner and either the
+        //            // network is saved or ephemerally connected. (In the latter case, "forget"
+        //            // blacklists the network so it won't be used again, ephemerally).
+        //            menu.add(Menu.NONE, MENU_ID_FORGET, 0, R.string.wifi_menu_forget);
+        //        }
+        //        if (mSelectedAccessPoint.networkId != INVALID_NETWORK_ID) {
+        //            menu.add(Menu.NONE, MENU_ID_MODIFY, 0, R.string.wifi_menu_modify);
+        //            NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
+        //            if (nfcAdapter != null && nfcAdapter.isEnabled() &&
+        //                    mSelectedAccessPoint.security != AccessPoint.SECURITY_NONE) {
+        //                // Only allow writing of NFC tags for password-protected networks.
+        //                menu.add(Menu.NONE, MENU_ID_WRITE_NFC, 0, R.string.wifi_menu_write_to_nfc);
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     @Override
