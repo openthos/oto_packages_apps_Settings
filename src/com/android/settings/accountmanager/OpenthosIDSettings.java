@@ -206,7 +206,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                     case MSG_REGIST_SEAFILE:
                          try {
                              mISeafileService.setBinder(mSeafileBinder);
-                             mISeafileService.regiestAccount(
+                             mISeafileService.registeAccount(
                                      mRegisterID, mRegisterEmail, mRegisterPass);
                          } catch (RemoteException e) {
                              e.printStackTrace();
@@ -226,8 +226,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case MSG_REGIST_SEAFILE_FAILED:
-                        Toast.makeText(getActivity(),
-                                getText(R.string.toast_registe_failed),
+                        Toast.makeText(getActivity(), msg.obj.toString(),
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case MSG_LOGIN_SEAFILE_OK:
@@ -546,7 +545,10 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                 reply.writeNoException();
                 return true;
             } else if (code == mISeafileService.getCodeRegiestFailed()) {
-                mHandler.sendEmptyMessage(MSG_REGIST_SEAFILE_FAILED);
+                Message msg = new Message();
+                msg.obj = data.readString();
+                msg.what = MSG_REGIST_SEAFILE_FAILED;
+                mHandler.sendMessage(msg);
                 reply.writeNoException();
                 return true;
             }
