@@ -6292,7 +6292,7 @@
            Date: 21 july 2016
            About settings names and other strings.
         -->
-    <string name="openthos_version_title">OPENTHOS 1.0</string>
+    <string name="openthos_version_title">OPENTHOS 1.1 RC2</string>
     <string name="openthos_version_default">Unknown</string>
     <string name="browser_title">Browser version</string>
     <string name="browser_version_default">Unknown</string>
