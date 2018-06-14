@@ -1728,6 +1728,10 @@
     <string name="android_x86_dashboard_summary">兼容模式、统计</string>
     <string name="nativebridge_toggle_title">"兼容模式"</string>
     <string name="nativebridge_toggle_summary">"可兼容於使用 arm 庫的应用"</string>
+    <string name="collect_hw_info_title">收集匿名的硬件信息</string>
+    <string name="collect_hw_info_summary">收集本机的硬件信息并传送给 Android-x86 项目做统计</string>
+    <string name="collect_apps_usage_title">收集匿名的应用信息</string>
+    <string name="collect_apps_usage_summary">收集应用的开启信息并传送给 Android-x86 项目做统计</string>
     <string name="language_input_gesture_title" msgid="8749227808244881255">"语言、输入法和手势"</string>
     <string name="language_input_gesture_summary_on_with_assist" msgid="7219895055450633449"></string>
     <string name="language_input_gesture_summary_on_non_assist" msgid="756147879200943161"></string>

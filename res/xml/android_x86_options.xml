@@ -23,4 +23,14 @@
         android:summary="@string/nativebridge_toggle_summary"
         android:persistent="false" />
 
+    <SwitchPreference android:key="toggle_hw_info"
+        android:title="@string/collect_hw_info_title"
+        android:summary="@string/collect_hw_info_summary"
+        android:persistent="false" />
+
+    <SwitchPreference android:key="toggle_apps_usage"
+        android:title="@string/collect_apps_usage_title"
+        android:summary="@string/collect_apps_usage_summary"
+        android:persistent="false" />
+
 </PreferenceScreen>
