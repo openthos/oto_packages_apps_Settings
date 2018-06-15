@@ -38,6 +38,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.android.settings.accountmanager.OpenthosIDSettings;
 import com.android.settings.accountmanager.ComputerUserNameSettings;
@@ -55,11 +56,13 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
 
     private static final String KEY_ACCOUNT_MANAGER_SETTINGS = "account_manager_settings";
     private static final String KEY_OPENTHOS_ID_EMAIL = "openthos_id_email";
+    private static final String KEY_OPENTHOS_URL = "openthos_url";
     private static final String KEY_COMPUTER_USERNAME = "computer_username";
     private static final String KEY_COMPUTER_NAME = "computer_name";
     //private static final String RO_PROPERTY_HOST = "ro.build.host";
     //private static final String RO_PROPERTY_USER = "ro.build.user";
     private PreferenceScreen mOpenthosID;
+    private PreferenceScreen mOpenthosUrl;
     private PreferenceScreen mComputerUserName;
     private PreferenceScreen mComputerName;
     private AlertDialog mDialog = null;
@@ -80,6 +83,8 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
 
         mOpenthosID = (PreferenceScreen) findPreference(KEY_OPENTHOS_ID_EMAIL);
         mOpenthosID.setPersistent(true);
+        mOpenthosUrl = (PreferenceScreen) findPreference(KEY_OPENTHOS_URL);
+        mOpenthosUrl.setPersistent(true);
         mComputerUserName = (PreferenceScreen) findPreference(KEY_COMPUTER_USERNAME);
         mComputerUserName.setPersistent(true);
         mComputerName = (PreferenceScreen) findPreference(KEY_COMPUTER_NAME);
@@ -91,6 +96,7 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         mComputerName.setSummary(defaultComputerName);
 
         mComputerName.setOnPreferenceClickListener(this);
+        mOpenthosUrl.setOnPreferenceClickListener(this);
 
         mAccountManagerSettings = (PreferenceGroup) findPreference(KEY_ACCOUNT_MANAGER_SETTINGS);
         if (mAccountManagerSettings != null) {
@@ -133,6 +139,7 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
                 String id = mISeafileService.getUserName();
                 if (!TextUtils.isEmpty(id)) {
                     mOpenthosID.setSummary(id);
+                    mOpenthosUrl.setSummary(mISeafileService.getOpenthosUrl());
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -151,7 +158,10 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
     @Override
     public boolean onPreferenceClick(Preference pref) {
         if (pref == mComputerName) {
-            showChangeComputerNameDialog(pref);
+            showChangeDialog(R.string.change_computer_name);
+            return true;
+        } else if (pref == mOpenthosUrl) {
+            showChangeDialog(R.string.change_openthos_url);
             return true;
         }
         return false;
@@ -171,27 +181,35 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         return true;
     }
 
-    private void showChangeComputerNameDialog(final Preference pref) {
+    private void showChangeDialog(final int title) {
         if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.change_computer_name);
+        builder.setTitle(title);
         final EditText editTextPref = new EditText(getActivity());
+        if (title == R.string.change_openthos_url) {
+            editTextPref.setText("http://");
+            editTextPref.setSelection(editTextPref.getText().length());
+        }
         builder.setView(editTextPref);
         builder.setCancelable(true);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-                String newComputerName = editTextPref.getText().toString();
+                String input = editTextPref.getText().toString();
                 //grant permission
                 /*ChangeBuildPropTools.exec("chmod -R 777  /system/build.prop");
                 ChangeBuildPropTools.setPropertyName(
                            ChangeBuildPropTools.getPropertyName(RO_PROPERTY_HOST,newComputerName));
                 ChangeBuildPropTools.exec("chmod -R 644  /system/build.prop");*/
-                Settings.System.putString(getActivity().getContentResolver(),
-                                          Settings.System.SYS_PROPERTY_HOST, newComputerName);
-                updateComputerName(newComputerName);
+                if (title == R.string.change_computer_name) {
+                    Settings.System.putString(getActivity().getContentResolver(),
+                            Settings.System.SYS_PROPERTY_HOST, input);
+                    updateComputerName(input);
+                } else if (title == R.string.change_openthos_url) {
+                    updateOpenthosUrl(input);
+                }
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -201,6 +219,21 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         });
         mDialog = builder.create();
         mDialog.show();
+    }
+
+    private void updateOpenthosUrl(String url) {
+        mOpenthosUrl.setSummary(url);
+        try {
+            mISeafileService.setOpenthosUrl(url);
+            if (!TextUtils.isEmpty(mISeafileService.getUserName())) {
+                mISeafileService.stopAccount();
+                mOpenthosID.setSummary(getText(R.string.email_address_summary).toString());
+            }
+            Toast.makeText(getActivity(),
+                    getText(R.string.toast_relogin), Toast.LENGTH_SHORT).show();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateComputerName(String name){

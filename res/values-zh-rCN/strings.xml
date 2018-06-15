@@ -2544,6 +2544,10 @@
     <string name="change_screen_password">修改锁屏密码</string>
     <string name="change_computer_name">修改主机名</string>
 
+    <string name="change_openthos_url">修改openthos服务器</string>
+    <string name="openthos_url">openthos服务器</string>
+    <string name="toast_relogin">请重新登录</string>
+
     <string name="old_password">旧密码</string>
     <string name="new_password">新密码</string>
     <string name="again_new_password">再次输入   </string>

@@ -146,6 +146,8 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                                 getText(R.string.toast_bind_successful),
                                 Toast.LENGTH_SHORT).show();
                         updateID(openthosID);
+                        mBindPref.setEnabled(false);
+                        mUnbundPref.setEnabled(true);
                         break;
                     case MSG_LOGIN_SEAFILE_FAILED:
                         Toast.makeText(getActivity(), msg.obj.toString(),
