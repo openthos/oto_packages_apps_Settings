@@ -278,12 +278,12 @@ public class CloudServiceFragment extends Fragment {
             holder.image.setImageDrawable(allList.get(i).loadIcon(mPackageManager));
             holder.check.setTag(R.id.tag_list, syncList);
             holder.check.setTag(R.id.tag_package, allList.get(i).activityInfo.packageName);
+            holder.check.setOnCheckedChangeListener(mCheckedChangeListener);
             try {
                 if ((mPackageManager.getPackageInfo(allList.get(i).activityInfo.packageName, 0).
                         applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0) {
                     holder.check.setChecked(true);
                     holder.check.setClickable(false);
-                    syncList.add(allList.get(i).activityInfo.packageName);
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();

@@ -6142,7 +6142,6 @@
     <string name="toast_register_successful">register successfully, send mail to your mailbox</string>
     <string name="toast_registe_successful">Registe successfully!</string>
     <string name="toast_registe_failed">Registe failed!</string>
-    <string name="toast_bind_successful">Bind successfully!</string>
     <string name="toast_bind_failed">Bind failed!</string>
     <!--
         Date: 29 june 2016

@@ -142,8 +142,7 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case MSG_LOGIN_SEAFILE_OK:
-                        Toast.makeText(getActivity(),
-                                getText(R.string.toast_bind_successful),
+                        Toast.makeText(getActivity(), msg.obj.toString(),
                                 Toast.LENGTH_SHORT).show();
                         updateID(openthosID);
                         mBindPref.setEnabled(false);
@@ -329,8 +328,10 @@ public class OpenthosIDSettings extends SettingsPreferenceFragment
                 return true;
             }
             if (code == mISeafileService.getCodeLoginSuccess()) {
-                mHandler.sendEmptyMessage(MSG_LOGIN_SEAFILE_OK);
-                reply.writeNoException();
+                Message msg = new Message();
+                msg.obj = data.readString();
+                msg.what = MSG_LOGIN_SEAFILE_OK;
+                mHandler.sendMessage(msg);
                 return true;
             } else if (code == mISeafileService.getCodeLoginFailed()) {
                 Message msg = new Message();

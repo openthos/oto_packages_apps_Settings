@@ -2572,7 +2572,6 @@
     <string name="toast_register_sendmail">已发送邮件到你邮箱,请激活并绑定账号</string>
     <string name="toast_registe_successful">注册成功!</string>
     <string name="toast_registe_failed">注册失败!</string>
-    <string name="toast_bind_successful">绑定成功!</string>
     <string name="toast_bind_failed">绑定失败!</string>
     <!--
       Date: 29 june 2016
