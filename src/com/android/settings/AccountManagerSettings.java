@@ -23,6 +23,11 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Binder;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Looper;
+import android.os.Parcel;
 import android.os.SystemProperties;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -53,6 +58,7 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         Preference.OnPreferenceChangeListener , Preference.OnPreferenceClickListener{
 
     private static final String TAG = "AccountManagerSettings";
+    public static final int MSG_CHANGE_URL = 0x1010;
 
     private static final String KEY_ACCOUNT_MANAGER_SETTINGS = "account_manager_settings";
     private static final String KEY_OPENTHOS_ID_EMAIL = "openthos_id_email";
@@ -73,6 +79,8 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
 
     private ISeafileService mISeafileService;
     private SeafileServiceConnection mSeafileServiceConnection;
+    private IBinder mSeafileBinder = new SeafileBinder();
+    private Handler mHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +127,18 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
                     R.string.computer_username_settings_title);
             mComputerUserName.setIntent(intentComputer);
         }
+
+        mHandler = new Handler() {
+
+            @Override
+            public void handleMessage (Message msg) {
+                switch (msg.what) {
+                    case MSG_CHANGE_URL:
+                        updateOpenthosUrl(msg.obj.toString());
+                        break;
+                }
+            }
+        };
     }
 
     @Override
@@ -136,10 +156,10 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         public void onServiceConnected(ComponentName name, IBinder service) {
             mISeafileService = ISeafileService.Stub.asInterface(service);
             try {
+                mOpenthosUrl.setSummary(mISeafileService.getOpenthosUrl());
                 String id = mISeafileService.getUserName();
                 if (!TextUtils.isEmpty(id)) {
                     mOpenthosID.setSummary(id);
-                    mOpenthosUrl.setSummary(mISeafileService.getOpenthosUrl());
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -161,7 +181,12 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
             showChangeDialog(R.string.change_computer_name);
             return true;
         } else if (pref == mOpenthosUrl) {
-            showChangeDialog(R.string.change_openthos_url);
+            try {
+                mISeafileService.setBinder(mSeafileBinder);
+                mISeafileService.setOpenthosUrl("");
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             return true;
         }
         return false;
@@ -188,28 +213,15 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title);
         final EditText editTextPref = new EditText(getActivity());
-        if (title == R.string.change_openthos_url) {
-            editTextPref.setText("http://");
-            editTextPref.setSelection(editTextPref.getText().length());
-        }
         builder.setView(editTextPref);
         builder.setCancelable(true);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 String input = editTextPref.getText().toString();
-                //grant permission
-                /*ChangeBuildPropTools.exec("chmod -R 777  /system/build.prop");
-                ChangeBuildPropTools.setPropertyName(
-                           ChangeBuildPropTools.getPropertyName(RO_PROPERTY_HOST,newComputerName));
-                ChangeBuildPropTools.exec("chmod -R 644  /system/build.prop");*/
-                if (title == R.string.change_computer_name) {
-                    Settings.System.putString(getActivity().getContentResolver(),
-                            Settings.System.SYS_PROPERTY_HOST, input);
-                    updateComputerName(input);
-                } else if (title == R.string.change_openthos_url) {
-                    updateOpenthosUrl(input);
-                }
+                Settings.System.putString(getActivity().getContentResolver(),
+                        Settings.System.SYS_PROPERTY_HOST, input);
+                updateComputerName(input);
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -224,7 +236,6 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
     private void updateOpenthosUrl(String url) {
         mOpenthosUrl.setSummary(url);
         try {
-            mISeafileService.setOpenthosUrl(url);
             if (!TextUtils.isEmpty(mISeafileService.getUserName())) {
                 mISeafileService.stopAccount();
                 mOpenthosID.setSummary(getText(R.string.email_address_summary).toString());
@@ -238,5 +249,32 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
 
     private void updateComputerName(String name){
         mComputerName.setSummary(name);
+    }
+
+    private class SeafileBinder extends Binder {
+
+        @Override
+        protected boolean onTransact(
+                int code, final Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == mISeafileService.getCodeChangeUrl()) {
+                Message msg = new Message();
+                msg.obj = data.readString();
+                msg.what = MSG_CHANGE_URL;
+                mHandler.sendMessage(msg);
+                reply.writeNoException();
+                return true;
+            }
+            return super.onTransact(code, data, reply, flags);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        try {
+            mISeafileService.unsetBinder(mSeafileBinder);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
     }
 }

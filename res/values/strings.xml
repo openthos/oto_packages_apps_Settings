@@ -6115,7 +6115,6 @@
     <string name="change_computer_username">change computer username</string>
     <string name="change_screen_password">change screen password</string>
     <string name="change_computer_name">change computer name</string>
-    <string name="change_openthos_url">change openthos url</string>
     <string name="openthos_url">openthos url</string>
     <string name="toast_relogin">Please re-login</string>
     <string name="openthos_url_default">http://dev.openthos.org/</string>
