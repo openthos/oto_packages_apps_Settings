@@ -282,6 +282,7 @@ public class CloudServiceFragment extends Fragment {
             try {
                 if ((mPackageManager.getPackageInfo(allList.get(i).activityInfo.packageName, 0).
                         applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0) {
+                    holder.check.setChecked(false);
                     holder.check.setChecked(true);
                     holder.check.setClickable(false);
                 }
@@ -363,11 +364,11 @@ public class CloudServiceFragment extends Fragment {
             List<String> syncList, ListView listView, TextView light, TextView dark) {
         try {
             appList = mISeafileService.getAppsInfo(tag);
+            syncList.clear();
             adapter.setList(appList, syncList);
             adapter.notifyDataSetChanged();
             setListViewHeight(listView, adapter);
             listView.setVisibility(View.VISIBLE);
-            syncList.clear();
             mTag = tag;
             light.setBackgroundResource(R.color.text_bg_color);
             dark.setBackgroundResource(R.color.circle_avatar_frame_pressed_color);
