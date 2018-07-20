@@ -118,7 +118,6 @@ import com.android.settings.wifi.AdvancedWifiSettings;
 import com.android.settings.wifi.SavedAccessPointsWifiSettings;
 import com.android.settings.wifi.WifiSettings;
 import com.android.settings.wifi.p2p.WifiP2pSettings;
-import com.android.settings.CloudServiceFragment;
 import com.android.settings.HotKeySettings;
 import com.android.settings.FireWallSettings;
 
@@ -393,7 +392,6 @@ public class SettingsActivity extends Activity
             OtherSoundSettings.class.getName(),
             QuickLaunchSettings.class.getName(),
             ApnSettings.class.getName(),
-            CloudServiceFragment.class.getName(),
             HotKeySettings.class.getName(),
             /**
              * Date: 20 July 2016

@@ -349,9 +349,12 @@
         <dashboard-tile
                 android:id="@+id/cloud_service"
                 android:title="@string/cloud_service"
-                android:fragment="com.android.settings.CloudServiceFragment"
-                android:icon="@drawable/ico_cloud"
-                />
+                android:icon="@drawable/ico_cloud">
+            <intent
+                android:action="org.openthos.seafile.RECOVERY_ACTIVITY"
+                android:targetPackage="org.openthos.seafile"
+                android:targetClass="org.openthos.seafile.RecoveryActivity" />
+        </dashboard-tile>
 
         <!-- Hot Key -->
         <dashboard-tile

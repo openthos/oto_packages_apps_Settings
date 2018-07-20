@@ -6220,22 +6220,7 @@
     <string name="sync_memorandum">Memorandum</string>
     <string name="sync_photoalbum">Photo Album</string>
     <string name="cloud_service">Cloud Service</string>
-    <string name="cloud_appdata">Apps Data</string>
-    <string name="cloud_startmenu">Start Menu</string>
-    <string name="cloud_import">Import</string>
-    <string name="cloud_export">Export</string>
-    <string name="cloud_browser">Browser</string>
-    <string name="cloud_appstore">App Store</string>
     <string name="cloud_file">File</string>
-    <string name="cloud_browser_import">Choose Import Browsers</string>
-    <string name="cloud_browser_export">Choose Export Browsers</string>
-    <string name="cloud_appdata_import">Choose Import Apps</string>
-    <string name="cloud_appdata_export">Choose Export Apps</string>
-    <string name="cloudfolder_path">data/sea/data/sdcard/cloudFolder/</string>
-    <string name="import_reboot_info_warn">If you want all import files full available,you need reboot the device.</string>
-    <string name="export_confirm_dialog_info">Are you sure to sync current device related files to cloud?</string>
-    <string name="cloud_service_dialog_confirm">Confirm</string>
-    <string name="cloud_service_dialog_cancel">Cancel</string>
     <!-- hotkey -->
     <string name="hot_copy">Copy</string>
     <string name="hot_cut">Cut</string>

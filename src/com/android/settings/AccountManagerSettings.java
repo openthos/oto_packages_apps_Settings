@@ -238,7 +238,7 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         try {
             if (!TextUtils.isEmpty(mISeafileService.getUserName())) {
                 mISeafileService.stopAccount();
-                mOpenthosID.setSummary(getText(R.string.email_address_summary).toString());
+                mOpenthosID.setSummary(null);
             }
             Toast.makeText(getActivity(),
                     getText(R.string.toast_relogin), Toast.LENGTH_SHORT).show();
