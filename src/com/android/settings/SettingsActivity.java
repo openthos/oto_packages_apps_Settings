@@ -67,7 +67,6 @@ import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.XmlUtils;
 import com.android.settings.accessibility.AccessibilitySettings;
 import com.android.settings.accessibility.CaptionPropertiesFragment;
-import com.android.settings.accountmanager.OpenthosIDSettings;
 import com.android.settings.accountmanager.ComputerUserNameSettings;
 import com.android.settings.accounts.AccountSettings;
 import com.android.settings.accounts.AccountSyncSettings;
@@ -334,7 +333,6 @@ public class SettingsActivity extends Activity
              * Expand settings with Account manager settings.
             */
             AccountManagerSettings.class.getName(),
-            OpenthosIDSettings.class.getName(),
             ComputerUserNameSettings.class.getName(),
             DeviceInfoSettings.class.getName(),
             ManageApplications.class.getName(),

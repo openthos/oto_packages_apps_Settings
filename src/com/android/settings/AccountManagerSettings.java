@@ -45,7 +45,6 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.android.settings.accountmanager.OpenthosIDSettings;
 import com.android.settings.accountmanager.ComputerUserNameSettings;
 import com.android.otosoft.tools.ChangeBuildPropTools;
 import org.openthos.seafile.ISeafileService;
@@ -65,10 +64,7 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
     private static final String KEY_OPENTHOS_URL = "openthos_url";
     private static final String KEY_COMPUTER_USERNAME = "computer_username";
     private static final String KEY_COMPUTER_NAME = "computer_name";
-    //private static final String RO_PROPERTY_HOST = "ro.build.host";
-    //private static final String RO_PROPERTY_USER = "ro.build.user";
     private PreferenceScreen mOpenthosID;
-    private PreferenceScreen mOpenthosUrl;
     private PreferenceScreen mComputerUserName;
     private PreferenceScreen mComputerName;
     private AlertDialog mDialog = null;
@@ -76,11 +72,6 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
     private String computerName;
 
     private PreferenceGroup mAccountManagerSettings;
-
-    private ISeafileService mISeafileService;
-    private SeafileServiceConnection mSeafileServiceConnection;
-    private IBinder mSeafileBinder = new SeafileBinder();
-    private Handler mHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,8 +82,6 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
 
         mOpenthosID = (PreferenceScreen) findPreference(KEY_OPENTHOS_ID_EMAIL);
         mOpenthosID.setPersistent(true);
-        mOpenthosUrl = (PreferenceScreen) findPreference(KEY_OPENTHOS_URL);
-        mOpenthosUrl.setPersistent(true);
         mComputerUserName = (PreferenceScreen) findPreference(KEY_COMPUTER_USERNAME);
         mComputerUserName.setPersistent(true);
         mComputerName = (PreferenceScreen) findPreference(KEY_COMPUTER_NAME);
@@ -104,20 +93,15 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         mComputerName.setSummary(defaultComputerName);
 
         mComputerName.setOnPreferenceClickListener(this);
-        mOpenthosUrl.setOnPreferenceClickListener(this);
 
         mAccountManagerSettings = (PreferenceGroup) findPreference(KEY_ACCOUNT_MANAGER_SETTINGS);
         if (mAccountManagerSettings != null) {
             // Note: KEY_SPELL_CHECKERS preference is marked as persistent="false" in XML.
             //InputMethodAndSubtypeUtil.removeUnnecessaryNonPersistentPreference(spellChecker);
             final Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setClass(activity, SubSettings.class);
-            intent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT,
-                    OpenthosIDSettings.class.getName());
-            intent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT_TITLE_RESID,
-                    R.string.openthos_id_settings_title);
+            intent.setComponent(new ComponentName("org.openthos.seafile",
+                    "org.openthos.seafile.OpenthosIDActivity"));
             mOpenthosID.setIntent(intent);
-            Log.d("accountIntent", "----------itme-------click");
 
             final Intent intentComputer = new Intent(Intent.ACTION_MAIN);
             intentComputer.setClass(activity, SubSettings.class);
@@ -127,66 +111,12 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
                     R.string.computer_username_settings_title);
             mComputerUserName.setIntent(intentComputer);
         }
-
-        mHandler = new Handler() {
-
-            @Override
-            public void handleMessage (Message msg) {
-                switch (msg.what) {
-                    case MSG_CHANGE_URL:
-                        updateOpenthosUrl(msg.obj.toString());
-                        break;
-                }
-            }
-        };
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mOpenthosID.setSummary(getText(R.string.email_address_summary).toString());
-        mSeafileServiceConnection = new SeafileServiceConnection();
-        Intent intent = new Intent();
-        intent.setComponent(new ComponentName("org.openthos.seafile",
-                    "org.openthos.seafile.SeafileService"));
-        getActivity().bindService(intent, mSeafileServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private class SeafileServiceConnection implements ServiceConnection {
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mISeafileService = ISeafileService.Stub.asInterface(service);
-            try {
-                mOpenthosUrl.setSummary(mISeafileService.getOpenthosUrl());
-                String id = mISeafileService.getUserName();
-                if (!TextUtils.isEmpty(id)) {
-                    mOpenthosID.setSummary(id);
-                }
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override
     public boolean onPreferenceClick(Preference pref) {
         if (pref == mComputerName) {
             showChangeDialog(R.string.change_computer_name);
-            return true;
-        } else if (pref == mOpenthosUrl) {
-            try {
-                mISeafileService.setBinder(mSeafileBinder);
-                mISeafileService.setOpenthosUrl("");
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
             return true;
         }
         return false;
@@ -195,10 +125,7 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         Log.d(TAG, "Account manager setting has been click");
-        //if (preference == mOpenthosID) {
-             return  false;
-        //}
-        //return true;
+        return  false;
     }
 
     @Override
@@ -233,48 +160,7 @@ public class AccountManagerSettings extends SettingsPreferenceFragment implement
         mDialog.show();
     }
 
-    private void updateOpenthosUrl(String url) {
-        mOpenthosUrl.setSummary(url);
-        try {
-            if (!TextUtils.isEmpty(mISeafileService.getUserName())) {
-                mISeafileService.stopAccount();
-                mOpenthosID.setSummary(null);
-            }
-            Toast.makeText(getActivity(),
-                    getText(R.string.toast_relogin), Toast.LENGTH_SHORT).show();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void updateComputerName(String name){
         mComputerName.setSummary(name);
-    }
-
-    private class SeafileBinder extends Binder {
-
-        @Override
-        protected boolean onTransact(
-                int code, final Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == mISeafileService.getCodeChangeUrl()) {
-                Message msg = new Message();
-                msg.obj = data.readString();
-                msg.what = MSG_CHANGE_URL;
-                mHandler.sendMessage(msg);
-                reply.writeNoException();
-                return true;
-            }
-            return super.onTransact(code, data, reply, flags);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        try {
-            mISeafileService.unsetBinder(mSeafileBinder);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        super.onDestroy();
     }
 }

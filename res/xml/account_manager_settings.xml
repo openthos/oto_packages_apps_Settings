@@ -23,13 +23,6 @@
     <PreferenceScreen
         android:key="openthos_id_email"
         android:title="@string/openthos_id_settings_title"
-        android:summary="@string/email_address_summary"
-    />
-    <!-- Openthos url -->
-    <PreferenceScreen
-        android:key="openthos_url"
-        android:title="@string/openthos_url"
-        android:summary="@string/openthos_url_default"
     />
     <!-- the computer user name -->
     <PreferenceScreen
