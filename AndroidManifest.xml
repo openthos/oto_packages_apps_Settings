@@ -3158,6 +3158,26 @@
                        android:resource="@string/app_and_notification_dashboard_summary"/>
         </activity>
 
+        <activity android:name=".Settings$AndroidX86DashboardActivity"
+                android:label="@string/android_x86_options_title"
+		android:icon="@drawable/ic_settings_applications">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter android:priority="6">
+                <action android:name="com.android.settings.action.SETTINGS" />
+            </intent-filter>
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                android:value="com.android.settings.AndroidX86DashboardFragment" />
+            <meta-data android:name="com.android.settings.category"
+                android:value="com.android.settings.category.ia.homepage" />
+            <meta-data android:name="com.android.settings.summary"
+                       android:resource="@string/android_x86_dashboard_summary"/>
+            <meta-data android:name="com.android.settings.PRIMARY_PROFILE_CONTROLLED"
+                android:value="true" />
+        </activity>
+
         <activity android:name=".Settings$UserAndAccountDashboardActivity"
                   android:label="@string/account_dashboard_title"
                   android:icon="@drawable/ic_settings_accounts">

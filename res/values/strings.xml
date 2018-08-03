@@ -4040,6 +4040,16 @@
         features of your phone may stop working correctly until you power it off
         and then on again.</string>
 
+    <!-- Android-x86 settings -->
+    <string name="android_x86_options_title">Android-x86 options</string>
+    <string name="android_x86_dashboard_summary">Native bridge, statistics</string>
+    <string name="nativebridge_toggle_title">Enable native bridge</string>
+    <string name="nativebridge_toggle_summary">To support apps with arm native libraries</string>
+    <string name="collect_hw_info_title">Collect anonymous hardware information</string>
+    <string name="collect_hw_info_summary">To collect the hardware information of this device and send to Android-x86 statistics</string>
+    <string name="collect_apps_usage_title">Collect anonymous apps usage</string>
+    <string name="collect_apps_usage_summary">To collect the apps usage information and send to Android-x86 statistics</string>
+
     <!-- Languages Settings --> <skip />
     <!-- Title of Language, input & gestures setting on main settings screen. -->
     <string name="language_input_gesture_title">Languages, input &amp; gestures</string>
@@ -8240,12 +8250,6 @@
 
     <!-- Toast message letting the user know the how to trigger telephony monitor -->
     <string name="telephony_monitor_toast">To apply telephony monitor change, reboot device</string>
-
-    <!-- Title for Camera HAL HDR+ switch [CHAR LIMIT=50] -->
-    <string name="camera_hal_hdrplus_switch">Camera HAL HDR+</string>
-
-    <!-- Toast message letting the user know how to enable Camera HAL HDR+ -->
-    <string name="camera_hal_hdrplus_toast">To apply Camera HAL HDR+ change, reboot device</string>
 
     <!-- Title for Camera laser sensor switch [CHAR LIMIT=NONE] -->
     <string name="camera_laser_sensor_switch">Camera Laser Sensor</string>

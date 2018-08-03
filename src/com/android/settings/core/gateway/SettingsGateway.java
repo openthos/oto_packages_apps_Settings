@@ -18,6 +18,7 @@ package com.android.settings.core.gateway;
 
 import com.android.settings.ApnEditor;
 import com.android.settings.ApnSettings;
+import com.android.settings.AndroidX86DashboardFragment;
 import com.android.settings.CryptKeeperSettings;
 import com.android.settings.DateTimeSettings;
 import com.android.settings.DeviceAdminSettings;
@@ -249,6 +250,7 @@ public class SettingsGateway {
             NetworkDashboardFragment.class.getName(),
             ConnectedDeviceDashboardFragment.class.getName(),
             AppAndNotificationDashboardFragment.class.getName(),
+            AndroidX86DashboardFragment.class.getName(),
             UserAndAccountDashboardFragment.class.getName(),
             EnterprisePrivacySettings.class.getName(),
             WebViewAppPicker.class.getName(),
@@ -262,6 +264,7 @@ public class SettingsGateway {
             Settings.NetworkDashboardActivity.class.getName(),
             Settings.ConnectedDeviceDashboardActivity.class.getName(),
             Settings.AppAndNotificationDashboardActivity.class.getName(),
+            Settings.AndroidX86DashboardActivity.class.getName(),
             Settings.DisplaySettingsActivity.class.getName(),
             Settings.SoundSettingsActivity.class.getName(),
             Settings.StorageDashboardActivity.class.getName(),
