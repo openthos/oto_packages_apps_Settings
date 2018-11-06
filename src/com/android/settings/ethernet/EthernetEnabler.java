@@ -38,6 +38,7 @@ import com.android.settings.R;
 import com.android.settings.widget.SwitchBar;
 import com.android.settings.SettingsActivity;
 import android.widget.Switch;
+import android.widget.Toast;
 import android.util.Slog;
 import android.net.EthernetManager;
 import android.provider.Settings;
@@ -101,16 +102,17 @@ public class EthernetEnabler implements SwitchBar.OnSwitchChangeListener {
 
     @Override
     public void onSwitchChanged(Switch switchView, boolean isChecked) {
-        if (mEthManager != null && !isChecked) {
-            mEthManager.setEthernetState(false);
-        }
-
         Settings.Global.putInt(mContext.getContentResolver(), Settings.Global.ETHERNET_ON,
                 isChecked ? EthernetManager.ETH_STATE_ENABLED : EthernetManager.ETH_STATE_DISABLED);
 
-        if (isChecked && (mEthManager != null)) {
-            mEthManager.start();
-            mEthManager.setEthernetState(true);
+        if (mEthManager != null) {
+            if (!mEthManager.isAvailable()) {
+                Toast.makeText(mContext, mContext.getResources().getString(R.string.cable_connect),
+                                Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(isChecked) mEthManager.start();
+            mEthManager.setEthernetState(isChecked);
         }
     }
 }
