@@ -106,6 +106,8 @@ public class TimeoutPreferenceController extends AbstractPreferenceController im
         final String summary;
         if (preference.isDisabledByAdmin()) {
             summary = mContext.getString(com.android.settings.R.string.disabled_by_policy_title);
+        } else if (currentTimeout == Integer.MAX_VALUE) {
+            summary = entries[entries.length - 1].toString();
         } else {
             final CharSequence timeoutDescription = getTimeoutDescription(
                     currentTimeout, entries, values);
