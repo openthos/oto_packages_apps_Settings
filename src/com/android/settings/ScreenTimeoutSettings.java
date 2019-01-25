@@ -49,6 +49,10 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
         int noChargeIndex = mSharedPreferences.getInt(
                             BATTERY_NO_CHARGING, DEFAULT_VALUE_INDEX_NO_CHARGING);
         if (isCharging()) {
+            int level = Settings.Global.getInt(getContentResolver(), BatteryManager.EXTRA_LEVEL, 0);
+            if (level == 0) {
+                getPreferenceScreen().removePreference(mNotCharging);
+            }
             Settings.System.putInt(getContentResolver(),
                                    android.provider.Settings.System.SCREEN_OFF_TIMEOUT,
                                    mTimes[chargeIndex]);
@@ -112,13 +116,13 @@ public class ScreenTimeoutSettings extends SettingsPreferenceFragment{
         });
     }
 
-    public boolean isCharging() {
+    private boolean isCharging() {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = getActivity().registerReceiver(null, ifilter);
 
         int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        boolean isCharging = (status == BatteryManager.BATTERY_STATUS_CHARGING)
-                             || (status == BatteryManager.BATTERY_STATUS_FULL);
-        return  isCharging;
+        return status == BatteryManager.BATTERY_STATUS_CHARGING
+                       || status == BatteryManager.BATTERY_STATUS_FULL
+                       || status == BatteryManager.BATTERY_STATUS_UNKNOWN;
     }
 }

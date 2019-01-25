@@ -821,8 +821,8 @@
     <string name="screen_timeout_charging_summary">{v} 后睡眠</string>
     <string name="screen_timeout_notcharging_summary">{v} 后睡眠</string>
     <string name="screen_timeout_settings_fragment_title">"设置睡眠时间"</string>
-    <string name="Charging">接通电源时</string>
-    <string name="NotCharging">用电池时</string>
+    <string name="Charging">连接电源</string>
+    <string name="NotCharging">使用电池</string>
     <string name="wallpaper_settings_title" msgid="5449180116365824625">"壁纸"</string>
     <string name="wallpaper_settings_fragment_title" msgid="519078346877860129">"选择壁纸来源"</string>
     <string name="screensaver_settings_title" msgid="3349790120327233241">"互动屏保"</string>
