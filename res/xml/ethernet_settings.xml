@@ -22,4 +22,9 @@
         android:summary="@string/eth_conf_summary"
         android:key="ETHERNET_CONFIG"
         android:persistent="false" />
+    <Preference
+        android:title="@string/eth_ip_address_title"
+        android:summary="@string/eth_ip_address_summary"
+        android:key="ETHERNET_IP_ADDRESS"
+        android:persistent="false" />
 </PreferenceScreen>

@@ -32,6 +32,7 @@ import android.net.IpConfiguration;
 import android.net.IpConfiguration.IpAssignment;
 import android.net.IpConfiguration.ProxySettings;
 import android.os.Environment;
+import android.os.SystemProperties;
 import android.util.SparseArray;
 import android.net.StaticIpConfiguration;
 import android.net.EthernetManager;
@@ -71,6 +72,7 @@ public class EthernetDialog extends AlertDialog implements DialogInterface.OnCli
     private Context mContext;
     private EthernetManager mEthManager;
     private ConnectivityManager mCM;
+    private OnIpConfigChangedCallback mIpConfigChangedCallback;
 
     public EthernetDialog(Context context,EthernetManager EthManager,ConnectivityManager cm) {
         super(context);
@@ -285,6 +287,7 @@ public class EthernetDialog extends AlertDialog implements DialogInterface.OnCli
             Slog.i(TAG,"mode dhcp");
             mEthManager.setConfiguration(new IpConfiguration(mIpAssignment, ProxySettings.NONE,
                                 null, null));
+            mIpConfigChangedCallback.onIpConfigChanged(SystemProperties.get("dhcp.eth0.ipaddress"));
         } else {
             Slog.i(TAG,"mode static ip");
             if (isIpAddress(mIpaddr.getText().toString())
@@ -306,6 +309,8 @@ public class EthernetDialog extends AlertDialog implements DialogInterface.OnCli
                 } else {
                     mEthManager.setConfiguration(new IpConfiguration(
                             mIpAssignment, ProxySettings.NONE, mStaticIpConfiguration, null));
+                    mIpConfigChangedCallback.onIpConfigChanged(mStaticIpConfiguration
+                            .ipAddress.getAddress().getHostAddress());
                 }
             } else {
                 Toast.makeText(mContext, R.string.eth_settings_error, Toast.LENGTH_LONG).show();
@@ -344,11 +349,20 @@ public class EthernetDialog extends AlertDialog implements DialogInterface.OnCli
         switch (which) {
             case BUTTON_POSITIVE:
                 handle_saveconf();
+                Toast.makeText(mContext, R.string.eth_reboot, Toast.LENGTH_LONG).show();
                 break;
             case BUTTON_NEGATIVE:
                 //Don't need to do anything
                 break;
             default:
         }
+    }
+
+    public final void setIpConfigChangedCallback(OnIpConfigChangedCallback icb) {
+        mIpConfigChangedCallback = icb;
+    }
+
+    public interface OnIpConfigChangedCallback {
+        public void onIpConfigChanged(String ipAddress);
     }
 }

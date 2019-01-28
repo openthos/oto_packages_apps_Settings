@@ -2565,6 +2565,9 @@
     <string name="eth_dns">DNS 地址</string>
     <string name="eth_gw">网关 地址</string>
     <string name="eth_ipaddr">IP 地址</string>
+    <string name="eth_ip_address_title">IP 地址 </string>
+    <string name="eth_ip_address_summary">IP</string>
+    <string name="eth_reboot">请重启以太网</string>
     <string name="eth_quick_toggle_title">以太网</string>
     <string name="eth_quick_toggle_summary">打开以太网</string>
     <string name="eth_conf_perf_title">以太网配置</string>

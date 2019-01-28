@@ -6138,6 +6138,9 @@
     <string name="eth_select_save">SAVE</string>
     <string name="eth_gw">Gateway address</string>
     <string name="eth_ipaddr">IP address</string>
+    <string name="eth_ip_address_title">Ethernet Ip</string>
+    <string name="eth_ip_address_summary">IP</string>
+    <string name="eth_reboot">Please reboot ethernet</string>
     <string name="eth_quick_toggle_title">Ethernet</string>
     <string name="eth_quick_toggle_summary">Turn on Ethernet</string>
     <string name="eth_conf_perf_title">Ethernet configuration</string>

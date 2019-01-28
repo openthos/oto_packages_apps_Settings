@@ -32,7 +32,6 @@ import android.util.Log;
 import android.view.View;
 import android.preference.CheckBoxPreference;
 
-import java.util.ArrayList;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.R;
 import com.android.settings.widget.SwitchBar;
@@ -41,6 +40,9 @@ import android.widget.Switch;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.net.EthernetManager;
+import android.net.IpConfiguration;
+import android.net.IpConfiguration.IpAssignment;
+import android.net.StaticIpConfiguration;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.util.Slog;
@@ -48,19 +50,24 @@ import android.widget.Toast;
 import android.os.Looper;
 
 public class EthernetSettings extends SettingsPreferenceFragment implements
-        Preference.OnPreferenceChangeListener {
+        Preference.OnPreferenceChangeListener,
+        EthernetDialog.OnIpConfigChangedCallback {
     private static final String TAG = "EthernetSettings";
     private EthernetEnabler mEthEnabler;
     private static final String KEY_CONF_ETH = "ETHERNET_CONFIG";
+    private static final String KEY_IP_ETH = "ETHERNET_IP_ADDRESS";
     private EthernetDialog mEthDialog = null;
     private Preference mEthConfigPref;
+    private Preference mEthIpPref;
     private ConnectivityManager mCM;
+    private EthernetManager mEM;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.ethernet_settings);
         mEthConfigPref = findPreference(KEY_CONF_ETH);
+        mEthIpPref = findPreference(KEY_IP_ETH);
     }
 
     @Override
@@ -69,8 +76,9 @@ public class EthernetSettings extends SettingsPreferenceFragment implements
         // On/off switch is hidden for Setup Wizard (returns null)
         mEthEnabler = createEthernetEnabler();
         mCM = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        mEthDialog = new EthernetDialog(getActivity(),
-                    (EthernetManager) getSystemService(Context.ETHERNET_SERVICE), mCM);
+        mEM = (EthernetManager)getActivity().getSystemService(Context.ETHERNET_SERVICE);
+        mEthDialog = new EthernetDialog(getActivity(), mEM, mCM);
+        mEthDialog.setIpConfigChangedCallback(this);
         mEthEnabler.setConfigDialog(mEthDialog);
     }
 
@@ -80,6 +88,7 @@ public class EthernetSettings extends SettingsPreferenceFragment implements
         super.onResume();
         if (mEthEnabler != null) {
             mEthEnabler.resume(activity);
+            mEthIpPref.setSummary(getEthernetIpAddress());
         }
     }
 
@@ -98,6 +107,11 @@ public class EthernetSettings extends SettingsPreferenceFragment implements
         if (mEthEnabler != null) {
             mEthEnabler.teardownSwitchBar();
         }
+    }
+
+    @Override
+    public void onIpConfigChanged(String ipAddress) {
+        mEthIpPref.setSummary(ipAddress);
     }
 
     /**
@@ -125,5 +139,22 @@ public class EthernetSettings extends SettingsPreferenceFragment implements
             }
         }
         return false;
+    }
+
+    private String getEthernetIpAddress() {
+        IpConfiguration ipinfo = mEM.getConfiguration();
+        if (ipinfo != null) {
+            if (ipinfo.ipAssignment == IpAssignment.DHCP) {
+                return SystemProperties.get("dhcp.eth0.ipaddress");
+            } else {
+                StaticIpConfiguration staticConfig = ipinfo.getStaticIpConfiguration();
+                if (staticConfig != null) {
+                    if (staticConfig.ipAddress != null) {
+                        return staticConfig.ipAddress.getAddress().getHostAddress();
+                    }
+                }
+            }
+        }
+        return "";
     }
 }
