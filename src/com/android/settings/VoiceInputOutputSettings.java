@@ -59,12 +59,10 @@ public class VoiceInputOutputSettings {
     private void populateOrRemovePreferences() {
         boolean hasVoiceInputPrefs = populateOrRemoveVoiceInputPrefs();
         boolean hasTtsPrefs = populateOrRemoveTtsPrefs();
-        if (!hasVoiceInputPrefs && !hasTtsPrefs) {
-            // There were no TTS settings and no recognizer settings,
-            // so it should be safe to hide the preference category
-            // entirely.
-            mFragment.getPreferenceScreen().removePreference(mVoiceCategory);
-        }
+        // There were no TTS settings and no recognizer settings,
+        // so it should be safe to hide the preference category
+        // entirely.
+        mFragment.getPreferenceScreen().removePreference(mVoiceCategory);
     }
 
     private boolean populateOrRemoveVoiceInputPrefs() {
